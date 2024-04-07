@@ -1,0 +1,1965 @@
+<template>
+    <!--子任务-->
+    <li v-if="ready && taskDetail.parent_id > 0">
+        <div class="subtask-icon">
+            <TaskMenu
+                :ref="`taskMenu_${taskDetail.id}`"
+                :disabled="taskId === 0"
+                :task="taskDetail"
+                :load-status="taskDetail.loading === true"
+                @on-update="getLogLists"/>
+        </div>
+        <div v-if="taskDetail.flow_item_name" class="subtask-flow">
+            <span :class="taskDetail.flow_item_status" @click.stop="openMenu($event, taskDetail)">{{taskDetail.flow_item_name}}</span>
+        </div>
+        <div class="subtask-name">
+            <Input
+                v-model="taskDetail.name"
+                ref="name"
+                type="textarea"
+                :rows="1"
+                :autosize="{ minRows: 1, maxRows: 8 }"
+                :maxlength="255"
+                enterkeyhint="done"
+                @on-blur="updateBlur('name')"
+                @on-keydown="onNameKeydown"
+            />
+        </div>
+        <DatePicker
+            v-model="timeValue"
+            :open="timeOpen"
+            :options="timeOptions"
+            format="yyyy/MM/dd HH:mm"
+            type="datetimerange"
+            class="subtask-time"
+            placement="bottom-end"
+            @on-open-change="timeChange"
+            @on-change="taskTimeChange"
+            @on-clear="timeClear"
+            @on-ok="timeOk"
+            transfer>
+            <div v-if="!taskDetail.complete_at && taskDetail.end_at && taskDetail.end_at != mainEndAt" @click="openTime" :class="['time', taskDetail.today ? 'today' : '', taskDetail.overdue ? 'overdue' : '']">
+                {{expiresFormat(taskDetail.end_at)}}
+            </div>
+            <Icon v-else class="clock" type="ios-clock-outline" @click="openTime" />
+        </DatePicker>
+        <UserSelect
+            class="subtask-avatar"
+            v-model="ownerData.owner_userid"
+            :multiple-max="10"
+            :avatar-size="20"
+            :title="$L('修改负责人')"
+            :add-icon="false"
+            :project-id="taskDetail.project_id"
+            :before-submit="onOwner"/>
+    </li>
+    <!--主任务-->
+    <div
+        v-else-if="ready"
+        :class="{'task-detail':true, 'open-dialog': hasOpenDialog, 'completed': taskDetail.complete_at}"
+        :style="taskDetailStyle">
+        <div v-show="taskDetail.id > 0" class="task-info">
+            <div class="head">
+                <TaskMenu
+                    :ref="`taskMenu_${taskDetail.id}`"
+                    :disabled="taskId === 0"
+                    :task="taskDetail"
+                    class="icon"
+                    size="medium"
+                    :color-show="false"
+                    @on-update="getLogLists"/>
+                <div v-if="taskDetail.flow_item_name" class="flow">
+                    <span :class="taskDetail.flow_item_status" @click.stop="openMenu($event, taskDetail)">{{taskDetail.flow_item_name}}</span>
+                </div>
+                <div v-if="taskDetail.archived_at" class="flow">
+                    <span class="archived" @click.stop="openMenu($event, taskDetail)">{{$L('已归档')}}</span>
+                </div>
+                <div class="nav">
+                    <p v-if="projectName"><span>{{projectName}}</span></p>
+                    <p v-if="columnName"><span>{{columnName}}</span></p>
+                    <p v-if="taskDetail.id"><span>{{taskDetail.id}}</span></p>
+                </div>
+                <div class="function">
+                    <EPopover
+                        v-if="getOwner.length === 0"
+                        v-model="receiveShow"
+                        placement="bottom">
+                        <div class="task-detail-receive">
+                            <div class="receive-title">
+                                <Icon type="ios-help-circle"/>
+                                {{$L('确认计划时间领取任务')}}
+                            </div>
+                            <div class="receive-time">
+                                <DatePicker
+                                    v-model="timeValue"
+                                    :options="timeOptions"
+                                    format="yyyy/MM/dd HH:mm"
+                                    type="datetimerange"
+                                    :placeholder="$L('请设置计划时间')"
+                                    :clearable="false"
+                                    :editable="false"
+                                    @on-change="taskTimeChange"/>
+                            </div>
+                            <div class="receive-bottom">
+                                <Button size="small" type="text" @click="receiveShow=false">取消</Button>
+                                <Button :loading="ownerLoad > 0" size="small" type="primary" @click="onOwner(true)">确定</Button>
+                            </div>
+                        </div>
+                        <Button slot="reference" :loading="ownerLoad > 0" class="pick" type="primary">{{$L('我要领取任务')}}</Button>
+                    </EPopover>
+                    <ETooltip v-if="$Electron" :disabled="$isEEUiApp || windowTouch" :content="$L('新窗口打开')">
+                        <i class="taskfont open" @click="openNewWin">&#xe776;</i>
+                    </ETooltip>
+                    <div class="menu">
+                        <TaskMenu
+                            :disabled="taskId === 0"
+                            :task="taskDetail"
+                            icon="ios-more"
+                            completed-icon="ios-more"
+                            size="medium"
+                            :color-show="false"
+                            @on-update="getLogLists"/>
+                    </div>
+                </div>
+            </div>
+            <Scrollbar ref="scroller" class="scroller">
+                <div class="title">
+                    <Input
+                        v-model="taskDetail.name"
+                        ref="name"
+                        type="textarea"
+                        :rows="1"
+                        :autosize="{ minRows: 1, maxRows: 8 }"
+                        :maxlength="255"
+                        enterkeyhint="done"
+                        @on-blur="updateBlur('name')"
+                        @on-keydown="onNameKeydown"/>
+                </div>
+                <TEditorTask
+                    ref="desc"
+                    class="desc"
+                    :value="taskContent"
+                    :placeholder="$L('详细描述...')"
+                    @on-blur="updateBlur('content')"/>
+                <Form class="items" label-position="left" label-width="auto" @submit.native.prevent>
+                    <FormItem v-if="taskDetail.p_name">
+                        <div class="item-label" slot="label">
+                            <i class="taskfont">&#xe6ec;</i>{{$L('优先级')}}
+                        </div>
+                        <ul class="item-content">
+                            <li>
+                                <EDropdown
+                                    ref="priority"
+                                    trigger="click"
+                                    placement="bottom"
+                                    @command="updateData('priority', $event)">
+                                    <TaskPriority :backgroundColor="taskDetail.p_color">{{taskDetail.p_name}}</TaskPriority>
+                                    <EDropdownMenu slot="dropdown">
+                                        <EDropdownItem v-for="(item, key) in taskPriority" :key="key" :command="item">
+                                            <i
+                                                class="taskfont"
+                                                :style="{color:item.color}"
+                                                v-html="taskDetail.p_name == item.name ? '&#xe61d;' : '&#xe61c;'"></i>
+                                            {{item.name}}
+                                        </EDropdownItem>
+                                    </EDropdownMenu>
+                                </EDropdown>
+                            </li>
+                        </ul>
+                    </FormItem>
+                    <FormItem v-if="getOwner.length > 0">
+                        <div class="item-label" slot="label">
+                            <i class="taskfont">&#xe6e4;</i>{{$L('负责人')}}
+                        </div>
+                        <UserSelect
+                            class="item-content user"
+                            v-model="ownerData.owner_userid"
+                            :multiple-max="10"
+                            :avatar-size="28"
+                            :title="$L('修改负责人')"
+                            :project-id="taskDetail.project_id"
+                            :add-icon="false"
+                            :before-submit="onOwner"/>
+                    </FormItem>
+                    <FormItem v-if="getAssist.length > 0 || assistForce">
+                        <div class="item-label" slot="label">
+                            <i class="taskfont">&#xe63f;</i>{{$L('协助人员')}}
+                        </div>
+                        <UserSelect
+                            ref="assist"
+                            class="item-content user"
+                            v-model="assistData.assist_userid"
+                            :multiple-max="10"
+                            :avatar-size="28"
+                            :title="$L(getAssist.length > 0 ? '修改协助人员' : '添加协助人员')"
+                            :project-id="taskDetail.project_id"
+                            :disabled-choice="assistData.disabled"
+                            :add-icon="false"
+                            :before-submit="onAssist"/>
+                    </FormItem>
+<!--                    <FormItem v-if="taskDetail.visibility > 1 || visibleForce || visibleKeep">-->
+<!--                        <div class="item-label" slot="label">-->
+<!--                            <i class="taskfont">&#xe77b;</i>-->
+<!--                            <span class="visibility-text color" @click="showCisibleDropdown">{{$L('可见性')}} <i class="taskfont">&#xe740;</i></span>-->
+<!--                        </div>-->
+<!--                        <div class="item-content user">-->
+<!--                            <span v-if="taskDetail.visibility == 1 || taskDetail.visibility == 2" ref="visibilityText" class="visibility-text" @click="showCisibleDropdown">{{ taskDetail.visibility == 1 ? $L('项目人员可见') : $L('任务人员可见') }}</span>-->
+<!--                            <UserSelect v-else-->
+<!--                                ref="visibleUserSelectRef"-->
+<!--                                v-model="taskDetail.visibility_appointor"-->
+<!--                                :avatar-size="28"-->
+<!--                                :title="$L('选择指定人员')"-->
+<!--                                :project-id="taskDetail.project_id"-->
+<!--                                :add-icon="false"-->
+<!--                                @on-show-change="visibleUserSelectShowChange"/>-->
+<!--                        </div>-->
+<!--                    </FormItem>-->
+                    <FormItem v-if="taskDetail.end_at || timeForce">
+                        <div class="item-label" slot="label">
+                            <i class="taskfont">&#xe6e8;</i>
+                            <span v-if="!taskDetail.end_at" @click="timeOpen = true" class="visibility-text color">{{$L('截止时间')}}</span>
+                            <span v-else class="visibility-text color" @click="showAtDropdown">{{$L('截止时间')}}</span>
+                        </div>
+                        <ul class="item-content">
+                            <li>
+                                <DatePicker
+                                    disabled
+                                    v-model="timeValue"
+                                    :open="timeOpen"
+                                    :options="timeOptions"
+                                    format="yyyy/MM/dd HH:mm"
+                                    type="datetimerange"
+                                    @on-open-change="timeChange"
+                                    @on-change="taskTimeChange"
+                                    @on-clear="timeClear"
+                                    @on-ok="timeOk"
+                                    transfer>
+                                    <div class="picker-time">
+                                        <div v-if="!taskDetail.end_at" @click="timeOpen = true" class="time">{{taskDetail.end_at ? cutTime : '--'}}</div>
+                                        <div v-else @click="showAtDropdown" class="time">{{taskDetail.end_at ? cutTime : '--'}}</div>
+                                        <template v-if="!taskDetail.complete_at && taskDetail.end_at">
+                                            <Tag v-if="within24Hours(taskDetail.end_at)" color="blue"><i class="taskfont">&#xe71d;</i>{{expiresFormat(taskDetail.end_at)}}</Tag>
+                                            <Tag v-if="isOverdue(taskDetail)" color="red">{{$L('超期未完成')}}</Tag>
+                                        </template>
+                                    </div>
+                                </DatePicker>
+                            </li>
+                        </ul>
+
+                    </FormItem>
+                    <FormItem v-if="(taskDetail.loop && taskDetail.loop != 'never') || loopForce">
+                        <div class="item-label" slot="label">
+                            <i class="taskfont">&#xe93f;</i>{{$L('重复周期')}}
+                        </div>
+                        <ul class="item-content">
+                            <li>
+                                <EDropdown
+                                    ref="loop"
+                                    trigger="click"
+                                    placement="bottom"
+                                    @command="updateData('loop', $event)">
+                                    <ETooltip :disabled="$isEEUiApp || windowTouch || !taskDetail.loop_at" :content="`${$L('下个周期')}: ${taskDetail.loop_at}`" placement="right">
+                                        <span>{{$L(loopLabel(taskDetail.loop))}}</span>
+                                    </ETooltip>
+                                    <EDropdownMenu slot="dropdown" class="task-detail-loop">
+                                        <EDropdownItem v-for="item in loops" :key="item.key" :command="item.key">
+                                            {{$L(item.label)}}
+                                        </EDropdownItem>
+                                    </EDropdownMenu>
+                                </EDropdown>
+                            </li>
+                        </ul>
+                    </FormItem>
+                    <FormItem v-if="fileList.length > 0">
+                        <div class="item-label" slot="label">
+                            <i class="taskfont">&#xe6e6;</i>{{$L('附件')}}
+                        </div>
+                        <ul class="item-content file">
+                            <li v-if="taskDetail.file_num > 50" class="tip">{{$L(`共${taskDetail.file_num}个文件，仅显示最新50个`)}}</li>
+                            <li v-for="file in fileList">
+                                <img v-if="file.id" class="file-ext" :src="file.thumb"/>
+                                <Loading v-else class="file-load"/>
+                                <div class="file-name">{{file.name}}</div>
+                                <div class="file-size">{{$A.bytesToSize(file.size)}}</div>
+                                <div class="file-menu" :class="{show:file._show_menu}">
+                                    <Icon @click="viewFile(file)" type="md-eye" />
+                                    <Icon @click="downFile(file)" type="md-arrow-round-down" />
+                                    <EPopover v-model="file._show_menu" class="file-delete">
+                                        <div class="task-detail-delete-file-popover">
+                                            <p>{{$L('你确定要删除这个文件吗？')}}</p>
+                                            <div class="buttons">
+                                                <Button size="small" type="text" @click="file._show_menu=false">{{$L('取消')}}</Button>
+                                                <Button size="small" type="primary" @click="deleteFile(file)">{{$L('确定')}}</Button>
+                                            </div>
+                                        </div>
+                                        <i slot="reference" class="taskfont del">&#xe6ea;</i>
+                                    </EPopover>
+                                </div>
+                            </li>
+                        </ul>
+                        <ul class="item-content">
+                            <li>
+                                <div class="add-button" @click="onUploadClick(true)">
+                                    <i class="taskfont">&#xe6f2;</i>
+                                    <span>{{$L('添加附件')}}</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </FormItem>
+                    <FormItem v-if="subList.length > 0 || addsubForce">
+                        <div class="item-label" slot="label">
+                            <i class="taskfont">&#xe6f0;</i>{{$L('子任务')}}
+                        </div>
+                        <ul class="item-content subtask">
+                            <TaskDetail
+                                v-for="(task, key) in subList"
+                                :ref="`subTask_${task.id}`"
+                                :key="key"
+                                :task-id="task.id"
+                                :open-task="task"
+                                :main-end-at="taskDetail.end_at"
+                                :can-update-blur="canUpdateBlur"/>
+                        </ul>
+                        <ul :class="['item-content', subList.length === 0 ? 'nosub' : '']">
+                            <li>
+                                <Input
+                                    v-if="addsubShow"
+                                    v-model="addsubName"
+                                    ref="addsub"
+                                    class="add-input"
+                                    :placeholder="$L('+ 输入子任务，回车添加子任务')"
+                                    :icon="addsubLoad > 0 ? 'ios-loading' : ''"
+                                    :class="{loading: addsubLoad > 0}"
+                                    enterkeyhint="done"
+                                    @on-blur="addsubChackClose"
+                                    @on-keydown="addsubKeydown"/>
+                                <div v-else class="add-button" @click="addsubOpen">
+                                    <i class="taskfont">&#xe6f2;</i>
+                                    <span>{{$L('添加子任务')}}</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </FormItem>
+                </Form>
+                <div v-if="menuList.length > 0" class="add">
+                    <EDropdown
+                        trigger="click"
+                        placement="bottom"
+                        @command="dropAdd">
+                        <div class="add-button">
+                            <i class="taskfont">&#xe6f2;</i>
+                            <span>{{$L('添加')}}</span>
+                            <em>{{menuText}}</em>
+                        </div>
+                        <EDropdownMenu slot="dropdown">
+                            <EDropdownItem v-for="(item, key) in menuList" :key="key" :command="item.command">
+                                <div class="item">
+                                    <i class="taskfont" v-html="item.icon"></i>{{$L(item.name)}}
+                                </div>
+                            </EDropdownItem>
+                        </EDropdownMenu>
+                    </EDropdown>
+                </div>
+                <EDropdown ref="eDropdownRef" class="calculate-dropdown" trigger="click" placement="bottom" @command="dropVisible">
+                    <div class="calculate-content"></div>
+                    <EDropdownMenu slot="dropdown">
+                        <EDropdownItem :command="1">
+                            <div class="task-menu-icon" >
+                                <Icon v-if="taskDetail.visibility == 1" class="completed" :type="'md-checkmark-circle'"/>
+                                <Icon v-else class="uncomplete" :type="'md-radio-button-off'"/>
+                                {{$L('项目人员')}}
+                            </div>
+                        </EDropdownItem>
+                        <EDropdownItem :command="2">
+                            <div class="task-menu-icon" >
+                                <Icon v-if="taskDetail.visibility == 2" class="completed" :type="'md-checkmark-circle'"/>
+                                <Icon v-else class="uncomplete" :type="'md-radio-button-off'"/>
+                                {{$L('任务人员')}}
+                            </div>
+                        </EDropdownItem>
+                        <EDropdownItem :command="3">
+                            <div class="task-menu-icon" >
+                                <Icon v-if="taskDetail.visibility == 3" class="completed" :type="'md-checkmark-circle'"/>
+                                <Icon v-else class="uncomplete" :type="'md-radio-button-off'"/>
+                                {{$L('指定成员')}}
+                            </div>
+                        </EDropdownItem>
+                    </EDropdownMenu>
+                </EDropdown>
+                <EDropdown ref="eDeadlineRef" class="calculate-dropdown" trigger="click" placement="bottom" @command="dropDeadline">
+                    <div class="calculate-content"></div>
+                    <EDropdownMenu slot="dropdown">
+                        <EDropdownItem :command="1">
+                            <div class="task-menu-icon" >
+                                {{$L('任务延期')}}
+                            </div>
+                        </EDropdownItem>
+                        <EDropdownItem :command="2">
+                            <div class="task-menu-icon" >
+                                {{$L('修改时间')}}
+                            </div>
+                        </EDropdownItem>
+                    </EDropdownMenu>
+                </EDropdown>
+            </Scrollbar>
+            <TaskUpload ref="upload" class="upload" @on-select-file="onSelectFile"/>
+        </div>
+        <div v-show="taskDetail.id > 0" class="task-dialog" :style="dialogStyle">
+            <template v-if="hasOpenDialog">
+                <DialogWrapper v-if="taskId > 0" ref="dialog" :dialog-id="taskDetail.dialog_id">
+                    <div slot="head" class="head">
+                        <Icon class="icon" type="ios-chatbubbles-outline" />
+                        <div class="nav">
+                            <p :class="{active:navActive=='dialog'}" @click="navActive='dialog'">{{$L('聊天')}}</p>
+                            <p :class="{active:navActive=='log'}" @click="navActive='log'">{{$L('动态')}}</p>
+                            <div v-if="navActive=='log'" class="refresh">
+                                <Loading v-if="logLoadIng"/>
+                                <Icon v-else type="ios-refresh" @click="getLogLists"></Icon>
+                            </div>
+                        </div>
+                    </div>
+                </DialogWrapper>
+                <ProjectLog v-if="navActive=='log' && taskId > 0" ref="log" :task-id="taskDetail.id" @on-load-change="logLoadChange"/>
+            </template>
+            <div v-else>
+                <div class="head">
+                    <Icon class="icon" type="ios-chatbubbles-outline" />
+                    <div class="nav">
+                        <p :class="{active:navActive=='dialog'}" @click="navActive='dialog'">{{$L('聊天')}}</p>
+                        <p :class="{active:navActive=='log'}" @click="navActive='log'">{{$L('动态')}}</p>
+                        <div v-if="navActive=='log'" class="refresh">
+                            <Loading v-if="logLoadIng"/>
+                            <Icon v-else type="ios-refresh" @click="getLogLists"></Icon>
+                        </div>
+                    </div>
+                    <div class="menu">
+                        <div v-if="navActive=='dialog' && taskDetail.msg_num > 0" class="menu-item" @click.stop="onSend('open')">
+                            <div v-if="openLoad > 0" class="menu-load"><Loading/></div>
+                            {{$L('任务聊天')}}
+                            <em>({{taskDetail.msg_num > 999 ? '999+' : taskDetail.msg_num}})</em>
+                            <i class="taskfont">&#xe703;</i>
+                        </div>
+                    </div>
+                </div>
+                <ProjectLog v-if="navActive=='log' && taskId > 0" ref="log" :task-id="taskDetail.id" :show-load="false" @on-load-change="logLoadChange"/>
+                <div v-else class="no-dialog"
+                     @drop.prevent="taskPasteDrag($event, 'drag')"
+                     @dragover.prevent="taskDragOver(true, $event)"
+                     @dragleave.prevent="taskDragOver(false, $event)">
+                    <div class="no-tip">{{$L('暂无消息')}}</div>
+                    <div class="no-input">
+
+                      <div class="chat-input-wrapper">
+                        <input
+                            v-model="text"
+                            class="chat-input-box2"
+                            @keydown.enter="onEnter"
+                            placeholder="请输入消息..."
+                        />
+                        <button v-on:click="onSend" class="chat—send—btn">发送</button>
+                      </div>
+<!--                        <ChatInput-->
+<!--                            ref="chatInput"-->
+<!--                            :task-id="taskId"-->
+<!--                            v-model="msgText"-->
+<!--                            :loading="sendLoad > 0"-->
+<!--                            :maxlength="200000"-->
+<!--                            :placeholder="$L('输入消息...')"-->
+<!--                            :send-menu="false"-->
+<!--                            @on-more="onEventMore"-->
+<!--                            @on-file="onSelectFile"-->
+<!--                            @on-record="onRecord"-->
+<!--                            @on-send="onSend"/>-->
+                    </div>
+                    <div v-if="dialogDrag" class="drag-over" @click="dialogDrag=false">
+                        <div class="drag-text">{{$L('拖动到这里发送')}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div v-if="!taskDetail.id" class="task-load"><Loading/></div>
+        <!-- 提示  -->
+        <TaskExistTips ref="taskExistTipsRef" @onAdd="updateData('times', updateParams)"/>
+        <!--任务延期-->
+        <Modal
+            v-model="delayTaskShow"
+            :title="$L('任务延期')"
+            :mask-closable="false"
+            :styles="{
+                width: '90%',
+                maxWidth: '450px'
+            }">
+            <Form ref="formDelayTaskRef" :model="delayTaskForm" :rules="delayTaskRule" label-position="left" label-width="auto" @submit.native.prevent>
+                <FormItem :label="$L('延期时长')" prop="time">
+                    <Input type="number" v-model="delayTaskForm.time" :placeholder="$L('请输入时长')" >
+                        <template #append>
+                            {{$L('小时')}}
+                        </template>
+                    </Input>
+                </FormItem>
+                <FormItem :label="$L('延期备注')" prop="remark">
+                    <Input type="textarea" v-model="delayTaskForm.remark" :placeholder="$L('请输入修改备注')"></Input>
+                </FormItem>
+            </Form>
+            <div slot="footer">
+                <Button @click="delayTaskShow=false">{{$L('关闭')}}</Button>
+                <Button type="primary" @click="onDelay" :loading="delayTaskLoading">{{$L('确定')}}</Button>
+            </div>
+        </Modal>
+    </div>
+</template>
+
+<script>
+import {mapState} from "vuex";
+import TaskPriority from "./TaskPriority";
+import TaskUpload from "./TaskUpload";
+import DialogWrapper from "./DialogWrapper";
+import ProjectLog from "./ProjectLog";
+import {Store} from "le5le-store";
+import TaskMenu from "./TaskMenu";
+import ChatInput from "./ChatInput";
+import UserSelect from "../../../components/UserSelect.vue";
+import TaskExistTips from "./TaskExistTips.vue";
+import TEditorTask from "../../../components/TEditorTask.vue";
+import {
+  WKSDK,
+  Message,
+  StreamItem,
+  MessageText,
+  Channel,
+  ChannelTypePerson,
+  ChannelTypeGroup,
+  MessageStatus,
+  SyncOptions,
+  PullMode,
+  MessageContent,
+  MessageContentType,
+  Setting
+} from "wukongimjssdk";
+
+export default {
+    name: "TaskDetail",
+    components: {
+        TEditorTask,
+        UserSelect,
+        TaskExistTips,
+        ChatInput,
+        TaskMenu,
+        ProjectLog,
+        DialogWrapper,
+        TaskUpload,
+        TaskPriority,
+    },
+    props: {
+        taskId: {
+            type: Number,
+            default: 0
+        },
+        openTask: {
+            type: Object,
+            default: () => {
+                return {};
+            }
+        },
+        mainEndAt: {
+            default: null
+        },
+        // 允许失去焦点更新
+        canUpdateBlur: {
+            type: Boolean,
+            default: true
+        },
+        // 是否Modal模式
+        modalMode: {
+            type: Boolean,
+            default: false
+        },
+    },
+    data() {
+        return {
+            ready: false,
+
+            taskDetail: {},
+
+            ownerData: {},
+            ownerLoad: 0,
+
+            receiveShow: false,
+
+            assistForce: false,
+            assistData: {},
+            assistLoad: 0,
+
+            visibleForce: false,
+
+            addsubForce: false,
+            addsubShow: false,
+            addsubName: "",
+            addsubLoad: 0,
+
+            timeForce: false,
+            timeOpen: false,
+            timeValue: [],
+            timeOptions: {shortcuts: $A.timeOptionShortcuts()},
+
+            loopForce: false,
+
+            nowTime: $A.Time(),
+            nowInterval: null,
+
+            msgText: '',
+            msgFile: [],
+            msgRecord: {},
+            navActive: 'dialog',
+            logLoadIng: false,
+
+            sendLoad: 0,
+            openLoad: 0,
+
+            dialogDrag: false,
+            imageAttachment: true,
+            receiveTaskSubscribe: null,
+
+            loops: [
+                {key: 'never', label: '从不'},
+                {key: 'day', label: '每天'},
+                {key: 'weekdays', label: '每个工作日'},
+                {key: 'week', label: '每周'},
+                {key: 'twoweeks', label: '每两周'},
+                {key: 'month', label: '每月'},
+                {key: 'year', label: '每年'},
+                {key: 'custom', label: '自定义'},
+            ],
+
+            updateParams: {},
+
+            delayTaskShow: false,
+            delayTaskLoading: false,
+            delayTaskForm: {
+                time: "24",
+                remark: ''
+            },
+            delayTaskRule: {
+                time: [
+                    { required: true,  message: this.$L('请输入时长'), trigger: 'blur' },
+                ],
+                remark: [
+                    { required: true, message: this.$L('请输入备注'), trigger: 'blur' },
+                ],
+            }
+        }
+    },
+
+    created() {
+        const navActive = $A.getObject(this.$route.query, 'navActive')
+        if (['dialog', 'log'].includes(navActive)) {
+            this.navActive = navActive;
+        }
+    },
+
+    mounted() {
+        this.nowInterval = setInterval(() => {
+            this.nowTime = $A.Time();
+        }, 1000);
+        //
+        this.receiveTaskSubscribe = Store.subscribe('receiveTask', () => {
+            this.receiveShow = true;
+        });
+
+        // this.initDataSource(); //初始化数据源
+        // this.connectIM()
+        // this.pullLast();
+
+    },
+
+    connectIM() {
+      添加数据监听
+      WKSDK.shared().chatManager.addMessageListener(this.messageListener);
+      //添加消息发送状态监听
+      WKSDK.shared().chatManager.addMessageStatusListener(
+          this.messageStatusListener
+      );
+    },
+  //拉取当前会话最新消息
+  async pullLast() {
+    // 设置pulldowning为true，pulldownFinished为false
+    this.pulldowning = true;
+    this.pulldownFinished = false;
+    // 调用API获取消息信息
+
+    const channelId = this.dialogId;
+    const channelTypeGroup = ChannelTypeGroup;
+    const channel = new Channel(channelId, channelTypeGroup);
+
+    WKSDK.shared()
+        .chatManager.syncMessages(channel, {
+      limit: 15,
+      startMessageSeq: 0,
+      endMessageSeq: 0,
+      pullMode: PullMode.Up,
+    }).then((msgs) => {
+          console.log("新的代码块225........pullLast then msgs", msgs);
+          // 将消息添加到messages数组中
+          if (msgs && msgs.length > 0) {
+            for (let m of msgs) {
+              this.messages.push(m);
+            }
+          }
+          // 将pulldowning设置为false
+          this.pulldowning = false;
+          // 滚动到底部
+          this.$nextTick(() => {
+            this.scrollBottom();
+          });
+        });
+  },
+  //onUnmounted
+  //初始化数据源
+  initDataSource() {
+    const syncMessagesCallback = async (channel, opts) => {
+      const resultMessages = await this.getMessageList(channel, opts);
+      return resultMessages;
+    };
+
+    WKSDK.shared().config.provider.syncMessagesCallback = syncMessagesCallback;
+    //同步会话列表 这里先不考虑
+    //清除未读，这里也先不考虑
+    //群频道 订阅者列表
+    const subscribersCallback = async (channel, version) => {
+      const subscribers = WKSDK.shared().channelManager.getSubscribes(channel);
+      console.log("subscribers------subscribersCallback------------------------end----",subscribers);
+      return subscribers;
+    };
+    WKSDK.shared().config.provider.syncSubscribersCallback = subscribersCallback;
+  },
+  //获取消息
+  async getMessageList(channel, opts) {
+    var requestData = {
+      login_uid: this.userId + "",
+      channel_id: this.dialogId,
+      channel_type: 2,
+      start_message_seq: 0,
+      end_message_seq: 0,
+      pull_mode: 1,
+      limit: 15, //固定每次取15条
+    };
+
+    try {
+      const {data} = await this.$store.dispatch("call", {
+        url: "channel/messagesync",
+        method: "post",
+        data: requestData,
+      });
+      var messageList = data.messages;
+      if (messageList) {
+        const resultMessages = messageList.map((msg) => this.toMessage(msg));
+        return resultMessages;
+      }
+    } catch (error) {
+      console.error("新的代码块........catch error", error);
+      // 如果有错误也返回一个空数组
+      return [];
+    } finally {
+      console.log("新的代码块........finally");
+      // 此处可以进行一些清理操作
+    }
+  },
+
+    destroyed() {
+        clearInterval(this.nowInterval);
+        //
+        if (this.receiveTaskSubscribe) {
+            this.receiveTaskSubscribe.unsubscribe();
+            this.receiveTaskSubscribe = null;
+        }
+    },
+
+    computed: {
+        ...mapState([
+            'systemConfig',
+
+            'cacheProjects',
+            'cacheColumns',
+            'cacheTasks',
+
+            'taskContents',
+            'taskFiles',
+            'taskPriority',
+
+            'dialogId',
+        ]),
+
+        projectName() {
+            if (!this.taskDetail.project_id) {
+                return ''
+            }
+            if (this.taskDetail.project_name) {
+                return this.taskDetail.project_name;
+            }
+            const project = this.cacheProjects.find(({id}) => id == this.taskDetail.project_id)
+            return project ? project.name : '';
+        },
+
+        columnName() {
+            if (!this.taskDetail.column_id) {
+                return ''
+            }
+            if (this.taskDetail.column_name) {
+                return this.taskDetail.column_name;
+            }
+            const column = this.cacheColumns.find(({id}) => id == this.taskDetail.column_id)
+            return column ? column.name : '';
+        },
+
+        taskContent() {
+            if (!this.taskId) {
+                return "";
+            }
+            let content = this.taskContents.find(({task_id}) => task_id == this.taskId)
+            return content ? content.content : ''
+        },
+
+        fileList() {
+            if (!this.taskId) {
+                return [];
+            }
+            return this.taskFiles.filter(({task_id}) => {
+                return task_id == this.taskId
+            }).sort((a, b) => {
+                return b.id - a.id;
+            });
+        },
+
+        subList() {
+            if (!this.taskId) {
+                return [];
+            }
+            return this.cacheTasks.filter(task => {
+                return task.parent_id == this.taskId
+            }).sort((a, b) => {
+                return a.id - b.id;
+            });
+        },
+
+        hasOpenDialog() {
+            return this.taskDetail.dialog_id !== '' && this.windowLandscape;
+        },
+
+        dialogStyle() {
+            const {windowHeight, hasOpenDialog} = this;
+            const height = Math.min(1100, windowHeight)
+            if (!height) {
+                return {};
+            }
+            if (!hasOpenDialog) {
+                return {};
+            }
+            const factor = height > 900 ? 200 : 70;
+            return {
+                minHeight: (height - factor - 48) + 'px'
+            }
+        },
+
+        taskDetailStyle() {
+            const {modalMode, windowHeight, hasOpenDialog} = this;
+            const height = Math.min(1100, windowHeight)
+            if (modalMode && hasOpenDialog) {
+                const factor = height > 900 ? 200 : 70;
+                return {
+                    maxHeight: (height - factor - 30) + 'px'
+                }
+            }
+            return {}
+        },
+
+        cutTime() {
+            const {taskDetail} = this;
+            let start_at = $A.Date(taskDetail.start_at, true);
+            let end_at = $A.Date(taskDetail.end_at, true);
+            let string = "";
+            if ($A.formatDate('Y/m/d', start_at) == $A.formatDate('Y/m/d', end_at)) {
+                string = $A.formatDate('Y/m/d H:i', start_at) + " ~ " + $A.formatDate('H:i', end_at)
+            } else if ($A.formatDate('Y', start_at) == $A.formatDate('Y', end_at)) {
+                string = $A.formatDate('Y/m/d H:i', start_at) + " ~ " + $A.formatDate('m/d H:i', end_at)
+                string = string.replace(/( 00:00| 23:59)/g, "")
+            } else {
+                string = $A.formatDate('Y/m/d H:i', start_at) + " ~ " + $A.formatDate('Y/m/d H:i', end_at)
+                string = string.replace(/( 00:00| 23:59)/g, "")
+            }
+            return string
+        },
+
+        getOwner() {
+            const {taskDetail} = this;
+            if (!$A.isArray(taskDetail.task_user)) {
+                return [];
+            }
+            return taskDetail.task_user.filter(({owner}) => owner === 1).sort((a, b) => {
+                return a.id - b.id;
+            });
+        },
+
+        getAssist() {
+            const {taskDetail} = this;
+            if (!$A.isArray(taskDetail.task_user)) {
+                return [];
+            }
+            return taskDetail.task_user.filter(({owner}) => owner === 0).sort((a, b) => {
+                return a.id - b.id;
+            });
+        },
+
+        menuList() {
+            const {taskDetail} = this;
+            const list = [];
+            if (!taskDetail.p_name) {
+                list.push({
+                    command: 'priority',
+                    icon: '&#xe6ec;',
+                    name: '优先级',
+                });
+            }
+            if (!($A.isArray(taskDetail.task_user) && taskDetail.task_user.find(({owner}) => owner === 0 ))) {
+                list.push({
+                    command: 'assist',
+                    icon: '&#xe63f;',
+                    name: '协助人员',
+                });
+            }
+            // if (taskDetail.visibility <= 1 && !this.visibleKeep) {
+            //     list.push({
+            //         command: 'visible',
+            //         icon: '&#xe77b;',
+            //         name: '可见性',
+            //     });
+            // }
+            if (!taskDetail.end_at) {
+                list.push({
+                    command: 'times',
+                    icon: '&#xe6e8;',
+                    name: '截止时间',
+                });
+            }
+            // if (!taskDetail.loop || taskDetail.loop == 'never') {
+            //     list.push({
+            //         command: 'loop',
+            //         icon: '&#xe93f;',
+            //         name: '重复周期',
+            //     });
+            // }
+            if (this.fileList.length == 0) {
+                list.push({
+                    command: 'file',
+                    icon: '&#xe6e6;',
+                    name: '附件',
+                });
+            }
+            // if (this.subList.length == 0) {
+            //     list.push({
+            //         command: 'subtask',
+            //         icon: '&#xe6f0;',
+            //         name: '子任务',
+            //     });
+            // }
+            return list;
+        },
+
+        menuText() {
+            const {menuList} = this
+            let text = ''
+            if (menuList.length > 0) {
+                menuList.forEach((item, index) => {
+                    if (index > 0) {
+                        text += " / "
+                    }
+                    text += this.$L(item.name)
+                })
+            }
+            return text
+        },
+
+        visibleKeep() {
+            return this.systemConfig.task_visible === 'open'    // 可见性保持显示
+        },
+    },
+
+    watch: {
+        openTask: {
+            handler(data) {
+                this.taskDetail = $A.cloneJSON(data);
+                this.__openTask && clearTimeout(this.__openTask);
+                this.__openTask = setTimeout(_ => this.$refs.name?.resizeTextarea(), 100)
+            },
+            immediate: true,
+            deep: true
+        },
+        taskId: {
+            handler(id) {
+                if (id > 0) {
+                    this.ready = true;
+                } else {
+                    if (this.windowPortrait) {
+                        $A.onBlur();
+                    }
+                    this.timeOpen = false;
+                    this.timeForce = false;
+                    this.loopForce = false;
+                    this.assistForce = false;
+                    this.visibleForce = false;
+                    this.addsubForce = false;
+                    this.receiveShow = false;
+                    this.$refs.chatInput && this.$refs.chatInput.hidePopover();
+                }
+            },
+            immediate: true
+        },
+        getOwner: {
+            handler(arr) {
+                const list = arr.map(({userid}) => userid)
+                this.$set(this.taskDetail, 'owner_userid', list)
+                this.$set(this.ownerData, 'owner_userid', list)
+                this.$set(this.assistData, 'disabled', arr.map(({userid}) => userid).filter(userid => userid != this.userId))
+            },
+            immediate: true
+        },
+        getAssist: {
+            handler(arr) {
+                const list = arr.map(({userid}) => userid)
+                this.$set(this.taskDetail, 'assist_userid', list)
+                this.$set(this.assistData, 'assist_userid', list);
+            },
+            immediate: true
+        },
+        receiveShow(val) {
+            if (val) {
+                this.timeValue = this.taskDetail.end_at ? [this.taskDetail.start_at, this.taskDetail.end_at] : [];
+            }
+        },
+        "taskDetail.visibility_appointor": {
+            handler(arr) {
+                if (arr?.filter(id=>id).length > 0) {
+                    this.taskDetail.visibility = 3
+                    this.updateVisible()
+                }
+            },
+            immediate: true
+        },
+    },
+
+    methods: {
+        within24Hours(date) {
+            return $A.Date(date, true) - this.nowTime < 86400
+        },
+
+        expiresFormat(date) {
+            return $A.countDownFormat(date, this.nowTime)
+        },
+
+        isOverdue(taskDetail) {
+            if (taskDetail.overdue) {
+                return true;
+            }
+            return $A.Date(taskDetail.end_at, true) < this.nowTime;
+        },
+
+        loopLabel(loop) {
+            const item = this.loops.find(item => item.key === loop)
+            if (item) {
+                return item.label
+            }
+            return loop ? `每${loop}天` : '从不'
+        },
+
+        onNameKeydown(e) {
+            if (e.keyCode === 13) {
+                if (!e.shiftKey) {
+                    e.preventDefault();
+                    this.updateData('name');
+                }
+            }
+        },
+
+        checkUpdate(action) {
+            let isModify = false;
+            if (this.openTask.name != this.taskDetail.name) {
+                isModify = true;
+                if (action === true) {
+                    this.updateData('name');
+                } else {
+                    action === false && this.$refs.name.focus();
+                    return true
+                }
+            }
+            if (this.$refs.desc && this.$refs.desc.getContent() != this.taskContent) {
+                isModify = true;
+                if (action === true) {
+                    this.updateData('content');
+                } else {
+                    action === false && this.$refs.desc.focus();
+                    return true
+                }
+            }
+            if (this.addsubShow && this.addsubName) {
+                isModify = true;
+                if (action === true) {
+                    this.onAddsub();
+                } else {
+                    action === false && this.$refs.addsub.focus();
+                    return true
+                }
+            }
+            this.subList.some(({id}) => {
+                if (this.$refs[`subTask_${id}`][0].checkUpdate(action)) {
+                    isModify = true;
+                }
+            })
+            return isModify;
+        },
+
+        updateBlur(action, params) {
+            if (this.canUpdateBlur) {
+                this.updateData(action, params)
+            }
+        },
+
+        updateData(action, params) {
+            let successCallback = null;
+            switch (action) {
+                case 'priority':
+                    this.$set(this.taskDetail, 'p_level', params.priority)
+                    this.$set(this.taskDetail, 'p_name', params.name)
+                    this.$set(this.taskDetail, 'p_color', params.color)
+                    action = ['p_level', 'p_name', 'p_color'];
+                    break;
+
+                case 'times':
+                    if (this.taskDetail.start_at
+                        && (Math.abs($A.Time(this.taskDetail.start_at) - $A.Time(params.start_at)) > 60 || Math.abs($A.Time(this.taskDetail.end_at) - $A.Time(params.end_at)) > 60)
+                        && typeof params.desc === "undefined") {
+                        $A.modalInput({
+                            title: `修改${this.taskDetail.parent_id > 0 ? '子任务' : '任务'}时间`,
+                            placeholder: `请输入修改备注`,
+                            okText: "确定",
+                            onOk: (desc) => {
+                                if (!desc) {
+                                    return `请输入修改备注`
+                                }
+                                this.updateParams = Object.assign(params, { desc })
+                                if (params.start_at && params.end_at && this.$refs.taskExistTipsRef) {
+                                    this.$refs.taskExistTipsRef.isExistTask({
+                                        taskid: this.taskDetail.id,
+                                        userids: this.taskDetail.owner_userid,
+                                        timerange: [params.start_at, params.end_at]
+                                    }).then(res => {
+                                        if (!res) {
+                                            this.updateData("times", this.updateParams)
+                                        }
+                                    });
+                                } else {
+                                    this.updateData("times", this.updateParams)
+                                }
+                                return false
+                            },
+                        });
+                        return;
+                    }
+                    this.$set(this.taskDetail, 'times', [params.start_at, params.end_at, params.desc])
+                    break;
+
+                case 'loop':
+                    if (params === 'custom') {
+                        this.customLoop()
+                        return;
+                    }
+                    this.$set(this.taskDetail, 'loop', params)
+                    break;
+
+                case 'content':
+                    const content = this.$refs.desc.getContent();
+                    if (content == this.taskContent.replace(/\s+original-(width|height)="[^"]*"/g, "")) {
+                        return;
+                    }
+                    if (this.windowTouch) {
+                        $A.modalConfirm({
+                            title: '温馨提示',
+                            content: '是否保存编辑内容？',
+                            onOk: () => {
+                                this.updateData("contentSave", {content})
+                            },
+                            onCancel: () => {
+                                this.$refs.desc.updateContent(this.taskContent);
+                            }
+                        });
+                    } else {
+                        this.updateData("contentSave", {content})
+                    }
+                    return;
+
+                case 'contentSave':
+                    this.$set(this.taskDetail, 'content', params.content)
+                    action = 'content';
+                    successCallback = () => {
+                        this.$store.dispatch("saveTaskContent", {
+                            task_id: this.taskId,
+                            content: params.content
+                        })
+                    }
+                    break;
+            }
+            //
+
+            let dataJson = {task_id: this.taskDetail.id};
+            ($A.isArray(action) ? action : [action]).forEach(key => {
+                let newData = this.taskDetail[key];
+                let originalData = this.openTask[key];
+                if ($A.jsonStringify(newData) != $A.jsonStringify(originalData)) {
+                    dataJson[key] = newData;
+                }
+            })
+            if (Object.keys(dataJson).length <= 1) return;
+            //
+            this.$store.dispatch("taskUpdate", dataJson).then(({msg}) => {
+                $A.messageSuccess(msg);
+                if (typeof successCallback === "function") successCallback();
+            }).catch(({msg}) => {
+                $A.modalError(msg);
+            })
+        },
+
+        customLoop() {
+            let value = this.taskDetail.loop || 1
+            $A.Modal.confirm({
+                render: (h) => {
+                    return h('div', [
+                        h('div', {
+                            style: {
+                                fontSize: '16px',
+                                fontWeight: '500',
+                                marginBottom: '20px',
+                            }
+                        }, this.$L('重复周期')),
+                        h('Input', {
+                            style: {
+                                width: '160px',
+                                margin: '0 auto',
+                            },
+                            props: {
+                                type: 'number',
+                                value,
+                                maxlength: 3
+                            },
+                            on: {
+                                input: (val) => {
+                                    value = $.runNum(val)
+                                }
+                            }
+                        }, [
+                            h('span', {slot: 'prepend'}, this.$L('每')),
+                            h('span', {slot: 'append'}, this.$L('天'))
+                        ])
+                    ])
+                },
+                onOk: _ => {
+                    this.$Modal.remove()
+                    if (value > 0) {
+                        this.updateData('loop', value)
+                    }
+                },
+                loading: true,
+                okText: this.$L('确定'),
+                cancelText: this.$L('取消'),
+            });
+        },
+
+        async taskTimeChange() {
+            const times = $A.date2string(this.timeValue, "Y-m-d H:i");
+            if ($A.rightExists(times[0], '00:00') && $A.rightExists(times[1], '00:00')) {
+                this.timeValue = await this.$store.dispatch("taskDefaultTime", times)
+            }
+        },
+
+        async onOwner(pick) {
+            let data = {
+                task_id: this.taskDetail.id,
+                owner: this.ownerData.owner_userid
+            }
+            //
+            if (pick === true) {
+                if (this.getOwner.length > 0) {
+                    this.receiveShow = false;
+                    $A.messageError("任务已被领取");
+                    return;
+                }
+                const times = $A.date2string(this.timeValue, "Y-m-d H:i");
+                if (!(times[0] && times[1])) {
+                    $A.messageError("请设置计划时间");
+                    return;
+                }
+                data.times = times;
+                data.owner = this.ownerData.owner_userid = [this.userId];
+            }
+            if ($A.jsonStringify(this.taskDetail.owner_userid) === $A.jsonStringify(this.ownerData.owner_userid)) {
+                return;
+            }
+            if ($A.count(data.owner) == 0) {
+                data.owner = '';
+            }
+            //
+            this.ownerLoad++;
+            return new Promise((resolve, reject) => {
+                this.$store.dispatch("taskUpdate", data).then(({msg}) => {
+                    $A.messageSuccess(msg);
+                    this.ownerLoad--;
+                    this.receiveShow = false;
+                    this.$store.dispatch("getTaskOne", this.taskDetail.id).catch(() => {})
+                    resolve()
+                }).catch(({msg}) => {
+                    $A.modalError(msg);
+                    this.ownerLoad--;
+                    this.receiveShow = false;
+                    reject()
+                })
+            })
+        },
+
+        onAssist() {
+            if ($A.jsonStringify(this.taskDetail.assist_userid) === $A.jsonStringify(this.assistData.assist_userid)) {
+                return;
+            }
+            return new Promise((resolve, reject) => {
+                if (this.getOwner.find(({userid}) => userid === this.userId) && this.assistData.assist_userid.find(userid => userid === this.userId)) {
+                    $A.modalConfirm({
+                        content: '你当前是负责人，确定要转为协助人员吗？',
+                        cancelText: '取消',
+                        okText: '确定',
+                        onOk: () => {
+                            this.onAssistConfirm().then(resolve).catch(reject)
+                        },
+                        onCancel: () => {
+                            reject()
+                        }
+                    })
+                } else {
+                    this.onAssistConfirm().then(resolve).catch(reject)
+                }
+            })
+        },
+
+        onAssistConfirm() {
+            return new Promise((resolve, reject) => {
+                let assist = this.assistData.assist_userid;
+                if (assist.length === 0) assist = false;
+                this.assistLoad++;
+                this.$store.dispatch("taskUpdate", {
+                    task_id: this.taskDetail.id,
+                    assist,
+                }).then(({msg}) => {
+                    $A.messageSuccess(msg);
+                    this.assistLoad--;
+                    this.$store.dispatch("getTaskOne", this.taskDetail.id).catch(() => {})
+                    resolve()
+                }).catch(({msg}) => {
+                    $A.modalError(msg);
+                    this.assistLoad--;
+                    reject()
+                })
+            })
+        },
+
+        openTime() {
+            this.timeOpen = !this.timeOpen;
+            if (this.timeOpen) {
+                this.timeValue = this.taskDetail.end_at ? [this.taskDetail.start_at, this.taskDetail.end_at] : [];
+            }
+        },
+
+        timeChange(open) {
+            if (!open) {
+                this.timeOpen = false;
+            }
+        },
+
+        timeClear() {
+            this.updateData('times', {
+                start_at: false,
+                end_at: false,
+            });
+            this.timeOpen = false;
+        },
+
+        timeOk() {
+            const times = $A.date2string(this.timeValue, "Y-m-d H:i");
+            this.updateData('times', {
+                start_at: times[0],
+                end_at: times[1],
+            });
+            this.timeOpen = false;
+        },
+
+        addsubOpen() {
+            this.addsubShow = true;
+            this.$nextTick(() => {
+                this.$refs.addsub.focus()
+            });
+        },
+
+        addsubChackClose() {
+            if (this.addsubName == '') {
+                this.addsubShow = false;
+            }
+        },
+
+        addsubKeydown(e) {
+            if (e.keyCode === 13) {
+                if (e.shiftKey || this.addsubLoad > 0) {
+                    return;
+                }
+                e.preventDefault();
+                this.onAddsub();
+            }
+        },
+
+        onAddsub() {
+            if (this.addsubName == '') {
+                $A.messageError('任务描述不能为空');
+                return;
+            }
+            this.addsubLoad++;
+            this.$store.dispatch("taskAddSub", {
+                task_id: this.taskDetail.id,
+                name: this.addsubName,
+            }).then(({msg}) => {
+                $A.messageSuccess(msg);
+                this.addsubLoad--;
+                this.addsubName = "";
+            }).catch(({msg}) => {
+                $A.modalError(msg);
+                this.addsubLoad--;
+            });
+        },
+
+        getLogLists() {
+            if (this.navActive != 'log') {
+                return;
+            }
+            this.$refs.log.getLists(true);
+        },
+
+        logLoadChange(load) {
+            this.logLoadIng = load
+        },
+
+        dropAdd(command) {
+            switch (command) {
+                case 'priority':
+                    this.$set(this.taskDetail, 'p_name', this.$L('未设置'));
+                    this.$nextTick(() => {
+                        this.$refs.priority.show();
+                    })
+                    break;
+
+                case 'assist':
+                    this.assistForce = true;
+                    this.$nextTick(() => {
+                        this.$refs.assist.onSelection();
+                    });
+                    break;
+
+                case 'visible':
+                    this.visibleForce = true;
+                    this.$nextTick(() => {
+                        this.showCisibleDropdown(null);
+                    });
+                    break;
+
+                case 'times':
+                    this.timeForce = true;
+                    this.$nextTick(() => {
+                        this.openTime()
+                    })
+                    break;
+
+                case 'loop':
+                    this.loopForce = true;
+                    this.$nextTick(() => {
+                        this.$refs.loop.show();
+                    })
+                    break;
+
+                case 'file':
+                    this.onUploadClick(true)
+                    break;
+
+                case 'subtask':
+                    this.addsubForce = true;
+                    this.$nextTick(() => {
+                        this.addsubOpen();
+                    });
+                    break;
+            }
+        },
+
+        onEventMore(e) {
+            if (['image', 'file'].includes(e)) {
+                this.onUploadClick(false)
+            }
+        },
+
+        onUploadClick(attachment) {
+            this.imageAttachment = !!attachment;
+            this.$refs.upload.handleClick()
+        },
+
+        msgDialog(msgText = null, onlyOpen = false) {
+            if (this.sendLoad > 0 || this.openLoad > 0) {
+                return;
+            }
+            if (onlyOpen === true) {
+                this.openLoad++;
+            } else {
+                this.sendLoad++;
+            }
+            //
+            this.$store.dispatch("call", {
+                url: 'project/task/dialog',
+                data: {
+                    task_id: this.taskDetail.id,
+                },
+            }).then(({data}) => {
+                this.$store.dispatch("saveTask", {
+                    id: data.id,
+                    dialog_id: data.dialog_id,
+                });
+                this.$store.dispatch("saveDialog", data.dialog_data);
+                //
+                if ($A.isSubElectron) {
+                    this.resizeDialog().then(() => {
+                        this.sendDialogMsg(msgText);
+                    });
+                } else {
+                    this.$nextTick(() => {
+                        if (this.windowPortrait) {
+                            $A.onBlur();
+                            const transferData = {
+                                time: $A.Time() + 10,
+                                msgRecord: this.msgRecord,
+                                msgFile: this.msgFile,
+                                msgText: typeof msgText === 'string' && msgText ? msgText : this.msgText,
+                                dialogId: data.dialog_id,
+                            };
+                            this.msgRecord = {};
+                            this.msgFile = [];
+                            this.msgText = "";
+                            this.$nextTick(_ => {
+                                if (this.dialogId !== '') {
+                                    this.$store.dispatch("openTask", 0)    // 如果当前打开着对话窗口则关闭任务窗口
+                                }
+                                this.$store.dispatch('openDialog', data.dialog_id).then(_ => {
+                                    this.$store.state.dialogMsgTransfer = transferData
+                                })
+                            })
+                        } else {
+                            this.sendDialogMsg(msgText);
+                        }
+                    });
+                }
+            }).catch(({msg}) => {
+                $A.modalError(msg);
+            }).finally(_ => {
+                if (onlyOpen === true) {
+                    this.openLoad--;
+                } else {
+                    this.sendLoad--;
+                }
+            });
+        },
+
+        sendDialogMsg(msgText = null) {
+            if (this.msgFile.length > 0) {
+                this.$refs.dialog.sendFileMsg(this.msgFile.map(file => Object.assign(file, {
+                    ajaxExtraData: {
+                        image_attachment: this.imageAttachment ? 1 : 0
+                    }
+                })));
+            } else if (this.msgText) {
+                this.$refs.dialog.sendMsg(this.msgText);
+                console.log("sendMsg---------------this.msgText")
+            } else if (typeof msgText === 'string' && msgText) {
+                this.$refs.dialog.sendMsg(msgText);
+              console.log("sendMsg---------------this.msgText  string msgText")
+            }
+            this.msgFile = [];
+            this.msgText = "";
+        },
+
+        taskPasteDrag(e, type) {
+            this.dialogDrag = false;
+            if ($A.dataHasFolder(type === 'drag' ? e.dataTransfer : e.clipboardData)) {
+                e.preventDefault();
+                $A.modalWarning(`暂不支持${type === 'drag' ? '拖拽' : '粘贴'}文件夹。`)
+                return;
+            }
+            const files = type === 'drag' ? e.dataTransfer.files : e.clipboardData.files;
+            this.msgFile = Array.prototype.slice.call(files);
+            if (this.msgFile.length > 0) {
+                e.preventDefault();
+                this.msgDialog()
+            }
+        },
+
+        taskDragOver(show, e) {
+            let random = (this.__dialogDrag = $A.randomString(8));
+            if (!show) {
+                setTimeout(() => {
+                    if (random === this.__dialogDrag) {
+                        this.dialogDrag = show;
+                    }
+                }, 150);
+            } else {
+                if (e.dataTransfer.effectAllowed === 'move') {
+                    return;
+                }
+                this.dialogDrag = true;
+            }
+        },
+
+        onSelectFile(row) {
+            this.msgFile = $A.isArray(row) ? row : [row];
+            this.msgDialog()
+        },
+
+        onRecord(row) {
+            this.msgRecord = row;
+            this.msgDialog()
+        },
+
+        // onSend(msgText) {
+             //发送信息的代码在这里
+
+            // this.$refs.chatInput && this.$refs.chatInput.hidePopover();
+            // if (msgText === 'open') {
+            //     this.msgDialog(null, true);
+            // } else {
+            //     this.msgDialog(msgText);
+            // }
+        // },
+          /**
+           *  发送信息
+           */
+          onSend() {
+            const channelId = this.dialogId;
+            const channelTypeGroup = ChannelTypeGroup;
+            const channel = new Channel(channelId, channelTypeGroup);
+
+            if (!this.text || this.text.trim() === "") {
+              this.msgCount++;
+              this.text = `${this.msgCount}`;
+            }
+            const setting = Setting.fromUint8(0);
+            if (channel && channel.channelID != "") {
+              let content;
+              if (this.streamNo && this.streamNo !== "") {
+                setting.streamNo = this.streamNo;
+              }
+              content = new MessageText(this.text);
+              WKSDK.shared().chatManager.send(content, channel, setting);
+              this.text = "";
+            } else {
+              // this.showSettingPanel = true;
+            }
+            // this.scrollBottom();
+          },
+
+        deleteFile(file) {
+            this.$set(file, '_show_menu', false);
+            this.$store.dispatch("forgetTaskFile", file.id)
+            //
+            this.$store.dispatch("call", {
+                url: 'project/task/filedelete',
+                data: {
+                    file_id: file.id,
+                },
+            }).catch(({msg}) => {
+                $A.modalError(msg);
+                this.$store.dispatch("getTaskFiles", this.taskDetail.id)
+            });
+        },
+
+        openMenu(event, task) {
+            const el = this.$refs[`taskMenu_${task.id}`];
+            el && el.handleClick(event)
+        },
+
+        openNewWin() {
+            let config = {
+                title: this.taskDetail.name,
+                titleFixed: true,
+                parent: null,
+                width: Math.min(window.screen.availWidth, this.$el.clientWidth + 72),
+                height: Math.min(window.screen.availHeight, this.$el.clientHeight + 72),
+                minWidth: 600,
+                minHeight: 450,
+            };
+            if (this.hasOpenDialog) {
+                config.minWidth = 800;
+                config.minHeight = 600;
+            }
+            this.$Electron.sendMessage('windowRouter', {
+                name: `task-${this.taskDetail.id}`,
+                path: `/single/task/${this.taskDetail.id}?navActive=${this.navActive}`,
+                force: false,
+                config
+            });
+            this.$store.dispatch('openTask', 0);
+        },
+
+        resizeDialog() {
+            return new Promise(resolve => {
+                this.$Electron.sendMessage('windowSize', {
+                    width: Math.max(1100, this.windowWidth),
+                    height: Math.max(720, this.windowHeight),
+                    minWidth: 800,
+                    minHeight: 600,
+                    autoZoom: true,
+                });
+                let num = 0;
+                let interval = setInterval(() => {
+                    num++;
+                    if (this.$refs.dialog || num > 20) {
+                        clearInterval(interval);
+                        if (this.$refs.dialog) {
+                            resolve()
+                        }
+                    }
+                }, 100);
+            })
+        },
+
+        viewFile(file) {
+            if (['jpg', 'jpeg', 'webp', 'gif', 'png'].includes(file.ext)) {
+                const list = this.fileList.filter(item => ['jpg', 'jpeg', 'webp', 'gif', 'png'].includes(item.ext))
+                const index = list.findIndex(item => item.id === file.id);
+                if (index > -1) {
+                    this.$store.dispatch("previewImage", {
+                        index, list: list.map(item => {
+                            return {
+                                src: item.path,
+                                width: item.width,
+                                height: item.height,
+                            }
+                        })
+                    })
+                } else {
+                    this.$store.dispatch("previewImage", {
+                        index: 0, list: [{
+                            src: file.path,
+                            width: file.width,
+                            height: file.height,
+                        }]
+                    })
+                }
+                return
+            }
+            const path = `/single/file/task/${file.id}`;
+            if (this.$Electron) {
+                this.$Electron.sendMessage('windowRouter', {
+                    name: `file-task-${file.id}`,
+                    path: path,
+                    userAgent: "/hideenOfficeTitle/",
+                    force: false,
+                    config: {
+                        title: `${file.name} (${$A.bytesToSize(file.size)})`,
+                        titleFixed: true,
+                        parent: null,
+                        width: Math.min(window.screen.availWidth, 1440),
+                        height: Math.min(window.screen.availHeight, 900),
+                    },
+                    webPreferences: {
+                        nodeIntegrationInSubFrames: file.ext === 'drawio'
+                    },
+                });
+            } else if (this.$isEEUiApp) {
+                $A.eeuiAppOpenPage({
+                    pageType: 'app',
+                    pageTitle: `${file.name} (${$A.bytesToSize(file.size)})`,
+                    url: 'web.js',
+                    params: {
+                        titleFixed: true,
+                        allowAccess: true,
+                        url: $A.rightDelete(window.location.href, window.location.hash) + `#${path}`
+                    },
+                });
+            } else {
+                window.open($A.apiUrl(`..${path}`))
+            }
+        },
+
+        downFile(file) {
+            $A.modalConfirm({
+                title: '下载文件',
+                content: `${file.name} (${$A.bytesToSize(file.size)})`,
+                okText: '立即下载',
+                onOk: () => {
+                    this.$store.dispatch('downUrl', $A.apiUrl(`project/task/filedown?file_id=${file.id}`))
+                }
+            });
+        },
+
+        showCisibleDropdown(e){
+            let eRect = null
+            if (e === null) {
+                eRect = this.$refs.visibilityText?.getBoundingClientRect()
+            } else {
+                eRect = e.target.getBoundingClientRect()
+            }
+            if (eRect === null) {
+                return
+            }
+            const boxRect = this.$refs.scroller.$el.getBoundingClientRect()
+            const refEl = this.$refs.eDropdownRef.$el
+            refEl.style.top = (eRect.top - boxRect.top) + 'px'
+            refEl.style.left = (eRect.left - boxRect.left) + 'px'
+            refEl.style.width = eRect.width + 'px'
+            refEl.style.height = eRect.height + 'px'
+            //
+            if (this.$refs.eDropdownRef.visible) {
+                this.$refs.eDropdownRef.hide()
+            }
+            setTimeout(() => {
+                this.$refs.eDropdownRef.show()
+            }, 0)
+        },
+
+        showAtDropdown({target}){
+            this.timeOpen = false
+            const eRect = target.getBoundingClientRect()
+            const boxRect = this.$refs.scroller.$el.getBoundingClientRect()
+            const refEl = this.$refs.eDeadlineRef.$el
+            refEl.style.top = (eRect.top - boxRect.top) + 'px'
+            refEl.style.left = (eRect.left - boxRect.left) + 'px'
+            refEl.style.width = eRect.width + 'px'
+            refEl.style.height = eRect.height + 'px'
+            //
+            if (this.$refs.eDeadlineRef.visible) {
+                this.$refs.eDeadlineRef.hide()
+            }
+            setTimeout(() => {
+                this.$refs.eDeadlineRef.show()
+            }, 0)
+        },
+
+        visibleUserSelectShowChange(isShow){
+            if (!isShow && this.taskDetail.visibility_appointor.filter(id => id).length == 0) {
+                let old = this.taskDetail.old_visibility;
+                this.taskDetail.visibility = old > 2 ? 1 : (old || 1);
+                if (this.taskDetail.visibility < 3) {
+                    this.updateVisible();
+                }
+            }
+        },
+
+        dropVisible(command) {
+            switch (command) {
+                case 1:
+                case 2:
+                    this.taskDetail.visibility = command
+                    this.updateVisible();
+                    break;
+                case 3:
+                    this.taskDetail.old_visibility = this.taskDetail.visibility
+                    this.taskDetail.visibility = command
+                    this.$nextTick(() => {
+                        this.$refs.visibleUserSelectRef.onSelection()
+                    });
+                    break;
+            }
+        },
+
+        dropDeadline(command) {
+            switch (command) {
+                case 1:
+                    this.delayTaskShow = true;
+                    break;
+                case 2:
+                    this.openTime()
+                    break;
+            }
+        },
+
+        onDelay(){
+            this.$refs['formDelayTaskRef'].validate((valid) => {
+                if (!valid) {
+                    return;
+                }
+                this.delayTaskLoading = true;
+                var date = new Date(this.taskDetail.end_at);
+                date.setHours(date.getHours() + Number(this.delayTaskForm.time));
+                this.$store.dispatch("taskUpdate", {
+                    task_id: this.taskDetail.id,
+                    times: [
+                        this.taskDetail.start_at,
+                        $A.formatDate('Y-m-d H:i:s', date),
+                        this.delayTaskForm.remark,
+                    ],
+                }).then(({msg}) => {
+                    $A.messageSuccess(msg);
+                    this.delayTaskLoading = false;
+                    this.delayTaskShow = false;
+                    this.delayTaskForm.time = '24';
+                    this.delayTaskForm.remark = '';
+                    this.$store.dispatch("getTaskOne", this.taskDetail.id).catch(() => {})
+                }).catch(({msg}) => {
+                    $A.modalError(msg);
+                    this.delayTaskLoading = false;
+                })
+            })
+        },
+
+        updateVisible() {
+            this.updateData(['visibility', 'visibility_appointor'])
+        }
+    }
+}
+</script>
+
+<style scoped>
+.chat-input-wrapper {
+  background-color: #f4f5f7;
+  padding: 2px 2px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.chat—send—btn {
+  height: 38px;
+  width: 58px;
+  background: #4b70f3;
+  color: white;
+  border: 0;
+  margin-left: 10px;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+.chat—send—btn:hover {
+  background-color: #5b8ff9; /* hover时的背景颜色 */
+}
+.chat-input-box2 {
+  font-size: 14px;
+  margin: 4px 12px;
+  line-height: 22px;
+  border: none;
+  outline: none;
+  color: #303133;
+  flex: 1;
+  background: transparent;
+}
+
+.chat-input-box2:focus {
+  caret-color: #ccc;
+}
+.chat-input-box2::placeholder {
+  color: #ccc; /* 设置提示文本的颜色 */
+}
+
+</style>
