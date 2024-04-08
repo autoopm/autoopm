@@ -6,3 +6,5 @@ services:
       context: .
     ports:
       - "8200:80"
+    volumes:
+      - ./docker/nginx:/etc/nginx/conf.d

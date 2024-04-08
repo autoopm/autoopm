@@ -21,3 +21,11 @@ COPY --from=build /app/dist /usr/share/nginx/html
 
 # 暴露容器端口
 EXPOSE 80
+
+
+
+
+
+
+
+
