@@ -45,7 +45,6 @@
               type="email"
               size="large"
               @on-enter="onLogin"
-              @on-blur="onBlur"
               clearable
             />
 
