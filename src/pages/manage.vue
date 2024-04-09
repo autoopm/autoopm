@@ -317,7 +317,7 @@
         @submit.native.prevent
       >
         <FormItem prop="name" :label="$L('项目名称')">
-          <Input ref="projectName" type="text" v-model="addData.name"></Input>
+          <Input ref="projectName" type="text" v-model="addData.name" @on-keydown="onKeydown"></Input>
         </FormItem>
         <FormItem v-if="addData.columns" :label="$L('任务列表')">
           <TagInput v-model="addData.columns" />
@@ -545,6 +545,7 @@ export default {
   },
 
   activated() {
+    console.log("cacheProjects----->activated")
     this.$store.dispatch("getUserInfo").catch((_) => {});
     this.$store.dispatch("getTaskPriority").catch((_) => {});
     // this.$store.dispatch("getReportUnread", 1000);
@@ -762,12 +763,15 @@ export default {
 
     projectLists() {
       const { projectKeyValue, cacheProjects } = this;
+      console.log("cacheProjects----->",cacheProjects);
       const data = $A.cloneJSON(cacheProjects).sort((a, b) => {
         if (a.top_at || b.top_at) {
           return $A.Date(b.top_at) - $A.Date(a.top_at);
         }
         return b.id - a.id;
       });
+
+      console.log("cacheProjects----->data",data);
       if (projectKeyValue) {
         return data.filter((item) =>
           $A.strExists(`${item.name} ${item.desc}`, projectKeyValue)
@@ -810,10 +814,12 @@ export default {
     },
 
     projectKeyValue(val) {
+      console.log("cacheProjects-----> projectKeyValue")
       if (val == "") {
         return;
       }
       setTimeout(() => {
+        console.log("cacheProjects-----> setTimeout")
         if (this.projectKeyValue == val) {
           this.searchProject();
         }
@@ -821,6 +827,7 @@ export default {
     },
 
     wsOpenNum(num) {
+      console.log("cacheProjects-----> wsOpenNum")
       if (num <= 1) return;
       this.$store.dispatch("getBasicData", 600);
     },
@@ -863,6 +870,24 @@ export default {
   },
 
   methods: {
+    //监听回车事件
+    onKeydown(e) {
+      if (e.keyCode === 13) {
+        if (e.shiftKey) {
+          return;
+        }
+        e.preventDefault();
+        if(this.addShow){
+           console.log("点击了添加项目")
+            this.onAddProject()
+        }
+
+        if(this.addTaskShow){
+          console.log("点击了添加任务")
+        }
+      }
+    },
+
     chackPass() {
       if (this.userInfo.changepass === 1) {
         this.goForward({ name: "manage-setting-password" });
@@ -1060,6 +1085,7 @@ export default {
     },
 
     searchProject() {
+      console.log("cacheProjects----->searchProjectsearchProject")
       setTimeout(() => {
         this.projectKeyLoading++;
       }, 1000);

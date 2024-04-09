@@ -136,6 +136,7 @@ export default {
 
     methods: {
         searchProject() {
+            console.log("cacheProjects----->searchProject")
             this.projectKeyLoading++;
             this.$store.dispatch("getProjects", {
                 keys: {

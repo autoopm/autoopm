@@ -597,6 +597,9 @@ export default {
    * @param timeout
    */
   getBasicData({ state, dispatch }, timeout) {
+
+    console.log("cacheProjects----->getBasicData")
+
     if (typeof timeout === "number") {
       window.__getBasicDataTimer && clearTimeout(window.__getBasicDataTimer);
       if (timeout > -1) {
@@ -614,6 +617,7 @@ export default {
     }
     window.__getBasicDataKey = tmpKey;
     //
+    console.log("cacheProjects----->getBasicData 2222")
     dispatch("getProjects").catch(() => {});
     // dispatch("getDialogAuto").catch(() => {});
     // dispatch("getDialogTodo", 0).catch(() => {});
@@ -691,15 +695,18 @@ export default {
    * @returns {Promise<unknown>}
    */
   getUserInfo({ dispatch }) {
+    console.log("cacheProjects----->getUserInfo1")
     return new Promise(function (resolve, reject) {
       dispatch("call", {
         url: "users/info",
       })
         .then((result) => {
+          console.log("cacheProjects----->then")
           dispatch("saveUserInfo", result.data);
           resolve(result);
         })
         .catch((e) => {
+          console.log("cacheProjects----->catch")
           reject(e);
         });
     });
@@ -1147,6 +1154,7 @@ export default {
    * @param data
    */
   saveProject({ state, dispatch }, data) {
+    console.log("cacheProjects----->11111saveProject")
     $A.execMainDispatch("saveProject", data);
     //
     if ($A.isArray(data)) {
@@ -1158,7 +1166,11 @@ export default {
         dispatch("saveColumn", data.project_column);
         delete data.project_column;
       }
+
+      console.log("cacheProjects----->data",data)
       const index = state.cacheProjects.findIndex(({ id }) => id == data.id);
+
+      console.log("cacheProjects----->index",index)
       if (index > -1) {
         state.cacheProjects.splice(
           index,
@@ -1267,6 +1279,8 @@ export default {
    * @returns {Promise<unknown>}
    */
   getProjects({ state, dispatch, getters }, requestData) {
+
+    console.log("cacheProjects----->两这里3333")
     return new Promise(function (resolve, reject) {
       if (state.userId === 0) {
         state.cacheProjects = [];
@@ -1307,6 +1321,7 @@ export default {
    * @returns {Promise<unknown>}
    */
   getProjectOne({ state, dispatch }, project_id) {
+    console.log("cacheProjects----->getProjectOne")
     return new Promise(function (resolve, reject) {
       if ($A.runNum(project_id) === 0) {
         reject({ msg: "Parameter error" });
