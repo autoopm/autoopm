@@ -634,10 +634,20 @@ export default {
             },
           })
           .then(({ data }) => {
-            console.log("in this data"+data);
             this.loadIng--;
             this.codeNeed = false;
+            //这里需要执行清空缓存操作
+            // this.$store.dispatch("cleanCacheProjects")
+            // $A.IDBSet("clearCache", "handle").then(_ => {
+            //   $A.reloadUrl()
+            //   console.log("清除缓存成功！")
+            // });
+
             $A.setStorage("cacheLoginEmail", this.email);
+            $A.setStorage("cacheProjects", []);
+            $A.setStorage("userInfo",{});
+
+
             this.$store
               .dispatch("handleClearCache", data)
               .then(() => {

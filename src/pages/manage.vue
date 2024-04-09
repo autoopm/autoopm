@@ -772,11 +772,14 @@ export default {
       });
 
       console.log("cacheProjects----->data",data);
+      console.log("cacheProjects----->projectKeyValue"+projectKeyValue);
       if (projectKeyValue) {
         return data.filter((item) =>
           $A.strExists(`${item.name} ${item.desc}`, projectKeyValue)
         );
       }
+
+      console.log("cacheProjects----->return data",data);
       return data;
     },
 

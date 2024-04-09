@@ -1147,6 +1147,14 @@ export default {
   /** ************************************** 项目 **********************************************/
   /** *****************************************************************************************/
 
+
+  /**
+   * 清除缓存的项目列表
+   */
+  cleanCacheProjects(state){
+    state.cacheProjects = [];
+  },
+
   /**
    * 保存项目数据
    * @param state
@@ -1154,9 +1162,7 @@ export default {
    * @param data
    */
   saveProject({ state, dispatch }, data) {
-    console.log("cacheProjects----->11111saveProject")
     $A.execMainDispatch("saveProject", data);
-    //
     if ($A.isArray(data)) {
       data.forEach((project) => {
         dispatch("saveProject", project);
@@ -1167,17 +1173,19 @@ export default {
         delete data.project_column;
       }
 
-      console.log("cacheProjects----->data",data)
-      const index = state.cacheProjects.findIndex(({ id }) => id == data.id);
+      // console.log("cacheProjects1222222222222222222222222222----->data",data)
+      const index = state.cacheProjects.findIndex(({ id }) => id === data.id);
+      console.log("cacheProjects1222222222222222222222222222----->index",index)
 
-      console.log("cacheProjects----->index",index)
       if (index > -1) {
+        console.log("cacheProjects1222222222222222222222222222----->找到了")
         state.cacheProjects.splice(
           index,
           1,
           Object.assign({}, state.cacheProjects[index], data)
         );
       } else {
+        console.log("cacheProjects1222222222222222222222222222----->没找到")
         if (typeof data.project_user === "undefined") {
           data.project_user = [];
         }
@@ -1279,8 +1287,6 @@ export default {
    * @returns {Promise<unknown>}
    */
   getProjects({ state, dispatch, getters }, requestData) {
-
-    console.log("cacheProjects----->两这里3333")
     return new Promise(function (resolve, reject) {
       if (state.userId === 0) {
         state.cacheProjects = [];
@@ -1297,6 +1303,8 @@ export default {
         data: callData.get(),
       })
         .then(({ data }) => {
+          console.log("请求了这里.......",data)
+          state.cacheProjects = []  //这里强行删除
           state.projectTotal = data.total_all;
           dispatch("saveProject", data.data);
           callData.save(data).then((ids) => dispatch("forgetProject", ids));
@@ -2313,14 +2321,11 @@ export default {
     //
     //   }
     // }
-
     // console.log("刚开始的 data："+data)
     // var data1 = $A.processParams(data)
     // console.log("最终的 data1："+data1)
 
     //TODO 处理 data
-
-
     return new Promise(function (resolve, reject) {
       dispatch("taskBeforeUpdate", data)
         .then(({ post }) => {

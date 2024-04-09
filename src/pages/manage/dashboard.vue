@@ -179,12 +179,9 @@ export default {
       groupedLevels:[], //分组
       nowTime: $A.Time(),
       nowInter: null,
-
       licenseTimer: null,
-
       loadIng: 0,
       dashboard: 'today',
-
       warningMsg: '',
     }
   },
@@ -238,6 +235,7 @@ export default {
         'max-height': 'calc(100% - 50px)'
       } : null
     },
+
   },
 
   watch: {
@@ -259,8 +257,7 @@ export default {
     },
 
     openTaskModal(taskDetail) {
-       console.log("点击了任务。。。。。")
-      this.openTask(taskDetail); //TODO 调用原来的办法
+      this.openTask(taskDetail);
 
     },
     getTaskSort() {
@@ -271,13 +268,21 @@ export default {
     refreshTask(){
       this.getTaskLists()
     },
+
     getTaskLists(){
       this.$store.dispatch("call", {
         method: 'get',
         url: 'project/task/lists',
       }).then(({data}) => {
-        // 清空taskDatas
+        // 清空taskDatas，好像无效呢
+        // for (let p_level in this.taskDatas) {
+        //   if (this.taskDatas.hasOwnProperty(p_level)) {
+        //     delete this.taskDatas[p_level];
+        //   }
+        // }
+
         this.taskDatas = {};
+        console.log("taskDatas size1 ",this.taskDatas)
         console.log("data value"+data)
         console.log(data)
         data.data.forEach(item => {
@@ -290,9 +295,9 @@ export default {
           }
           this.taskDatas[item.p_level].items.push(item);
         });
-        console.log("处理完成......")
-        console.log("处理完成1......",this.taskDatas)
-        console.log("处理完成2......",this.groupedLevels)
+
+        console.log("taskDatas size ",this.taskDatas)
+        this.$forceUpdate()  //强刷
 
         // this.groupedLevels = groupedLevels.reduce((acc, curr, index) => {
         //   if (index % 2 === 0) {
@@ -302,17 +307,11 @@ export default {
         // }, []);
 
         const result = this.chunkArray(this.groupedLevels, 2);
-        console.log(result); // 输出 [['1', '2'], ['3', '4'], ['5', '6']]
-        console.log("处理完成3......",result)
-        console.log("处理完成4......",this.groupedLevels)
         this.groupedLevels = result;
-        console.log("处理完成2......",this.groupedLevels)
       }).catch(({msg}) => {
-        console.log("data value msg"+msg)
         // $A.modalError(msg);
       }).finally(_ => {
         this.loadIng--;
-        console.log("data value finally")
       });
     },
     chunkArray(arr, chunkSize) {
@@ -323,7 +322,9 @@ export default {
       }
       return chunkedArray;
     },
+
     getTodayNum(){
+
 
     },
     formatCDate(){
