@@ -184,17 +184,22 @@
 
         <div class="ivu-modal-footer">
             <div class="adaption">
+                 提交继续添加
+                <iSwitch v-model="again" @on-change="changeMore" style="margin-right: 20px;margin-left: 10px" />  <!--默认--->
                 <Button type="default" @click="close">{{$L('取消')}}</Button>
                 <ButtonGroup class="page-manage-add-task-button-group">
-                    <Button type="primary" :loading="loadIng > 0" @click="onAdd">{{$L('添加任务')}}</Button>
-                    <Dropdown @on-click="onAdd(true)" transfer>
-                        <Button type="primary">
-                            <Icon type="ios-arrow-down"></Icon>
-                        </Button>
-                        <DropdownMenu slot="list">
-                            <DropdownItem :disabled="loadIng > 0">{{$L('提交继续添加')}}</DropdownItem>
-                        </DropdownMenu>
-                    </Dropdown>
+                    <Button type="primary"
+                            :loading="isLoading"
+                            :disabled="isDisabled"
+                            @click="onAdd(again)">{{$L('添加任务')}}</Button>
+<!--                    <Dropdown @on-click="onAdd(true)" transfer>-->
+<!--                        <Button type="primary">-->
+<!--                            <Icon type="ios-arrow-down"></Icon>-->
+<!--                        </Button>-->
+<!--                        <DropdownMenu slot="list">-->
+<!--                            <DropdownItem :disabled="loadIng > 0">{{$L('提交继续添加')}}</DropdownItem>-->
+<!--                        </DropdownMenu>-->
+<!--                    </Dropdown>-->
                 </ButtonGroup>
             </div>
         </div>
@@ -251,7 +256,6 @@ export default {
             cascaderValue: '',
             cascaderLoading: 0,
             cascaderAlready: [],
-
             advanced: false,
             subName: '',
 
@@ -263,12 +267,7 @@ export default {
             isMounted: false,
             beforeClose: [],
             again: false,
-          timeoutId: null,
-
-            //wukongim相关
-            // connectStatusListener: null,
-            // messageListener: null,
-            // messageStatusListener: null
+            timeoutId: null,
         }
     },
 
@@ -301,7 +300,15 @@ export default {
                 }
             }
             return 0;
+        },
+        isLoading() {
+          return this.loadIng > 0;
+        },
+        // 计算属性来决定是否应该禁用按钮
+        isDisabled() {
+          return this.loadIng > 0 && !this.again;
         }
+
     },
 
     watch: {
@@ -332,6 +339,15 @@ export default {
     },
 
     methods: {
+
+
+      //添加更多
+      changeMore (status) {
+        console.log("this status value"+status)
+        this.again = status
+        console.log("this status addMore value"+this.again)
+        // this.$set(this.addMore, status);
+      },
         /**
          * 初始化级联数据
          */
@@ -514,8 +530,10 @@ export default {
         },
 
         async onAdd(again,affirm=false) {
+            console.log("loadIng value"+this.loadIng)
             if (!this.addData.name) {
                 $A.messageError("任务描述不能为空");
+                 console.log("loadIng value 任务描述不能为空"+this.loadIng)
                 return;
             }
 
@@ -533,13 +551,12 @@ export default {
                         this.again = again
                     }
                 });
+              console.log("loadIng value 存在任务提示"+this.loadIng)
                 return;
             }
-
-          console.log('-------->this adddata-------->');
-          console.log(this.addData);
             this.$store.dispatch("taskAdd", this.addData).then(({msg}) => {
                 this.loadIng--;
+                console.log("loadIng value dispatch"+this.loadIng)
                 $A.messageSuccess(msg);
                 if (again === true) {
                     this.addData = Object.assign({}, this.addData, {
@@ -548,6 +565,8 @@ export default {
                         subtasks: [],
                     });
                     this.$refs.input.focus();
+                    this.loadIng--;
+                    console.log("loadIng value dispatch"+this.loadIng)
                 } else {
                     this.addData = {
                         cascader: [], //TODO 修改成逗号分割
