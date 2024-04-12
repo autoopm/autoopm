@@ -1,10 +1,257 @@
 <template>
+
   <div class="page-dashboard">
+    <div class="p-8" style="width: 100%;">
+      <div class="flex flex-col gap-8" >
+        <!--状态部分-->
+        <div class="grid grid-cols-1 rounded-[10px] border border-custom-border-200 bg-custom-background-100 lg:grid-cols-3">
+          <div class="grid grid-cols-1 divide-y divide-custom-border-200 border-b border-custom-border-200 lg:border-r lg:border-b-0">
+            <div class="flex">
+              <div class="basis-1/2 p-4">
+                <h4 class="text-sm">我的任务</h4>
+                <h5 class="mt-2 text-2xl font-semibold">0</h5>
+              </div>
+              <div class="basis-1/2 border-l border-custom-border-200 p-4">
+                <h4 class="text-sm">待处理</h4>
+                <h5 class="mt-2 text-2xl font-semibold">0</h5>
+              </div>
+            </div>
+            <div class="flex">
+              <div class="basis-1/2 p-4">
+                <h4 class="text-sm">已完成的</h4>
+                <h5 class="mt-2 text-2xl font-semibold">0</h5>
+              </div>
+              <div class="basis-1/2 border-l border-custom-border-200 p-4">
+                <h4 class="text-sm">本周应完成</h4>
+                <h5 class="mt-2 text-2xl font-semibold">0</h5>
+              </div>
+            </div>
+          </div>
+          <div class="p-4 lg:col-span-2">
+            <h3 class="mb-2 font-semibold capitalize flex items-center gap-2">
+              活动图表
+<!--              <Tooltip-->
+              <div>
+                功能开发中
+              </div>
+<!--                  tooltipContent="Your profile activity graph is a record of actions you've performed on issues across the workspace."-->
+<!--                  class="w-72 border border-custom-border-200"-->
+<!--              >-->
+<!--                <InformationCircleIcon class="h-3 w-3" />-->
+<!--              </Tooltip>-->
+            </h3>
+<!--            <ActivityGraph activities={data?.issue_activities} />-->
+          </div>
+        </div>
+
+        <!--图片分析-->
+
+        <div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
+          <!---->
+          <div>
+            <h3 class="mb-2 font-semibold capitalize">超期任务</h3>
+            <div class="h-[calc(100%-2.25rem)] rounded-[10px] border border-custom-border-200 bg-custom-background-100 p-4 text-sm">
+              <div class="mb-2 grid grid-cols-4 gap-2 rounded-lg px-3 py-2 font-medium bg-red-500/20 bg-opacity-20">
+                <h4 class="capitalize">超期</h4>
+                <h4 class="col-span-2">任务</h4>
+                <h4>到期日期</h4>
+              </div>
+              <!--任务不位空的处理-->
+<!--              <div class="max-h-72 overflow-y-scroll">-->
+<!--                <div class="grid grid-cols-4 gap-2 px-3 py-2">-->
+<!--                  <h5 class="flex cursor-default items-center gap-2 text-red-500 ">-->
+<!--                    5天-->
+<!--                  </h5>-->
+<!--                  <h5 class="col-span-2">测试的任务1111</h5>-->
+<!--                  <h5 class="cursor-default">-->
+<!--                    2024-05-01-->
+<!--                  </h5>-->
+<!--                </div>-->
+<!--                <div class="grid grid-cols-4 gap-2 px-3 py-2">-->
+<!--                  <h5 class="flex cursor-default items-center gap-2 text-red-500 ">-->
+<!--                    5天-->
+<!--                  </h5>-->
+<!--                  <h5 class="col-span-2">测试的任务1111</h5>-->
+<!--                  <h5 class="cursor-default">-->
+<!--                    2024-05-01-->
+<!--                  </h5>-->
+<!--                </div>-->
+<!--                <div class="grid grid-cols-4 gap-2 px-3 py-2">-->
+<!--                  <h5 class="flex cursor-default items-center gap-2 text-red-500 ">-->
+<!--                    5天-->
+<!--                  </h5>-->
+<!--                  <h5 class="col-span-2">测试的任务1111</h5>-->
+<!--                  <h5 class="cursor-default">-->
+<!--                    2024-05-01-->
+<!--                  </h5>-->
+<!--                </div>-->
+<!--              </div>-->
+              <div class="grid h-full place-items-center">
+                <div class="my-5 flex flex-col items-center gap-4">
+<!--                  <LayerDiagonalIcon height={60} width={60} />-->
+<!--                  <span class="text-custom-text-200">-->
+<!--                    任务为空，使用快捷键-->
+<!--                    <pre class="inline rounded bg-custom-background-80 px-2 py-1">K</pre>-->
+<!--                   快速添加任务-->
+<!--                  </span>-->
+                  <!--临时放置-->
+                  <span class="text-custom-text-200">
+                    功能开发中
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--进行中任务-->
+          <div>
+            <h3 class="mb-2 font-semibold capitalize">进行中任务</h3>
+            <div class="h-[calc(100%-2.25rem)] rounded-[10px] border border-custom-border-200 bg-custom-background-100 p-4 text-sm">
+              <div class="mb-2 grid grid-cols-4 gap-2 rounded-lg px-3 py-2 font-medium bg-red-500/20 bg-opacity-20">
+                <h4 class="capitalize">进行中</h4>
+                <h4 class="col-span-2">任务</h4>
+                <h4>到期日期</h4>
+              </div>
+              <!--任务不位空的处理-->
+<!--              <div class="max-h-72 overflow-y-scroll">-->
+<!--                <div class="grid grid-cols-4 gap-2 px-3 py-2">-->
+<!--                  <h5 class="flex cursor-default items-center gap-2 text-red-500 ">-->
+<!--                    5天-->
+<!--                  </h5>-->
+<!--                  <h5 class="col-span-2">测试的任务1111</h5>-->
+<!--                  <h5 class="cursor-default">-->
+<!--                    2024-05-01-->
+<!--                  </h5>-->
+<!--                </div>-->
+<!--              </div>-->
+              <!--              <div class="grid h-full place-items-center">-->
+              <!--                <div class="my-5 flex flex-col items-center gap-4">-->
+              <!--                  <LayerDiagonalIcon height={60} width={60} />-->
+              <!--                  <span class="text-custom-text-200">-->
+              <!--                    任务为空，使用快捷键-->
+              <!--                    <pre class="inline rounded bg-custom-background-80 px-2 py-1">K</pre>-->
+              <!--                   快速添加任务-->
+              <!--                  </span>-->
+              <!--                </div>-->
+              <!--              </div>-->
+
+              <div class="grid h-full place-items-center">
+                <div class="my-5 flex flex-col items-center gap-4">
+                      <span class="text-custom-text-200">
+                            功能开发中
+                          </span>
+                </div>
+              </div>
+              </div>
+            </div>
+
+            <!--任务状态-->
+          <div>
+            <h3 class="mb-2 font-semibold">任务状态</h3>
+            <div class="rounded-[10px] border border-custom-border-200 bg-custom-background-100 p-4">
+              <div class="grid grid-cols-1 sm:grid-cols-4">
+                <div class="sm:col-span-3">
+                   功能开发中
+                </div>
+
+<!--                <div class="flex sm:block items-center gap-3 flex-wrap justify-center sm:space-y-2 sm:self-end sm:justify-self-end sm:px-8 sm:pb-8">-->
+<!--                  &lt;!&ndash;遍历对象&ndash;&gt;-->
+<!--                  <div  class="flex items-center gap-2">-->
+<!--&lt;!&ndash;                    <div className="h-2 w-2" style={{ backgroundColor: STATE_GROUP_COLORS[cell.state_group] }}/>&ndash;&gt;-->
+<!--                    <div class="h-2 w-2" style="background-color: red"/>-->
+<!--                    <div class="capitalize text-custom-text-200 text-xs whitespace-nowrap">-->
+<!--                      已完成 - 111-->
+<!--                    </div>-->
+<!--                  </div>-->
+
+<!--                  <div  class="flex items-center gap-2">-->
+<!--                    &lt;!&ndash;                    <div className="h-2 w-2" style={{ backgroundColor: STATE_GROUP_COLORS[cell.state_group] }}/>&ndash;&gt;-->
+<!--                    <div class="h-2 w-2" style="background-color: green"/>-->
+<!--                    <div class="capitalize text-custom-text-200 text-xs whitespace-nowrap">-->
+<!--                      进行中 - 87-->
+<!--                    </div>-->
+<!--                  </div>-->
+
+<!--                  <div  class="flex items-center gap-2">-->
+<!--                    &lt;!&ndash;                    <div className="h-2 w-2" style={{ backgroundColor: STATE_GROUP_COLORS[cell.state_group] }}/>&ndash;&gt;-->
+<!--                    <div class="h-2 w-2" style="background-color: yellow"/>-->
+<!--                    <div class="capitalize text-custom-text-200 text-xs whitespace-nowrap">-->
+<!--                      待处理 - 87-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                  &lt;!&ndash;遍历对象&ndash;&gt;-->
+<!--                </div>-->
+
+              </div>
+            </div>
+          </div>
+
+          <!--我关闭的任务-->
+          <div>
+            <div class="mb-0.5 flex justify-between">
+              <h3 class="font-semibold">我关闭的任务</h3>
+                <!--下拉月份-->
+<!--              <CustomMenu label={<span className="text-sm">{MONTHS[month - 1]}</span>} noBorder>-->
+<!--                {MONTHS.map((month, index) => (-->
+<!--                <CustomMenu.MenuItem key={month} onClick={() => setMonth(index + 1)}>-->
+<!--                {month}-->
+<!--                </CustomMenu.MenuItem>-->
+<!--                ))}-->
+<!--              </CustomMenu>-->
+            </div>
+            <div class="rounded-[10px] border border-custom-border-200 bg-custom-background-100 p-8 pl-4">
+<!--              <div class="flex items-center justify-center h-72">-->
+                <div class="flex items-center justify-center ">
+                <h4 class="text-[#d687ff]">功能开发中</h4>
+              </div>
+<!--              <LineGraph-->
+<!--                  height="250px"-->
+<!--                  data={[-->
+<!--                  {-->
+<!--                  id: "completed_issues",-->
+<!--              color: "#d687ff",-->
+<!--              data: data.map((item) => ({-->
+<!--              x: item.week_in_month,-->
+<!--              y: item.completed_count,-->
+<!--              })),-->
+<!--              },-->
+<!--              ]}-->
+<!--              margin={{ top: 20, right: 20, bottom: 20, left: 20 }}-->
+<!--              customYAxisTickValues={data.map((item) => item.completed_count)}-->
+<!--              colors={(datum) => datum.color}-->
+<!--              enableSlices="x"-->
+<!--              sliceTooltip={(datum) => (-->
+<!--              <div class="rounded-md border border-custom-border-200 bg-custom-background-80 p-2 text-xs">-->
+<!--                {datum.slice.points[0].data.yFormatted}-->
+<!--                <span className="text-custom-text-200"> issues closed in </span>-->
+<!--                {datum.slice.points[0].data.xFormatted}-->
+<!--              </div>-->
+<!--              )}-->
+<!--              theme={{-->
+<!--                background: "rgb(var(&#45;&#45;color-background-100))",-->
+<!--              }}-->
+<!--              />-->
+<!--              <h4 class="mt-4 flex items-center justify-center gap-2 text-[#d687ff]">-->
+<!--                <span class="h-2 w-2 bg-[#d687ff]" />已完成任务-->
+<!--              </h4>-->
+            </div>
+<!--            )}-->
+          </div>
+
+
+
+
+
+
+
+        </div>
+      </div>
+    </div>
+
     <PageTitle :title="$L('仪表盘')"/>
     <Alert v-if="warningMsg" class="dashboard-warning" type="warning" show-icon>
       <span @click="goForward({name: 'manage-setting-license'})">{{ warningMsg }}</span>
     </Alert>
-    <div class="dashboard-wrapper" :style="wrapperStyle">
+    <div class="dashboard-wrapper" :style="wrapperStyle" style="display: none">
       <div class="dashboard-hello">{{ $L('欢迎您，' + userInfo.nickname) }}</div>
       <div class="dashboard-desc">
         {{ $L('以下是你当前的任务统计数据') }}
