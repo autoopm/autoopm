@@ -45,19 +45,18 @@
         </div>
 
         <!--图片分析-->
-
         <div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
           <!---->
           <div>
             <h3 class="mb-2 font-semibold capitalize">超期任务</h3>
-            <div class="h-[calc(100%-2.25rem)] rounded-[10px] border border-custom-border-200 bg-custom-background-100 p-4 text-sm rounded-lg">
+            <div class="h-[calc(100%-2.25rem)] rounded-[10px] border border-custom-border-200 bg-custom-background-100 p-4 text-sm rounded-lg max-h-96 overflow-y-scroll">
               <div class="mb-2 grid grid-cols-4 gap-2 rounded-lg px-3 py-2 font-medium bg-red-500/20 bg-opacity-20 bg-red-300">
                 <h4 class="capitalize">超期</h4>
                 <h4 class="col-span-2">任务</h4>
                 <h4>到期日期</h4>
               </div>
 
-              <div class="max-h-72 overflow-y-scroll" v-for="task in dashData.overdueTask" @click="openTaskModal(task)">
+              <div class="max-h-12 overflow-y-scroll  " v-for="task in dashData.overdueTask" @click="openTaskModal(task)" >
                 <div class="grid grid-cols-4 gap-2 px-3 py-2">
                   <h5 class="flex cursor-default items-center gap-2 text-red-500  ">
                     {{expiresFormat(task.end_at)}}
@@ -85,13 +84,13 @@
           <!--进行中任务-->
           <div>
             <h3 class="mb-2 font-semibold capitalize">进行中任务</h3>
-            <div class="h-[calc(100%-2.25rem)] rounded-[10px] border border-custom-border-200 bg-custom-background-100 p-4 text-sm rounded-lg">
+            <div class="h-[calc(100%-2.25rem)] rounded-[10px] border border-custom-border-200 bg-custom-background-100 p-4 text-sm rounded-lg max-h-96 overflow-y-scroll">
               <div class="mb-2 grid grid-cols-4 gap-2 rounded-lg px-3 py-2 font-medium bg-opacity-20 bg-green-300">
                 <h4 class="capitalize">进行中</h4>
                 <h4 class="col-span-2">任务</h4>
                 <h4>到期日期</h4>
               </div>
-              <div class="max-h-72 overflow-y-scroll" v-for="task in dashData.runingTask" @click="openTaskModal(task)">
+              <div class="max-h-12 overflow-y-scroll" v-for="task in dashData.runingTask" @click="openTaskModal(task)" >
 
                 <div class="grid grid-cols-4 gap-2 px-3 py-2">
                   <h5 class="flex cursor-default items-center gap-2 text-green-500 ">
@@ -105,8 +104,6 @@
                   </h5>
                 </div>
               </div>
-
-
 
               <div class="grid h-full place-items-center" v-if="dashData.runingTask.length === 0">
                 <div class="my-5 flex flex-col items-center gap-4">

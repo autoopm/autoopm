@@ -2,7 +2,9 @@
 FROM node:16 AS build-stage
 WORKDIR /app
 COPY . .
+RUN npm config set registry https://registry.npm.taobao.org
 RUN npm install
+
 RUN npm run build
 
 # 使用nginx作为web服务器
