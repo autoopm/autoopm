@@ -42,6 +42,8 @@ services:
   drawio-webapp:
     container_name: "autoo-drawio-webapp-${APP_ID}"
     image: "jgraph/drawio:20.8.20"
+    ports:
+      - "8102:8080"
     volumes:
       - ./docker/drawio/webapp/index.html:/usr/local/tomcat/webapps/draw/index.html
       - ./docker/drawio/webapp/stencils:/usr/local/tomcat/webapps/draw/stencils
