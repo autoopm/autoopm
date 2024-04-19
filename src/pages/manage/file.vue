@@ -1842,6 +1842,7 @@ export default {
       if (ids.length === 1) {
         fileName = `【${firstFile.name}】${typeName}`;
       }
+      var ids = Array.isArray(ids) ? ids.join(',') : ids;
       $A.modalConfirm({
         title: "删除" + typeName,
         content: "你确定要删除" + fileName + "吗？",
@@ -2116,6 +2117,7 @@ export default {
         return;
       }
       this.shareLoad++;
+      this.shareInfo.userids =  this.shareInfo.userids ? this.shareInfo.userids.join(',') : this.shareInfo.userids;
       this.$store
         .dispatch("call", {
           url: "file/share/update",
@@ -2152,13 +2154,14 @@ export default {
         return;
       }
       item.loading = true;
+      var useridstr = Array.isArray(item.userid) ? item.userid.join(',') : item.userid;
       //
       this.$store
         .dispatch("call", {
           url: "file/share/update",
           data: {
             id: this.shareInfo.id,
-            userids: [item.userid],
+            userids: useridstr,
             permission: item.permission,
             force: force === true ? 1 : 0,
           },
