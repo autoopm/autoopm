@@ -1,31 +1,31 @@
 version: '3'
 
 services:
-#  autoo-web:
-#      container_name: "autoo-web-${APP_ID}"
-#      build:
-#        context: .
-#        dockerfile: ./Dockerfile
-#      ports:
-#        - "8099:80"
-#      networks:
-#        extnetwork:
-#          ipv4_address: 10.66.66.9
-#      restart: unless-stopped
+  autoo-web:
+      container_name: "autoo-web-${APP_ID}"
+      build:
+        context: .
+        dockerfile: ./Dockerfile
+      ports:
+        - "8200:80"
+      networks:
+        extnetwork:
+          ipv4_address: 10.66.66.9
+      restart: unless-stopped
 
-  nginx:
-    container_name: "autoo-nginx-${APP_ID}"
-    image: "nginx:alpine"
-    ports:
-      - "${APP_PORT}:80"
-      - "${APP_SSL_PORT:-}:443"
-    volumes:
-      - ./docker/nginx:/etc/nginx/conf.d
-#      - ./public:/var/www/public
-    networks:
-      extnetwork:
-        ipv4_address: 10.66.66.11
-    restart: unless-stopped
+#  nginx:
+#    container_name: "autoo-nginx-${APP_ID}"
+#    image: "nginx:alpine"
+#    ports:
+#      - "${APP_PORT}:80"
+#      - "${APP_SSL_PORT:-}:443"
+#    volumes:
+#      - ./docker/nginx:/etc/nginx/conf.d
+#      - ./dist:/var/www/public
+#    networks:
+#      extnetwork:
+#        ipv4_address: 10.66.66.11
+#    restart: unless-stopped
 
   fileview:
     container_name: "autoo-fileview-${APP_ID}"

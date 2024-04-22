@@ -7,7 +7,7 @@ RUN npm install
 
 RUN npm run build
 
-# 使用nginx作为web服务器
+ #使用nginx作为web服务器
 FROM nginx:alpine
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 COPY docker/nginx/default.conf /etc/nginx/conf.d/default.conf
