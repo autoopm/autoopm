@@ -82,7 +82,7 @@ export default {
             this.url = $A.originUrl(`drawio/webapp/index.html${query}`);
         } else {
             // this.url = $A.apiUrl(`../drawio/webapp/${query}`);
-            this.url = $A.apiUrl(`http://localhost:8102/${query}`);
+            this.url = $A.apiUrl(`http://82.157.62.190:8102/${query}`);
         }
     },
     mounted() {
