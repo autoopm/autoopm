@@ -26,7 +26,14 @@ services:
 #      extnetwork:
 #        ipv4_address: 10.66.66.11
 #    restart: unless-stopped
-
+  excalidraw:
+    container_name: "autoo-excalidraw-${APP_ID}"
+    image: excalidraw/excalidraw:latest
+    restart: unless-stopped
+    ports:
+      - 8104:80
+    volumes:
+      - ./docker/excalidraw:/app/web
   fileview:
     container_name: "autoo-fileview-${APP_ID}"
     image: "kuaifan/fileview:4.2.0-SNAPSHOT-RC25"

@@ -2,79 +2,62 @@
 
   <div class="page-dashboard">
     <div class="p-8" style="width: 100%;">
+
       <div class="flex flex-col gap-8" >
-        <!--状态部分-->
-        <div class="grid grid-cols-1 rounded-[10px] border border-custom-border-200 bg-custom-background-100 lg:grid-cols-3 rounded-lg">
-          <div class="grid grid-cols-1 divide-y divide-custom-border-200 border-b border-custom-border-200 lg:border-r lg:border-b-0">
-            <div class="flex">
-              <div class="basis-1/2 p-4">
-                <h4 class="text-sm">总任务</h4>
-                <h5 class="mt-2 text-2xl font-semibold">{{dashData.myTaskSize}}</h5>
-              </div>
-              <div class="basis-1/2 border-l border-custom-border-200 p-4">
-                <h4 class="text-sm">待处理</h4>
-                <h5 class="mt-2 text-2xl font-semibold">{{dashData.pendingTaskSize}}</h5>
-              </div>
-            </div>
-            <div class="flex">
-              <div class="basis-1/2 p-4">
-                <h4 class="text-sm">已完成</h4>
-                <h5 class="mt-2 text-2xl font-semibold">{{dashData.weekCompleteTaskSize}}</h5>
-              </div>
-              <div class="basis-1/2 border-l border-custom-border-200 p-4">
-                <h4 class="text-sm">应完成</h4>
-                <h5 class="mt-2 text-2xl font-semibold">{{dashData.weekShouleCompleteTaskSize}}</h5>
-              </div>
-            </div>
-          </div>
-          <div class="p-4 lg:col-span-2">
-            <h3 class="mb-2 font-semibold capitalize flex items-center gap-2">
-              活动图表
-<!--              <Tooltip-->
-              <div>
-                功能开发中
-              </div>
-<!--                  tooltipContent="Your profile activity graph is a record of actions you've performed on issues across the workspace."-->
-<!--                  class="w-72 border border-custom-border-200"-->
-<!--              >-->
-<!--                <InformationCircleIcon class="h-3 w-3" />-->
-<!--              </Tooltip>-->
-            </h3>
-<!--            <ActivityGraph activities={data?.issue_activities} />-->
-          </div>
+      <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-4">
+        <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
+          <dt class="truncate text-sm font-medium text-gray-500">总任务</dt>
+          <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{{dashData.myTaskSize}}</dd>
         </div>
+
+        <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
+          <dt class="truncate text-sm font-medium text-gray-500">待处理</dt>
+          <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{{dashData.pendingTaskSize}}</dd>
+        </div>
+
+        <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
+          <dt class="truncate text-sm font-medium text-gray-500">本周已完成</dt>
+          <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{{dashData.weekCompleteTaskSize}}</dd>
+        </div>
+
+        <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
+          <dt class="truncate text-sm font-medium text-gray-500">本周应完成</dt>
+          <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{{dashData.weekShouleCompleteTaskSize}}</dd>
+        </div>
+      </dl>
 
         <!--图片分析-->
         <div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
           <!---->
-          <div>
+          <div >
             <h3 class="mb-2 font-semibold capitalize">超期任务</h3>
-            <div class="h-[calc(100%-2.25rem)] rounded-[10px] border border-custom-border-200 bg-custom-background-100 p-4 text-sm rounded-lg max-h-96 overflow-y-scroll">
-              <div class="mb-2 grid grid-cols-4 gap-2 rounded-lg px-3 py-2 font-medium bg-red-500/20 bg-opacity-20 bg-red-300">
+            <div class="h-[calc(100%-2.25rem)] rounded-[10px] border border-custom-border-200 bg-custom-background-100  text-sm rounded-lg max-h-96 overflow-auto ring-1 ring-black ring-opacity-5">
+              <div class=" grid grid-cols-4 gap-2  px-3 py-2 font-medium bg-red-500/20 bg-opacity-20 bg-red-300">
                 <h4 class="capitalize">超期</h4>
                 <h4 class="col-span-2">任务</h4>
                 <h4>到期日期</h4>
               </div>
 
-              <div class="max-h-12 overflow-y-scroll  " v-for="task in dashData.overdueTask" @click="openTaskModal(task)" >
-                <div class="grid grid-cols-4 gap-2 px-3 py-2">
-                  <h5 class="flex cursor-default items-center gap-2 text-red-500  ">
-                    {{expiresFormat(task.end_at)}}
-                  </h5>
-                  <!--设置最大显示字符数-->
-                  <h5 class="col-span-2">{{task.name}}</h5>
-                  <h5 class="cursor-default">
-                    {{dealTime(task.end_at)}}
-                  </h5>
+              <div class="max-h-12 overflow-y-auto border-b border-gray-200" v-for="task in dashData.overdueTask" @click="openTaskModal(task)" >
+                  <div class="grid grid-cols-4 gap-2 px-3 py-2 ">
+                    <h5 class="flex cursor-default items-center gap-2 text-red-500  ">
+                      {{expiresFormat(task.end_at)}}
+                    </h5>
+                    <!--设置最大显示字符数-->
+                    <h5 class="col-span-2">{{task.name}}</h5>
+                    <h5 class="cursor-default">
+                      {{dealTime(task.end_at)}}
+                    </h5>
                 </div>
+
               </div>
               <div class="grid h-full place-items-center" v-if="dashData.overdueTask.length === 0">
                 <div class="my-5 flex flex-col items-center gap-4">
 <!--                  <LayerDiagonalIcon height={60} width={60} />-->
                   <span class="text-custom-text-200">
                     任务为空，使用快捷键
-                    <pre class="inline rounded bg-custom-background-80 px-2 py-1">Ctrl</pre>
-                    <pre class="inline rounded bg-custom-background-80 px-2 py-1">+K</pre>
+                    <pre class="inline rounded bg-custom-background-80 px-2 py-1">{{key}}</pre>
+                    <pre class="inline rounded bg-custom-background-80 px-2 py-1">+ K</pre>
                    快速添加任务
                   </span>
                 </div>
@@ -82,15 +65,15 @@
             </div>
           </div>
           <!--进行中任务-->
-          <div>
+          <div >
             <h3 class="mb-2 font-semibold capitalize">进行中任务</h3>
-            <div class="h-[calc(100%-2.25rem)] rounded-[10px] border border-custom-border-200 bg-custom-background-100 p-4 text-sm rounded-lg max-h-96 overflow-y-scroll">
-              <div class="mb-2 grid grid-cols-4 gap-2 rounded-lg px-3 py-2 font-medium bg-opacity-20 bg-green-300">
+            <div class="h-[calc(100%-2.25rem)] rounded-[10px] border border-custom-border-200 bg-custom-background-100 text-sm rounded-lg max-h-96 overflow-auto ring-1 ring-black ring-opacity-5">
+              <div class=" grid grid-cols-4 gap-2  px-3 py-2 font-medium bg-opacity-20 bg-green-300">
                 <h4 class="capitalize">进行中</h4>
                 <h4 class="col-span-2">任务</h4>
                 <h4>到期日期</h4>
               </div>
-              <div class="max-h-12 overflow-y-scroll" v-for="task in dashData.runingTask" @click="openTaskModal(task)" >
+              <div class="max-h-12 overflow-y-auto border-b border-gray-200" v-for="task in dashData.runingTask" @click="openTaskModal(task)" >
 
                 <div class="grid grid-cols-4 gap-2 px-3 py-2">
                   <h5 class="flex cursor-default items-center gap-2 text-green-500 ">
@@ -110,8 +93,8 @@
                   <!--                  <LayerDiagonalIcon height={60} width={60} />-->
                   <span class="text-custom-text-200">
                     任务为空，使用快捷键
-                    <pre class="inline rounded bg-custom-background-80 px-2 py-1">Ctrl</pre>
-                    <pre class="inline rounded bg-custom-background-80 px-2 py-1">+K</pre>
+                    <pre class="inline rounded bg-custom-background-80 px-2 py-1">{{key}}</pre>
+                    <pre class="inline rounded bg-custom-background-80 px-2 py-1">+ K</pre>
                    快速添加任务
                   </span>
                 </div>
@@ -348,6 +331,7 @@ export default {
       loadIng: 0,
       dashboard: 'today',
       warningMsg: '',
+      isMac: window.navigator.platform.toUpperCase().indexOf('MAC') >= 0
     }
   },
 
@@ -365,6 +349,7 @@ export default {
   },
 
   computed: {
+
     ...mapState(['userInfo', 'userIsAdmin', 'cacheTasks', 'taskCompleteTemps', 'loadDashboardTasks']),
     ...mapGetters(['dashboardTask', 'assistTask', 'transforTasks']),
 
@@ -390,6 +375,9 @@ export default {
       return list;
     },
 
+    key() {
+      return this.isMac ? 'Command' : 'Ctrl';
+    },
     total() {
       const {dashboardTask} = this;
       return dashboardTask.today_count + dashboardTask.overdue_count + dashboardTask.all_count;
