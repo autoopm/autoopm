@@ -128,11 +128,11 @@ export default {
             let codeId = this.code || this.value.id;
             let fileUrl
             if ($A.leftExists(codeId, "msgFile_")) {
-                fileUrl = `dialog/msg/download/?msg_id=${$A.leftDelete(codeId, "msgFile_")}&token=${this.userToken}`;
+                fileUrl = `dialog/msg/download?msg_id=${$A.leftDelete(codeId, "msgFile_")}&Token=${this.userToken}`;
             } else if ($A.leftExists(codeId, "taskFile_")) {
-                fileUrl = `project/task/filedown/?file_id=${$A.leftDelete(codeId, "taskFile_")}&token=${this.userToken}`;
+                fileUrl = `project/task/filedown?file_id=${$A.leftDelete(codeId, "taskFile_")}&Token=${this.userToken}`;
             } else {
-                fileUrl = `file/content/?id=${codeId}&token=${this.userToken}`;
+                fileUrl = `file/content?id=${codeId}&Token=${this.userToken}`;
                 if (this.historyId > 0) {
                     fileUrl += `&history_id=${this.historyId}`
                 }
@@ -230,7 +230,7 @@ export default {
                     "fileType": this.fileType,
                     "title": fileName,
                     "key": fileKey,
-                    "url": `http://nginx/api/${this.fileUrl}`,
+                    "url": `http://82.157.62.190:8081/api/${this.fileUrl}`,
                 },
                 "editorConfig": {
                     "mode": "edit",
@@ -244,7 +244,7 @@ export default {
                         "forcesave": true,
                         "help": false,
                     },
-                    "callbackUrl": `http://nginx/api/file/content/office?id=${codeId}&dootask-token=${this.userToken}`,
+                    "callbackUrl": `http://82.157.62.190:8081/api/file/content/office?id=${codeId}&Token=${this.userToken}`,
                 },
                 "events": {
                     "onDocumentReady": this.onDocumentReady,
@@ -270,7 +270,21 @@ export default {
                 this.$nextTick(() => {
                     this.$store.dispatch("call", {
                         url: 'file/office/token',
-                        data: { config: config },
+                        data: {
+                          documentFileType: config.document.fileType,
+                          documentTitle: config.document.title,
+                          documentKey: config.document.key,
+                          documentUrl: config.document.url,
+                          editorConfigMode: config.editorConfig.mode,
+                          editorConfigLang: config.editorConfig.lang,
+                          editorConfigUserId: config.editorConfig.user.id,
+                          editorConfigUserName: config.editorConfig.user.name,
+                          editorConfigCustomizationUiTheme: config.editorConfig.customization.uiTheme,
+                          editorConfigCustomizationForcesave: config.editorConfig.customization.forcesave,
+                          editorConfigCustomizationHelp: config.editorConfig.customization.help,
+                          editorConfigCustomizationCallbackUrl: config.editorConfig.callbackUrl,
+                          eventsOnDocumentReady: config.events.onDocumentReady,
+                        },
                     }).then(({data}) => {
                         config.token = data.token
                         this.docEditor = new DocsAPI.DocEditor(this.id, config);
