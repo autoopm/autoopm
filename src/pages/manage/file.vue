@@ -496,7 +496,7 @@
 
     <!--上传文件-->
     <Upload
-      name="files"
+      name="file"
       ref="fileUpload"
       v-show="false"
       :action="actionUrl"
@@ -517,7 +517,7 @@
 
     <!--上传文件夹-->
     <Upload
-      name="files"
+      name="file"
       ref="dirUpload"
       v-show="false"
       :action="actionUrl"
@@ -2381,7 +2381,7 @@ export default {
       //上传完成
       this.uploadIng--;
       this.uploadUpdate(fileList);
-      if (res.ret === 1) {
+      if (res.data.ret === 1) {
         this.$store.dispatch("saveFile", res.data);
       } else {
         $A.modalWarning({
