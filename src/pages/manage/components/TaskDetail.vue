@@ -447,8 +447,10 @@
                      @dragover.prevent="taskDragOver(true, $event)"
                      @dragleave.prevent="taskDragOver(false, $event)">
                     <div class="no-tip">{{$L('暂无消息')}}</div>
-                    <div class="no-input">
+                    <div>
 
+                    </div>
+                    <div class="no-input">
                       <div class="chat-input-wrapper">
                         <input
                             v-model="text"
@@ -577,6 +579,7 @@ export default {
     },
     data() {
         return {
+            text:"",
             ready: false,
 
             taskDetail: {},
@@ -698,7 +701,6 @@ export default {
       endMessageSeq: 0,
       pullMode: PullMode.Up,
     }).then((msgs) => {
-          console.log("新的代码块225........pullLast then msgs", msgs);
           // 将消息添加到messages数组中
           if (msgs && msgs.length > 0) {
             for (let m of msgs) {
@@ -760,7 +762,7 @@ export default {
       // 如果有错误也返回一个空数组
       return [];
     } finally {
-      console.log("新的代码块........finally");
+      // console.log("新的代码块........finally");
       // 此处可以进行一些清理操作
     }
   },

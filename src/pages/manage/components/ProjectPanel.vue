@@ -201,7 +201,8 @@
                                             :class="['task-time', item.today ? 'today' : '', item.overdue ? 'overdue' : '']"
                                             :disabled="$isEEUiApp || windowTouch"
                                             :open-delay="600"
-                                            :content="item.end_at">
+                                            :content="String(item.end_at)">
+
                                             <div v-if="!item.complete_at"><i class="taskfont">&#xe71d;</i>{{ expiresFormat(item.end_at) }}</div>
                                         </ETooltip>
                                     </div>
@@ -557,6 +558,7 @@ export default {
         this.nowInterval = setInterval(() => {
             this.nowTime = $A.Time();
         }, 1000);
+
     },
 
     destroyed() {

@@ -246,7 +246,7 @@ export default {
   data() {
     return {
       messages: [],
-
+      text:"",
       keeps: 25,
       msgItem: DialogItem,
       msgText: "",
@@ -417,10 +417,7 @@ export default {
     },
 
     dialogData() {
-      console.log("mounted------------------------------dialogData");
-      //TODO 从缓存中提取聊天 这里改成从悟空im中提取
-      const data =
-          this.cacheDialogs.find(({ id }) => id == this.dialogId) || {};
+      const data = this.cacheDialogs.find(({ id }) => id == this.dialogId) || {};
       //TODO 这里猜测是未读
       if (this.unreadOne === 0) {
         this.unreadOne = data.unread_one || 0;
@@ -788,73 +785,56 @@ export default {
           this.positionShow = false;
           this.listPreparedStatus = false;
           this.scrollToBottomAndRefresh = false;
-          this.renderMsgNum = Math.min(
-              this.keeps,
-              Math.max(this.allMsgList.length, 1)
-          );
+          // this.renderMsgNum = Math.min(
+          //     this.keeps,
+          //     Math.max(this.allMsgList.length, 1)
+          // );
           this.renderMsgSizes.clear();
-          console.log(
-              "mounted------------------------------dialogId handler 请求信息列表"
-          );
           this.allMsgs = this.allMsgList;
-          console.log(
-              "mounted------------------------------dialogId handler 请求信息列表 allMsgList",
-              this.allMsgList
-          );
-          console.log(
-              "mounted------------------------------dialogId handler 请求信息列表 allMsgs",
-              this.allMsgs
-          );
-          //TODO 不从缓存走，所以这里打算暂时去掉
-          // const tmpMsgA = this.allMsgList.map(({id, msg, emoji}) => {
-          //     return {id, msg, emoji}
-          // })
-          console.log(
-              "mounted------------------------------this.msgId",
-              this.msgId
-          );
-          console.log(
-              "mounted------------------------------this.msg_type",
-              this.msg_type
-          );
+          console.log("请求到这里1.......")
 
-          this.getMsgs({
-            dialog_id,
-            msg_id: this.msgId,
-            msg_type: this.msgType,
-            save_before: (_) => this.onMarkOffset(false),
-          })
-              .then((data) => {
-                console.log(
-                    "mounted-------------------------------dialogId handle then22 ",
-                    data
-                );
-                this.openId = dialog_id;
-                this.listPreparedStatus = true;
-                console.log(
-                    "mounted-------------------------------dialogId handle then22 ",
-                    data
-                );
-                this.allMsgs = data; //TODO 这里赋值
-                //
-                // const tmpMsgB = this.allMsgList.map(({id, msg, emoji}) => {
-                //     return {id, msg, emoji}
-                // })
-                if (JSON.stringify(tmpMsgA) != JSON.stringify(tmpMsgB)) {
-                  this.renderMsgNum = Math.min(
-                      this.keeps,
-                      Math.max(this.allMsgList.length, 1)
-                  );
-                }
-                //
-                setTimeout((_) => {
-                  this.onSearchMsgId();
-                  this.positionShow = this.readTimeout === null;
-                }, 100);
-              })
-              .catch((_) => {
-                console.log("请求数据异常！！！");
-              });
+          //TODO 这里更新信息列表
+          this.messages = []
+          this.pullLast();
+
+
+          // this.getMsgs({
+          //   dialog_id,
+          //   msg_id: this.msgId,
+          //   msg_type: this.msgType,
+          //   save_before: (_) => this.onMarkOffset(false),
+          // })
+          //     .then((data) => {
+          //       console.log(
+          //           "mounted-------------------------------dialogId handle then22 ",
+          //           data
+          //       );
+          //       this.openId = dialog_id;
+          //       this.listPreparedStatus = true;
+          //       console.log(
+          //           "mounted-------------------------------dialogId handle then22 ",
+          //           data
+          //       );
+          //       this.allMsgs = data; //TODO 这里赋值
+          //       //
+          //       // const tmpMsgB = this.allMsgList.map(({id, msg, emoji}) => {
+          //       //     return {id, msg, emoji}
+          //       // })
+          //       if (JSON.stringify(tmpMsgA) != JSON.stringify(tmpMsgB)) {
+          //         // this.renderMsgNum = Math.min(
+          //         //     this.keeps,
+          //         //     Math.max(this.allMsgList.length, 1)
+          //         // );
+          //       }
+          //       //
+          //       setTimeout((_) => {
+          //         this.onSearchMsgId();
+          //         this.positionShow = this.readTimeout === null;
+          //       }, 100);
+          //     })
+          //     .catch((_) => {
+          //       console.log("请求数据异常！！！");
+          //     });
           //
           this.$store.dispatch("saveInDialog", {
             uid: this._uid,
@@ -914,6 +894,7 @@ export default {
     },
 
     msgType() {
+      console.log("请求到这里2.......")
       this.getMsgs({
         dialog_id: this.dialogId,
         msg_id: this.msgId,
@@ -1049,11 +1030,8 @@ export default {
       //TODO 判断连接状态
       WKSDK.shared().chatManager.addMessageListener(this.messageListener);
       //添加消息发送状态监听
-      WKSDK.shared().chatManager.addMessageStatusListener(
-          this.messageStatusListener
-      );
+      WKSDK.shared().chatManager.addMessageStatusListener(this.messageStatusListener);
     },
-
     //数据监听
     messageListener(msg) {
       const channelId = this.dialogId;
@@ -1126,7 +1104,8 @@ export default {
 
     //拉取当前会话最新消息
     async pullLast() {
-      console.log("新的代码块........pullLast");
+
+      // console.log("新的代码块........pullLast");
       // 设置pulldowning为true，pulldownFinished为false
       this.pulldowning = true;
       this.pulldownFinished = false;
@@ -1139,14 +1118,14 @@ export default {
       WKSDK.shared().chatManager.syncMessages(channel, {limit: 15,
         startMessageSeq: 0,endMessageSeq: 0,pullMode: PullMode.Up,})
           .then((msgs) => {
-            console.log("新的代码块225........pullLast then msgs", msgs);
+            // console.log("新的代码块225........pullLast then msgs", msgs);
             // 将消息添加到messages数组中
             if (msgs && msgs.length > 0) {
               for (let m of msgs) {
                 this.messages.push(m);
-                console.log("messages-->"+m)
-                console.log(m)
-                console.log("messages-->"+m)
+                // console.log("messages-->"+m)
+                // console.log(m)
+                // console.log("messages-->"+m)
               }
             }
 
@@ -1162,7 +1141,6 @@ export default {
       if (this.messages.length == 0) {
         return;
       }
-
       const firstMsg = this.messages[0];
       if (firstMsg.messageSeq == 1) {
         this.pulldownFinished = true;
@@ -1438,13 +1416,8 @@ export default {
     //onUnmounted
     //初始化数据源
     initDataSource() {
-      console.log("新的代码块........initDataSource");
       const syncMessagesCallback = async (channel, opts) => {
         const resultMessages = await this.getMessageList(channel, opts);
-        console.log(
-            "新的代码块........resultMessages resultMessages",
-            resultMessages
-        );
         return resultMessages;
         //
       };
@@ -1496,7 +1469,7 @@ export default {
         // 如果有错误也返回一个空数组
         return [];
       } finally {
-        console.log("新的代码块........finally");
+        // console.log("新的代码块........finally");
         // 此处可以进行一些清理操作
       }
     },
@@ -1628,25 +1601,26 @@ export default {
             });
           }
           this.preventToBottom = true;
-          this.getMsgs({
-            dialog_id: this.dialogId,
-            msg_id: this.msgId,
-            msg_type: this.msgType,
-            position_id,
-            spinner: 2000,
-          }).finally((_) => {
-            const index = this.allMsgs.findIndex(
-                (item) => item.id === position_id
-            );
-            if (index > -1) {
-              this.onToIndex(index);
-              resolve();
-            }
-            if (msg_id > 0) {
-              this.$store.dispatch("cancelLoad", `msg-${msg_id}`);
-            }
-            this.preventToBottom = false;
-          });
+          console.log("请求到这里3.......")
+          // this.getMsgs({
+          //   dialog_id: this.dialogId,
+          //   msg_id: this.msgId,
+          //   msg_type: this.msgType,
+          //   position_id,
+          //   spinner: 2000,
+          // }).finally((_) => {
+          //   const index = this.allMsgs.findIndex(
+          //       (item) => item.id === position_id
+          //   );
+          //   if (index > -1) {
+          //     this.onToIndex(index);
+          //     resolve();
+          //   }
+          //   if (msg_id > 0) {
+          //     this.$store.dispatch("cancelLoad", `msg-${msg_id}`);
+          //   }
+          //   this.preventToBottom = false;
+          // });
         }
       });
     },
@@ -1999,11 +1973,12 @@ export default {
 
     onReGetMsg() {
       this.scrollToBottomAndRefresh = false;
-      this.getMsgs({
-        dialog_id: this.dialogId,
-        msg_id: this.msgId,
-        msg_type: this.msgType,
-      }).catch((_) => {});
+      console.log("请求到这里4.......")
+      // this.getMsgs({
+      //   dialog_id: this.dialogId,
+      //   msg_id: this.msgId,
+      //   msg_type: this.msgType,
+      // }).catch((_) => {});
     },
 
     onPrevPage() {
@@ -2013,34 +1988,35 @@ export default {
         return;
       }
       console.log("获取列表数据来这里，开始请求");
-      this.getMsgs({
-        dialog_id: this.dialogId,
-        msg_id: this.msgId,
-        msg_type: this.msgType,
-        prev_id: this.prevId,
-        save_before: (_) => (this.scrollDisabled = true),
-        save_after: (_) => (this.scrollDisabled = false),
-      })
-          .then(({ data }) => {
-            console.log("执行了这里3....");
-            const ids = data.list.map((item) => item.id); //TODO 重新位置
-            this.$nextTick(() => {
-              const scroller = this.$refs.scroller;
-              const reducer = ids.reduce((previousValue, currentId) => {
-                const previousSize =
-                    typeof previousValue === "object"
-                        ? previousValue.size
-                        : scroller.getSize(previousValue);
-                return { size: previousSize + scroller.getSize(currentId) };
-              });
-              let offset = scroller.getOffset() + reducer.size;
-              if (this.prevId === 0) {
-                offset -= 36;
-              }
-              this.onToOffset(offset);
-            });
-          })
-          .catch(() => {});
+      console.log("请求到这里5.......")
+      // this.getMsgs({
+      //   dialog_id: this.dialogId,
+      //   msg_id: this.msgId,
+      //   msg_type: this.msgType,
+      //   prev_id: this.prevId,
+      //   save_before: (_) => (this.scrollDisabled = true),
+      //   save_after: (_) => (this.scrollDisabled = false),
+      // })
+      //     .then(({ data }) => {
+      //       console.log("执行了这里3....");
+      //       const ids = data.list.map((item) => item.id); //TODO 重新位置
+      //       this.$nextTick(() => {
+      //         const scroller = this.$refs.scroller;
+      //         const reducer = ids.reduce((previousValue, currentId) => {
+      //           const previousSize =
+      //               typeof previousValue === "object"
+      //                   ? previousValue.size
+      //                   : scroller.getSize(previousValue);
+      //           return { size: previousSize + scroller.getSize(currentId) };
+      //         });
+      //         let offset = scroller.getOffset() + reducer.size;
+      //         if (this.prevId === 0) {
+      //           offset -= 36;
+      //         }
+      //         this.onToOffset(offset);
+      //       });
+      //     })
+      //     .catch(() => {});
     },
 
     onDialogMenu(cmd) {
@@ -2400,15 +2376,16 @@ export default {
           const nearMsg = this.allMsgs[i + (key === "next_id" ? 1 : -1)];
           if (nearMsg && nearMsg.id != rangeValue) {
             this.preventMoreLoad = true;
-            this.getMsgs({
-              dialog_id: this.dialogId,
-              msg_id: this.msgId,
-              msg_type: this.msgType,
-              [key]: rangeValue,
-            }).finally((_) => {
-              console.log("执行了这里2....");
-              this.preventMoreLoad = false;
-            });
+            console.log("请求到这里6.......")
+            // this.getMsgs({
+            //   dialog_id: this.dialogId,
+            //   msg_id: this.msgId,
+            //   msg_type: this.msgType,
+            //   [key]: rangeValue,
+            // }).finally((_) => {
+            //   console.log("执行了这里2....");
+            //   this.preventMoreLoad = false;
+            // });
           }
         }
       }

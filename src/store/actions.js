@@ -95,9 +95,6 @@ export default {
     });
   },
 
-
-
-
   /**
    * 访问接口
    * @param state
@@ -193,8 +190,6 @@ export default {
         params.data = JSON.stringify(params.data);
       }
 
-
-
       //处理数据
       params.data =  $A.translationKeys(params.data);
 
@@ -266,6 +261,7 @@ export default {
           return;
         }
         if (code === 200) {
+          // console.error("data------------->|"+params.url+"|",data);
           resolve({ data, msg:message });
         } else {
           //TODO 更改了这里
@@ -598,7 +594,6 @@ export default {
    */
   getBasicData({ state, dispatch }, timeout) {
 
-    console.log("cacheProjects----->getBasicData")
 
     if (typeof timeout === "number") {
       window.__getBasicDataTimer && clearTimeout(window.__getBasicDataTimer);
@@ -617,7 +612,6 @@ export default {
     }
     window.__getBasicDataKey = tmpKey;
     //
-    console.log("cacheProjects----->getBasicData 2222")
     dispatch("getProjects").catch(() => {});
     // dispatch("getDialogAuto").catch(() => {});
     // dispatch("getDialogTodo", 0).catch(() => {});
@@ -695,18 +689,15 @@ export default {
    * @returns {Promise<unknown>}
    */
   getUserInfo({ dispatch }) {
-    console.log("cacheProjects----->getUserInfo1")
     return new Promise(function (resolve, reject) {
       dispatch("call", {
         url: "users/info",
       })
         .then((result) => {
-          console.log("cacheProjects----->then")
           dispatch("saveUserInfo", result.data);
           resolve(result);
         })
         .catch((e) => {
-          console.log("cacheProjects----->catch")
           reject(e);
         });
     });
@@ -1175,17 +1166,17 @@ export default {
 
       // console.log("cacheProjects1222222222222222222222222222----->data",data)
       const index = state.cacheProjects.findIndex(({ id }) => id === data.id);
-      console.log("cacheProjects1222222222222222222222222222----->index",index)
+      // console.log("cacheProjects1222222222222222222222222222----->index",index)
 
       if (index > -1) {
-        console.log("cacheProjects1222222222222222222222222222----->找到了")
+        // console.log("cacheProjects1222222222222222222222222222----->找到了")
         state.cacheProjects.splice(
           index,
           1,
           Object.assign({}, state.cacheProjects[index], data)
         );
       } else {
-        console.log("cacheProjects1222222222222222222222222222----->没找到")
+        // console.log("cacheProjects1222222222222222222222222222----->没找到")
         if (typeof data.project_user === "undefined") {
           data.project_user = [];
         }
@@ -1303,8 +1294,6 @@ export default {
         data: callData.get(),
       })
         .then(({ data }) => {
-          console.log("请求了这里.......",data)
-          state.cacheProjects = []  //这里强行删除
           state.projectTotal = data.total_all;
           dispatch("saveProject", data.data);
           callData.save(data).then((ids) => dispatch("forgetProject", ids));
@@ -1329,7 +1318,6 @@ export default {
    * @returns {Promise<unknown>}
    */
   getProjectOne({ state, dispatch }, project_id) {
-    console.log("cacheProjects----->getProjectOne")
     return new Promise(function (resolve, reject) {
       if ($A.runNum(project_id) === 0) {
         reject({ msg: "Parameter error" });
@@ -2965,29 +2953,33 @@ export default {
    * @returns {Promise<unknown>}
    */
   openDialog({ state, dispatch }, dialog_id) {
-    console.log("打开会话.......11111111111112221313113f-->"+dialog_id)
+    // console.log("打开会话.......11111111111112221313113f-->"+dialog_id)
     return new Promise((resolve) => {
-      console.log("打开会话.......11111111111112221313113f-->requestAnimationFrame1")
+      // console.log("打开会话.......11111111111112221313113f-->requestAnimationFrame1")
       let search_msg_id;
       let dialog_msg_id;
-      console.log("打开会话.......11111111111112221313113f-->requestAnimationFrame2")
+      // console.log("打开会话.......11111111111112221313113f-->requestAnimationFrame2")
       if ($A.isJson(dialog_id)) {
+        console.error("dialogId--------------->$A.isJson(dialog_id) ")
+
         search_msg_id = dialog_id.search_msg_id;
         dialog_msg_id = dialog_id.dialog_msg_id;
         dialog_id = dialog_id.dialog_id;
-        console.log("打开会话.......11111111111112221313113f-->dialog_id"+dialog_id)
+        // console.log("打开会话.......11111111111112221313113f-->dialog_id"+dialog_id)
       }
+
+      console.error("dialogId--------------->"+dialog_id)
       //
       requestAnimationFrame((_) => {
         state.dialogSearchMsgId = /^\d+$/.test(search_msg_id)
           ? search_msg_id
           : 0;
         state.dialogMsgId = /^\d+$/.test(dialog_msg_id) ? dialog_msg_id : 0;
-        console.log("打开会话.......11111111111112221313113f-->state.dialogMsgId"+state.dialogMsgId)
+        // console.log("打开会话.......11111111111112221313113f-->state.dialogMsgId"+state.dialogMsgId)
         // state.dialogId = /^\d+$/.test(dialog_id) ? dialog_id : 0;
         state.dialogId = dialog_id;
-        console.log("打开会话.......11111111111112221313113f-->state.state.dialogId"+state.dialogId)
-        console.log("打开会话.......11111111111112221313113f-->requestAnimationFrame4")
+        // console.log("打开会话.......11111111111112221313113f-->state.state.dialogId"+state.dialogId)
+        // console.log("打开会话.......11111111111112221313113f-->requestAnimationFrame4")
         resolve();
       });
     });

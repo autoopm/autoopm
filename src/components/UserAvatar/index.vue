@@ -129,8 +129,6 @@ export default {
         },
 
         nickname() {
-            console.log('nickname'+this.user);
-            console.log(this.user);
             const {nickname} = this.user;
             if (!nickname) {
                 return "D";

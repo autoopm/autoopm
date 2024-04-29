@@ -1,8 +1,7 @@
 <template>
 
-  <div class="page-dashboard">
+  <div class="page-dashboard " >
     <div class="p-8" style="width: 100%;">
-
       <div class="flex flex-col gap-8" >
       <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-4">
         <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
@@ -401,7 +400,7 @@ export default {
   methods: {
     dealTime(date) {
       let time = $A.Date(date, true);
-      console.log("date--->"+date);
+      // console.log("date--->"+date);
       // $A.formatDate('Y-m-d', line)
       return $A.formatDate('m/d H:i', time);
     },

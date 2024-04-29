@@ -160,18 +160,18 @@
 <!--              <i class="taskfont">&#xe6f5;</i>-->
 <!--              <div class="menu-title">{{ $L("日历") }}</div>-->
 <!--            </li>-->
-<!--            <li-->
-<!--              @click="toggleRoute('messenger')"-->
-<!--              :class="classNameRoute('messenger')"-->
-<!--            >-->
-<!--              <i class="taskfont">&#xe6eb;</i>-->
-<!--              <div class="menu-title">{{ $L("消息") }}</div>-->
-<!--              <Badge-->
-<!--                class="menu-badge"-->
-<!--                :overflow-count="999"-->
-<!--                :text="msgUnreadMention"-->
-<!--              />-->
-<!--            </li>-->
+            <li
+              @click="toggleRoute('messenger')"
+              :class="classNameRoute('messenger')"
+            >
+              <i class="taskfont">&#xe6eb;</i>
+              <div class="menu-title">{{ $L("消息") }}</div>
+              <Badge
+                class="menu-badge"
+                :overflow-count="999"
+                :text="msgUnreadMention"
+              />
+            </li>
             <li @click="toggleRoute('file')" :class="classNameRoute('file')">
               <i class="taskfont">&#xe6f3;</i>
               <div class="menu-title">{{ $L("文件") }}</div>
@@ -545,7 +545,6 @@ export default {
   },
 
   activated() {
-    console.log("cacheProjects----->activated")
     this.$store.dispatch("getUserInfo").catch((_) => {});
     this.$store.dispatch("getTaskPriority").catch((_) => {});
     // this.$store.dispatch("getReportUnread", 1000);
@@ -763,7 +762,6 @@ export default {
 
     projectLists() {
       const { projectKeyValue, cacheProjects } = this;
-      console.log("cacheProjects----->",cacheProjects);
       const data = $A.cloneJSON(cacheProjects).sort((a, b) => {
         if (a.top_at || b.top_at) {
           return $A.Date(b.top_at) - $A.Date(a.top_at);
@@ -771,15 +769,12 @@ export default {
         return b.id - a.id;
       });
 
-      console.log("cacheProjects----->data",data);
-      console.log("cacheProjects----->projectKeyValue"+projectKeyValue);
       if (projectKeyValue) {
         return data.filter((item) =>
           $A.strExists(`${item.name} ${item.desc}`, projectKeyValue)
         );
       }
 
-      console.log("cacheProjects----->return data",data);
       return data;
     },
 
@@ -817,12 +812,10 @@ export default {
     },
 
     projectKeyValue(val) {
-      console.log("cacheProjects-----> projectKeyValue")
       if (val == "") {
         return;
       }
       setTimeout(() => {
-        console.log("cacheProjects-----> setTimeout")
         if (this.projectKeyValue == val) {
           this.searchProject();
         }
@@ -830,7 +823,6 @@ export default {
     },
 
     wsOpenNum(num) {
-      console.log("cacheProjects-----> wsOpenNum")
       if (num <= 1) return;
       this.$store.dispatch("getBasicData", 600);
     },
@@ -1088,7 +1080,6 @@ export default {
     },
 
     searchProject() {
-      console.log("cacheProjects----->searchProjectsearchProject")
       setTimeout(() => {
         this.projectKeyLoading++;
       }, 1000);

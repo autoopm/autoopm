@@ -66,13 +66,13 @@
                                 :data-id="dialog.id"
                                 :class="dialogClass(dialog)"
                                 @click="openDialog({
-                                    dialog_id: dialog.id,
+                                    dialog_id: dialog.channel.channelID,
                                     dialog_msg_id: dialog.search_msg_id,
                                     search_msg_id: dialog.search_msg_id,
                                 })"
-                                v-longpress="handleLongpress"
-                                :style="{'background-color':dialog.color}">
-                                <template v-if="dialog.type=='group'">
+                                v-longpress="handleLongpress" >
+<!--                                :style="{'background-color':dialog.color}"-->
+                                <template v-if="dialog.channel.channelType=== 2">
                                     <EAvatar v-if="dialog.avatar" class="img-avatar" :src="dialog.avatar" :size="42"></EAvatar>
                                     <i v-else-if="dialog.group_type=='department'" class="taskfont icon-avatar department">&#xe75c;</i>
                                     <i v-else-if="dialog.group_type=='project'" class="taskfont icon-avatar project">&#xe6f9;</i>
@@ -80,7 +80,7 @@
                                     <i v-else-if="dialog.group_type=='okr'" class="taskfont icon-avatar task">&#xe6f4;</i>
                                     <Icon v-else class="icon-avatar" type="ios-people" />
                                 </template>
-                                <div v-else-if="dialog.dialog_user" class="user-avatar"><UserAvatar :userid="dialog.dialog_user.userid" :size="42"/></div>
+                                <div v-else-if="dialog.lastMessage.fromUID" class="user-avatar"><UserAvatar :userid="dialog.lastMessage.fromUID" :size="42"/></div>
                                 <Icon v-else class="icon-avatar" type="md-person" />
                                 <div class="dialog-box">
                                     <div class="dialog-title">
@@ -90,9 +90,12 @@
                                         <template v-for="tag in $A.dialogTags(dialog)" v-if="tag.color != 'success'">
                                             <Tag :color="tag.color" :fade="false" @on-click="openDialog(dialog.id)">{{$L(tag.text)}}</Tag>
                                         </template>
-                                        <span>{{dialog.name}}</span>
+                                        <!--对方用户-->
+                                        <span>标题</span>
                                         <Icon v-if="dialog.type == 'user' && lastMsgReadDone(dialog.last_msg) && dialog.dialog_user.userid != userId" :type="lastMsgReadDone(dialog.last_msg)"/>
-                                        <em v-if="dialog.last_at">{{$A.formatTime(dialog.last_at)}}</em>
+                                        <!-- <em v-if="dialog.last_at">{{$A.formatTime(dialog.last_at)}}</em> -->
+                                      <em v-if="dialog.lastMessage.timestamp">{{$A.formatTime(dialog.lastMessage.timestamp)}}</em>
+
                                     </div>
                                     <div class="dialog-text no-dark-content">
                                         <template v-if="dialog.extra_draft_has && dialog.id != dialogId">
@@ -106,7 +109,10 @@
                                             </template>
                                             <div class="last-text">
                                                 <em v-if="formatMsgEmojiDesc(dialog.last_msg)">{{formatMsgEmojiDesc(dialog.last_msg)}}</em>
-                                                <span>{{$A.getMsgSimpleDesc(dialog.last_msg)}}</span>
+<!--                                                <span>{{$A.getMsgSimpleDesc(dialog.last_msg)}}</span>-->
+                                              <span>{{getMessageText(dialog.lastMessage)}}</span>
+
+
                                             </div>
                                         </template>
                                         <div v-if="dialog.silence" class="taskfont last-silence">&#xe7d7;</div>
@@ -116,7 +122,10 @@
                                 <div class="dialog-line"></div>
                             </li>
                         </template>
+
                         <li v-else-if="dialogSearchLoad === 0 && dialogMarkLoad === 0" class="nothing">
+                             {{dialogList.length}}
+                             1111
                             {{$L(dialogSearchKey ? `没有任何与"${dialogSearchKey}"相关的会话` : `没有任何会话`)}}
                         </li>
                         <li v-else class="nothing">
@@ -217,6 +226,23 @@ import {mapState} from "vuex";
 import DialogWrapper from "./components/DialogWrapper";
 import longpress from "../../directives/longpress";
 import {Store} from "le5le-store";
+import {
+  WKSDK,
+  Message,
+  Conversation,
+  StreamItem,
+  MessageText,
+  Channel,
+  ChannelTypePerson,
+  ChannelTypeGroup,
+  MessageStatus,
+  SyncOptions,
+  PullMode,
+  MessageContent,
+  MessageContentType,
+  Setting
+} from "wukongimjssdk";
+import {Buffer} from "buffer";
 
 const MessengerObject = {menuHistory: []};
 
@@ -225,6 +251,7 @@ export default {
     directives: {longpress},
     data() {
         return {
+            dialogList: [],
             firstLoad: true,
             activeNum: 0,
             tabActive: 'dialog',
@@ -270,12 +297,19 @@ export default {
     },
 
     mounted() {
+        this.initDataSource();
+        this.initIM();
+        //设置同步的源
+        this.getDialogList();
         const id = $A.runNum(this.$route.query.dialog_id);
         if (id > 0) {
             this.openDialog(id)
         }
         //
         this.clickAgainSubscribe = Store.subscribe('clickAgainDialog', this.shakeUnread);
+
+
+
     },
 
     beforeDestroy() {
@@ -339,86 +373,114 @@ export default {
             })
         },
 
-        dialogList() {
-            const {dialogActive, dialogSearchKey, dialogSearchList} = this
-            if (dialogSearchList.length > 0) {
-                return dialogSearchList.sort((a, b) => {
-                    // 搜索结果排在后面
-                    return (a.is_search === true ? 1 : 0) - (b.is_search === true ? 1 : 0)
-                })
-            }
-            if (dialogActive == '' && dialogSearchKey == '') {
-                return this.cacheDialogs.filter(dialog => this.filterDialog(dialog)).sort(this.dialogSort);
-            }
-            if(dialogActive == 'mark' && !dialogSearchKey){
-                const lists = [];
-                this.dialogMsgs.filter(h=>h.tag).forEach(h=>{
-                    let dialog = $A.cloneJSON(this.cacheDialogs).find(p=>p.id == h.dialog_id)
-                    if(dialog){
-                        dialog.last_msg = h;
-                        dialog.search_msg_id = h.id;
-                        lists.push(dialog);
-                    }
-                });
-                return lists;
-            }
-            const list = this.cacheDialogs.filter(dialog => {
-                if (!this.filterDialog(dialog)) {
-                    return false;
-                }
-                if (dialogSearchKey) {
-                    const {name, pinyin, last_msg} = dialog;
-                    let searchString = `${name} ${pinyin}`
-                    if (last_msg) {
-                        switch (last_msg.type) {
-                            case 'text':
-                                searchString += ` ${last_msg.msg.text.replace(/<[^>]+>/g,"")}`
-                                break
-                            case 'meeting':
-                            case 'file':
-                                searchString += ` ${last_msg.msg.name}`
-                                break
-                        }
-                    }
-                    if (!$A.strExists(searchString, dialogSearchKey)) {
-                        return false;
-                    }
-                } else if (dialogActive) {
-                    switch (dialogActive) {
-                        case 'project':
-                        case 'task':
-                            if (dialogActive != dialog.group_type) {
-                                return false;
-                            }
-                            break;
-                        case 'user':
-                            if (dialogActive != dialog.type || dialog.bot) {
-                                return false;
-                            }
-                            break;
-                        case 'group':
-                            if (dialogActive != dialog.type || ['project', 'task'].includes(dialog.group_type)) {
-                                return false;
-                            }
-                            break;
-                        case 'bot':
-                            if (!dialog.bot) {
-                                return false;
-                            }
-                            break;
-                        case '@':
-                            if (!$A.getDialogMention(dialog)) {
-                                return false;
-                            }
-                            break;
-                        default:
-                            return false;
-                    }
-                }
-                return true;
-            })
-            return list.sort(this.dialogSort)
-        },
+        // dialogList() {
+
+          // var connStatus =  WKSDK.shared().connectManager.status
+          // console.log("dialogSearchList connStatus------->"+connStatus)
+          // if (connStatus === 1){  //修改程sdk中的
+          //   const remoteConversations = WKSDK.shared().conversationManager.sync() //同步最近会话列表
+          //   console.log("11111111remoteConversations value--->")
+          //   console.log(remoteConversations)
+          //   console.log("111111111111111111remoteConversations value end--->")
+
+
+            // this.dialogList = remoteConversations  //赋值操作操作
+            // this.updateDialogList(remoteConversations) //赋值操作操作
+            // return  remoteConversations;
+
+            // if (remoteConversations && remoteConversations.length > 0) {
+            //    console.log("remoteConversations not null， 赋值操作操作")
+            //     //赋值操作
+            //     this.dialogList = remoteConversations
+            //     console.log("111111111111dialogList value--->")
+            //     console.log(dialogList)
+            //     console.log("111111111111111111dialogList value end--->")
+            //
+            //   // conversationWraps.value = sortConversations(remoteConversations.map(conversation => new ConversationWrap(conversation)))
+            // }
+          // }else {
+          //   return []
+          // }
+
+            // const {dialogActive, dialogSearchKey, dialogSearchList} = this
+            // if (dialogSearchList.length > 0) {
+            //     return dialogSearchList.sort((a, b) => {
+            //         // 搜索结果排在后面
+            //         return (a.is_search === true ? 1 : 0) - (b.is_search === true ? 1 : 0)
+            //     })
+            // }
+            // if (dialogActive == '' && dialogSearchKey == '') {
+            //     return this.cacheDialogs.filter(dialog => this.filterDialog(dialog)).sort(this.dialogSort);
+            // }
+            // if(dialogActive == 'mark' && !dialogSearchKey){
+            //     const lists = [];
+            //     this.dialogMsgs.filter(h=>h.tag).forEach(h=>{
+            //         let dialog = $A.cloneJSON(this.cacheDialogs).find(p=>p.id == h.dialog_id)
+            //         if(dialog){
+            //             dialog.last_msg = h;
+            //             dialog.search_msg_id = h.id;
+            //             lists.push(dialog);
+            //         }
+            //     });
+            //     return lists;
+            // }
+            // const list = this.cacheDialogs.filter(dialog => {
+            //     if (!this.filterDialog(dialog)) {
+            //         return false;
+            //     }
+            //     if (dialogSearchKey) {
+            //         const {name, pinyin, last_msg} = dialog;
+            //         let searchString = `${name} ${pinyin}`
+            //         if (last_msg) {
+            //             switch (last_msg.type) {
+            //                 case 'text':
+            //                     searchString += ` ${last_msg.msg.text.replace(/<[^>]+>/g,"")}`
+            //                     break
+            //                 case 'meeting':
+            //                 case 'file':
+            //                     searchString += ` ${last_msg.msg.name}`
+            //                     break
+            //             }
+            //         }
+            //         if (!$A.strExists(searchString, dialogSearchKey)) {
+            //             return false;
+            //         }
+            //     } else if (dialogActive) {
+            //         switch (dialogActive) {
+            //             case 'project':
+            //             case 'task':
+            //                 if (dialogActive != dialog.group_type) {
+            //                     return false;
+            //                 }
+            //                 break;
+            //             case 'user':
+            //                 if (dialogActive != dialog.type || dialog.bot) {
+            //                     return false;
+            //                 }
+            //                 break;
+            //             case 'group':
+            //                 if (dialogActive != dialog.type || ['project', 'task'].includes(dialog.group_type)) {
+            //                     return false;
+            //                 }
+            //                 break;
+            //             case 'bot':
+            //                 if (!dialog.bot) {
+            //                     return false;
+            //                 }
+            //                 break;
+            //             case '@':
+            //                 if (!$A.getDialogMention(dialog)) {
+            //                     return false;
+            //                 }
+            //                 break;
+            //             default:
+            //                 return false;
+            //         }
+            //     }
+            //     return true;
+            // })
+            // return list.sort(this.dialogSort)
+        // },
 
         contactsFilter() {
             const {contactsData, contactsKey} = this;
@@ -591,7 +653,272 @@ export default {
     },
 
     methods: {
-        listTouch() {
+      //初始化聊天
+      initIM(){
+        console.log("初始化悟空im")
+        WKSDK.shared().connectManager.addConnectStatusListener(this.connectStatusListener) // 监听连接状态
+        // WKSDK.shared().conversationManager.addConversationListener(this.conversationListener) // 监听最近会话列表的变化
+        // WKSDK.shared().chatManager.addCMDListener(this.cmdListener) // 监听cmd消息
+        // WKSDK.shared().channelManager.addListener(this.channelInfoListener) // 监听频道信息变化
+      },
+
+      //初始化数据源
+      initDataSource(){
+        const syncConversationsCallback = async () => {
+          return await this.getConversationList();
+        };
+        //设定会话同步源
+        WKSDK.shared().config.provider.syncConversationsCallback = syncConversationsCallback;
+      },
+
+      async getDialogList(){
+        console.log("进到这个页面")
+        var connStatus =  WKSDK.shared().connectManager.status
+        if (connStatus === 1) {  //修改程sdk中的
+
+          WKSDK.shared().conversationManager.sync().then((data) => {
+            // const remoteConversations = WKSDK.shared().conversationManager.sync() //同步最近会话列表
+            console.log("11111111remoteConversations value--->")
+            console.log(data)
+            console.log("111111111111111111remoteConversations value end--->")
+            // this.dialogList = remoteConversations
+            this.dialogList = data;
+           /* this.dialogList = []  //先清空
+            if (data && data.length > 0) {
+               console.log("remoteConversations  for befor")
+               for (let m of data) {
+                this.dialogList.push(m);
+               }
+            }
+            console.log("dialogList value end--->",this.dialogList)*/
+
+
+          })
+
+
+
+        }else {
+          console.log("dialogSearchList connStatus------->"+connStatus)
+          this.dialogList = []
+        }
+      },
+
+      async getConversationList() {
+        var requestData = {
+          uid: WKSDK.shared().config.uid,
+          msg_count: 1,
+        };
+        try {
+          const {data} = await this.$store.dispatch("call", {
+            url: "channel/conversationsync",
+            method: "post",
+            data: requestData,
+          });
+          console.error("data result22222222222:--->"+ data);
+          console.error(data);
+          var conversationList = data;
+          if (conversationList) {
+            const resultConversation = conversationList.map((item) => this.toConversation(item));
+            console.error("resultConversation value::"+resultConversation)
+            return resultConversation;
+          }
+          // return data
+          // var conversationList = data;
+          // if (conversationList) {
+          //   return  conversationList
+            // const resultconversation = conversationList.map((msg) => this.toMessage(msg));
+            // console.error("resultconversation result:--->", resultconversation);
+            // return resultconversation;
+          // }
+        } catch (error) {
+          console.error("新的代码块........catch error", error);
+          return [];
+        } finally {
+
+        }
+      },
+      //转换工具
+      toConversation(conversationMap) {
+        console.error("recents value ------>toConversation")
+        const conversation = new Conversation();
+        conversation.channel = new Channel(conversationMap['channel_id'], conversationMap['channel_type']);
+        conversation.unread = conversationMap['unread'] || 0;
+        conversation.timestamp = conversationMap['timestamp'] || 0;
+        let recents = conversationMap["recents"];
+        console.error("recents value ------>",recents)
+        if (recents && recents.length > 0) {
+          const messageModel = this.toMessage(recents[0]);
+          conversation.lastMessage = messageModel;
+        }
+        conversation.extra = {};
+        return conversation;
+      },
+      //数据转换
+      toMessage(msgMap) {
+        const message = new Message();
+        if (msgMap["message_idstr"]) {
+          message.messageID = msgMap["message_idstr"];
+        } else {
+          message.messageID = new BigNumber(msgMap["message_id"]).toString();
+        }
+        if (msgMap["header"]) {
+          message.header.reddot =
+              msgMap["header"]["red_dot"] === 1 ? true : false;
+        }
+        if (msgMap["setting"]) {
+          message.setting = Setting.fromUint8(msgMap["setting"]);
+        }
+        if (msgMap["revoke"]) {
+          message.remoteExtra.revoke = msgMap["revoke"] === 1 ? true : false;
+        }
+        if (msgMap["message_extra"]) {
+          const messageExtra = msgMap["message_extra"];
+          message.remoteExtra = this.toMessageExtra(messageExtra);
+        }
+        message.clientSeq = msgMap["client_seq"];
+        message.channel = new Channel(
+            msgMap["channel_id"],
+            msgMap["channel_type"]
+        );
+        message.messageSeq = msgMap["message_seq"];
+        message.clientMsgNo = msgMap["client_msg_no"];
+        message.streamNo = msgMap["stream_no"];
+        message.streamFlag = msgMap["stream_flag"];
+        message.fromUID = msgMap["from_uid"];
+        message.timestamp = msgMap["timestamp"];
+        message.status = MessageStatus.Normal;
+        const decodedBuffer = Buffer.from(msgMap["payload"], "base64");
+        const contentObj = JSON.parse(decodedBuffer.toString("utf8"));
+        let contentType = 0;
+        if (contentObj) {
+          contentType = contentObj.type;
+        }
+        const messageContent = WKSDK.shared().getMessageContent(contentType);
+        if (contentObj) {
+          messageContent.decode(
+              this.stringToUint8Array(JSON.stringify(contentObj))
+          );
+        }
+        message.content = messageContent;
+        message.isDeleted = msgMap["is_deleted"] === 1;
+        const streamMaps = msgMap["streams"];
+        if (streamMaps && streamMaps.length > 0) {
+          const streams = [];
+          for (const streamMap of streamMaps) {
+            const streamItem = new StreamItem();
+            streamItem.clientMsgNo = streamMap["client_msg_no"];
+            streamItem.streamSeq = streamMap["stream_seq"];
+
+            if (streamMap["blob"] && streamMap["blob"].length > 0) {
+              const blob = Buffer.from(streamMap["blob"], "base64");
+              const blobObj = JSON.parse(blob.toString("utf8"));
+              const blobType = blobObj.type;
+              const blobContent = WKSDK.shared().getMessageContent(contentType); // 假设 WKSDK 类中有 shared 方法来获取消息内容
+
+              if (blobObj) {
+                blobContent.decode(
+                    this.stringToUint8Array(JSON.stringify(blobObj))
+                );
+              }
+
+              streamItem.clientMsgNo = streamMap["client_msg_no"];
+              streamItem.streamSeq = streamMap["stream_seq"];
+              streamItem.content = blobContent;
+            }
+
+            streams.push(streamItem);
+          }
+
+          message.streams = streams;
+        }
+        return message;
+      },
+
+      //获取消息
+      getMessageText(m) {
+        if (m instanceof Message) {
+          const streams = m.streams;
+          let text = "";
+          if (m.content instanceof MessageText) {
+            const messageText = m.content;
+            text = messageText.text || "";
+          }
+
+          if (streams && streams.length > 0) {
+            streams.forEach((stream) => {
+              if (stream.content instanceof MessageText) {
+                const messageText = stream.content;
+                text = text + (messageText.text || "");
+              }
+            });
+          }
+          return text;
+        }
+        return "未知消息";
+      },
+
+      /**
+       *
+       * @param msgExtraMap
+       * @returns {MessageExtra}
+       */
+      toMessageExtra(msgExtraMap) {
+        const messageExtra = new MessageExtra();
+        if (msgExtraMap["message_id_str"]) {
+          messageExtra.messageID = msgExtraMap["message_id_str"];
+        } else {
+          messageExtra.messageID = new BigNumber(
+              msgExtraMap["message_id"]
+          ).toString();
+        }
+        messageExtra.messageSeq = msgExtraMap["message_seq"];
+        messageExtra.readed = msgExtraMap["readed"] === 1;
+        if (msgExtraMap["readed_at"] && msgExtraMap["readed_at"] > 0) {
+          messageExtra.readedAt = new Date(msgExtraMap["readed_at"]);
+        }
+        messageExtra.revoke = msgExtraMap["revoke"] === 1;
+        if (msgExtraMap["revoker"]) {
+          messageExtra.revoker = msgExtraMap["revoker"];
+        }
+        messageExtra.readedCount = msgExtraMap["readed_count"] || 0;
+        messageExtra.unreadCount = msgExtraMap["unread_count"] || 0;
+        messageExtra.extraVersion = msgExtraMap["extra_version"] || 0;
+        messageExtra.editedAt = msgExtraMap["edited_at"] || 0;
+        const contentEditObj = msgExtraMap["content_edit"];
+        if (contentEditObj) {
+          const contentEditContentType = contentEditObj.type;
+          const contentEditContent = WKSDK.shared().getMessageContent(
+              contentEditContentType
+          );
+          const contentEditPayloadData = this.stringToUint8Array(
+              JSON.stringify(contentEditObj)
+          );
+          contentEditContent.decode(contentEditPayloadData);
+          messageExtra.contentEditData = contentEditPayloadData;
+          messageExtra.contentEdit = contentEditContent;
+          messageExtra.isEdit = true;
+        }
+        return messageExtra;
+      },
+
+      /**
+       * 数据转换
+       * @param str
+       */
+      stringToUint8Array(str) {
+        const newStr = unescape(encodeURIComponent(str));
+        const arr = [];
+        for (let i = 0; i < newStr.length; i++) {
+          arr.push(newStr.charCodeAt(i));
+        }
+        return new Uint8Array(arr);
+      },
+      connectStatusListener(status, reasonCode){
+        console.log("status -》"+status)
+
+      },
+
+      listTouch() {
             if (this.$refs.navMenu?.visible) {
                 this.$refs.navMenu.hide()
             }
@@ -769,6 +1096,7 @@ export default {
         },
 
         searchDialog() {
+          console.log("dialogSearchList--->searchDialog")
             const key = this.dialogSearchKey
             if (key == '') {
                 return
@@ -811,7 +1139,7 @@ export default {
         },
 
         searchTagDialog() {
-            //
+            console.log("dialogSearchList->searchTagDialog")
             this.dialogMarkLoad++;
             this.$store.dispatch("call", {
                 url: 'dialog/search/tag',

@@ -200,7 +200,6 @@ export default {
         },
 
         getLists() {
-          console.log("cacheProjects----->两这里22222211")
             let type = 'team';
             if (this.keys.type == 'all') {
                 type = 'all';
