@@ -91,10 +91,12 @@
                                             <Tag :color="tag.color" :fade="false" @on-click="openDialog(dialog.id)">{{$L(tag.text)}}</Tag>
                                         </template>
                                         <!--对方用户-->
-                                        <span>标题</span>
+<!--                                        <span>{{ dialog.info.name ? dialog.info.name : '未定义' }}</span>-->
+                                      <span v-if="dialog && dialog.info && dialog.info.name">{{ dialog.info.name }}</span>
+                                      <span v-else>未定义</span>
                                         <Icon v-if="dialog.type == 'user' && lastMsgReadDone(dialog.last_msg) && dialog.dialog_user.userid != userId" :type="lastMsgReadDone(dialog.last_msg)"/>
                                         <!-- <em v-if="dialog.last_at">{{$A.formatTime(dialog.last_at)}}</em> -->
-                                      <em v-if="dialog.lastMessage.timestamp">{{$A.formatTime(dialog.lastMessage.timestamp)}}</em>
+                                      <em v-if="formatTimestamp(dialog.lastMessage.timestamp)">{{formatTimestamp(dialog.lastMessage.timestamp)}}</em>
 
                                     </div>
                                     <div class="dialog-text no-dark-content">
@@ -653,6 +655,27 @@ export default {
     },
 
     methods: {
+      //格式化时间
+      formatTimestamp(timestamp) {
+        // var date = new Date(timestamp * 1000);
+        // var formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
+        // return formattedDate;
+
+          let now = $A.Time(),
+              time = new Date(timestamp * 1000),
+              string = "";
+          if (
+              Math.abs(now - time) < 3600 * 6 ||
+              $A.formatDate("Ymd", now) === $A.formatDate("Ymd", time)
+          ) {
+            string = $A.formatDate("H:i", time);
+          } else if ($A.formatDate("Y", now) === $A.formatDate("Y", time)) {
+            string = $A.formatDate("m-d", time);
+          } else {
+            string = $A.formatDate("Y-m-d", time);
+          }
+          return string || "";
+      },
       //初始化聊天
       initIM(){
         console.log("初始化悟空im")
@@ -751,6 +774,9 @@ export default {
           conversation.lastMessage = messageModel;
         }
         conversation.extra = {};
+        conversation.info = conversationMap["info"]
+        console.log("conversation info--->"+conversationMap["info"])
+        console.log(conversationMap["info"])
         return conversation;
       },
       //数据转换
