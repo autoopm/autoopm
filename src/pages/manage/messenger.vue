@@ -126,8 +126,6 @@
                         </template>
 
                         <li v-else-if="dialogSearchLoad === 0 && dialogMarkLoad === 0" class="nothing">
-                             {{dialogList.length}}
-                             1111
                             {{$L(dialogSearchKey ? `没有任何与"${dialogSearchKey}"相关的会话` : `没有任何会话`)}}
                         </li>
                         <li v-else class="nothing">
@@ -268,10 +266,10 @@ export default {
                 {type: 'project', name: '项目'},
                 {type: 'task', name: '任务'},
                 {type: 'user', name: '单聊'},
-                {type: 'group', name: '群聊'},
-                {type: 'bot', name: '机器人'},
-                {type: 'mark', name: '标注'},
-                {type: '@', name: '@我'},
+                // {type: 'group', name: '群聊'},
+                // {type: 'bot', name: '机器人'},
+                // {type: 'mark', name: '标注'},
+                // {type: '@', name: '@我'},
             ],
             dialogHistory: MessengerObject.menuHistory,
 
@@ -701,9 +699,9 @@ export default {
 
           WKSDK.shared().conversationManager.sync().then((data) => {
             // const remoteConversations = WKSDK.shared().conversationManager.sync() //同步最近会话列表
-            console.log("11111111remoteConversations value--->")
-            console.log(data)
-            console.log("111111111111111111remoteConversations value end--->")
+            // console.log("11111111remoteConversations value--->")
+            // console.log(data)
+            // console.log("111111111111111111remoteConversations value end--->")
             // this.dialogList = remoteConversations
             this.dialogList = data;
            /* this.dialogList = []  //先清空
