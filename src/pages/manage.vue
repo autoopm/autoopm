@@ -1464,7 +1464,7 @@ export default {
 .home_page_logo{
   width: 40px;
   height: 40px;
-  background: url(../images/logo2.png) no-repeat center center;
+  background: url("public/images/logo2.png") no-repeat center center;
   background-size: contain;
 }
 </style>
