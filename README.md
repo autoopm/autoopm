@@ -40,7 +40,7 @@ ps：欢迎大家提 issue
 
 页面截图
 ![输入图片说明](WX20240402-013009@2x.png)
-![输入图片说明](dashboard@2x.png)
+![输入图片说明](dashboard.png)
 ![输入图片说明](project@2x.png)
 ![输入图片说明](file1@2x.png)
 ![输入图片说明](file2@2x.png)

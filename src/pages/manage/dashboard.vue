@@ -4,24 +4,24 @@
     <div class="p-8" style="width: 100%;">
       <div class="flex flex-col gap-8" >
       <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-4">
-        <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
-          <dt class="truncate text-sm font-medium text-gray-500">总任务</dt>
-          <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{{dashData.myTaskSize}}</dd>
+        <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6" style="background: #4477DC">
+          <dt class="truncate text-sm font-medium text-white">总任务</dt>
+          <dd class="mt-1 text-3xl font-semibold tracking-tight text-white">{{dashData.myTaskSize}}</dd>
         </div>
 
-        <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
-          <dt class="truncate text-sm font-medium text-gray-500">待处理</dt>
-          <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{{dashData.pendingTaskSize}}</dd>
+        <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6" style="background: #69D2AC">
+          <dt class="truncate text-sm font-medium text-white">待处理</dt>
+          <dd class="mt-1 text-3xl font-semibold tracking-tight text-white">{{dashData.pendingTaskSize}}</dd>
         </div>
 
-        <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
-          <dt class="truncate text-sm font-medium text-gray-500">本周已完成</dt>
-          <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{{dashData.weekCompleteTaskSize}}</dd>
+        <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6" style="background: #C244DE">
+          <dt class="truncate text-sm font-medium text-white">本周已完成</dt>
+          <dd class="mt-1 text-3xl font-semibold tracking-tight text-white">{{dashData.weekCompleteTaskSize}}</dd>
         </div>
 
-        <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
-          <dt class="truncate text-sm font-medium text-gray-500">本周应完成</dt>
-          <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{{dashData.weekShouleCompleteTaskSize}}</dd>
+        <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6" style="background: #ED4014">
+          <dt class="truncate text-sm font-medium text-white">本周应完成</dt>
+          <dd class="mt-1 text-3xl font-semibold tracking-tight text-white">{{dashData.weekShouleCompleteTaskSize}}</dd>
         </div>
       </dl>
 
