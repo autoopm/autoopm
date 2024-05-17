@@ -79,7 +79,8 @@ VueRouter.prototype.push = function push(location) {
 };
 
 const router = new VueRouter({
-  mode: isElectron || isEEUiApp ? "hash" : "history",
+  mode: 'hash', // 将路由模式设置为 hash 模式
+  // mode: isElectron || isEEUiApp ? "hash" : "history",
   routes,
 });
 
