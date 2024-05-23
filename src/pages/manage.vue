@@ -8,10 +8,128 @@
       :class="{ 'show-mobile-menu': showMobileMenu }"
     >
 
-      <div class="py-2" style="display: flex;justify-content: flex-start;align-items: center;width: 80%;">
-          <div class="h-9 block home_page_logo"/>
-          <span style="font-size: 16px;font-weight: 600;margin-left: 10px">AutooPM</span>
-      </div>
+<!--      <div class="py-2" style="display: flex;justify-content: flex-start;align-items: center;width: 80%;">-->
+<!--          <div class="h-9 block home_page_logo"/>-->
+<!--          <span style="font-size: 16px;font-weight: 600;margin-left: 10px">AutooPM</span>-->
+<!--      </div>-->
+
+      <Dropdown
+          class="page-manage-menu-dropdown main-menu"
+          trigger="click"
+          @on-click="settingRoute"
+          @on-visible-change="menuVisibleChange"
+      >
+        <div :class="['manage-box-title', visibleMenu ? 'menu-visible' : '']" style="margin-bottom: 20px">
+          <div class="manage-box-avatar">
+            <UserAvatar :userid="userId" :size="36" />
+          </div>
+          <span>{{ userInfo.nickname }}</span>
+          <Badge v-if="!!clientNewVersion" class="manage-box-top-report" dot />
+          <div class="manage-box-arrow">
+            <Icon type="ios-arrow-up" />
+            <Icon type="ios-arrow-down" />
+          </div>
+        </div>
+        <DropdownMenu slot="list">
+          <template v-for="item in menu">
+            <!--最近打开的任务-->
+            <Dropdown
+                v-if="item.path === 'taskBrowse'"
+                transfer
+                transfer-class-name="page-manage-menu-dropdown"
+                placement="right-start"
+            >
+              <DropdownItem :divided="!!item.divided">
+                <div class="manage-menu-flex">
+                  {{ $L(item.name) }}
+                  <Icon type="ios-arrow-forward"></Icon>
+                </div>
+              </DropdownItem>
+              <DropdownMenu slot="list" v-if="taskBrowseLists.length > 0">
+                <DropdownItem
+                    v-for="(item, key) in taskBrowseLists"
+                    v-if="item.id > 0 && key < 10"
+                    :key="key"
+                    class="task-title"
+                    @click.native="openTask(item)"
+                    :name="item.name"
+                >
+                  <span
+                      v-if="item.flow_item_name"
+                      :class="item.flow_item_status"
+                  >{{ item.flow_item_name }}</span
+                  >
+                  <div class="task-title-text">{{ item.name }}</div>
+                </DropdownItem>
+              </DropdownMenu>
+              <DropdownMenu v-else slot="list">
+                <DropdownItem style="color: darkgrey">{{
+                    $L("暂无打开记录")
+                  }}</DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+            <!-- 团队管理 -->
+            <Dropdown
+                v-else-if="item.path === 'team'"
+                transfer
+                transfer-class-name="page-manage-menu-dropdown"
+                placement="right-start"
+            >
+              <DropdownItem :divided="!!item.divided">
+                <div class="manage-menu-flex">
+                  {{ $L(item.name) }}
+                  <Icon type="ios-arrow-forward"></Icon>
+                </div>
+              </DropdownItem>
+              <DropdownMenu slot="list">
+                <DropdownItem name="allUser">{{ $L("团队管理") }}</DropdownItem>
+                <!--                <DropdownItem name="exportTask">{{-->
+                <!--                    $L("导出任务统计")-->
+                <!--                  }}</DropdownItem>-->
+                <!--                <DropdownItem name="exportOverdueTask">{{-->
+                <!--                    $L("导出超期任务")-->
+                <!--                  }}</DropdownItem>-->
+                <!--                <DropdownItem name="exportApprove">{{-->
+                <!--                    $L("导出审批数据")-->
+                <!--                  }}</DropdownItem>-->
+                <!--                <DropdownItem name="exportCheckin">{{-->
+                <!--                    $L("导出签到数据")-->
+                <!--                  }}</DropdownItem>-->
+              </DropdownMenu>
+            </Dropdown>
+            <!-- 其他菜单 -->
+            <DropdownItem
+                v-else-if="item.visible !== false"
+                :divided="!!item.divided"
+                :name="item.path"
+                :style="item.style || {}"
+            >
+              <div class="manage-menu-flex">
+                {{ $L(item.name) }}
+                <Badge
+                    v-if="item.path === 'version'"
+                    class="manage-menu-report-badge"
+                    :text="clientNewVersion"
+                />
+                <Badge
+                    v-else-if="
+                    item.path === 'workReport' && reportUnreadNumber > 0
+                  "
+                    class="manage-menu-report-badge"
+                    :count="reportUnreadNumber"
+                />
+                <Badge
+                    v-else-if="item.path === 'approve' && approveUnreadNumber > 0"
+                    class="manage-menu-report-badge"
+                    :count="approveUnreadNumber"
+                />
+              </div>
+
+            </DropdownItem>
+          </template>
+        </DropdownMenu>
+
+      </Dropdown>
 
 
 
@@ -85,23 +203,7 @@
 <!--              />-->
 <!--            </li>-->
           </ul>
-          <div
-              v-if="(projectSearchShow || projectTotal > 20) && windowHeight > 600"
-              class="manage-project-search"
-          >
-            <Input
-                v-model="projectKeyValue"
-                :placeholder="
-            $L(`共${projectTotal || cacheProjects.length}个项目，搜索...`)
-          "
-                clearable
-            >
-              <div class="search-pre" slot="prefix">
-                <Loading v-if="projectKeyLoading > 0" />
-                <Icon v-else type="ios-search" />
-              </div>
-            </Input>
-          </div>
+
 
         </div>
 
@@ -110,8 +212,6 @@
 
 
         <div ref="menuProject" class="menu-project">
-
-
           <ul>
             <li
               v-for="(item, key) in projectLists"
@@ -153,6 +253,25 @@
         </div>
       </Scrollbar>
 
+      <div
+          v-if="(projectSearchShow || projectTotal > 20) && windowHeight > 600"
+          class="manage-project-search"
+      >
+        <Input
+            v-model="projectKeyValue"
+            :placeholder="
+            $L(`共${projectTotal || cacheProjects.length}个项目，搜索...`)
+          "
+            clearable
+        >
+          <div class="search-pre" slot="prefix">
+            <Loading v-if="projectKeyLoading > 0" />
+            <Icon v-else type="ios-search" />
+          </div>
+        </Input>
+      </div>
+
+
 
 
 
@@ -183,7 +302,12 @@
         </Dropdown>
       </div>
 
-      <ButtonGroup class="manage-box-new-group" style="margin-bottom: 0px">
+
+
+
+
+      <ButtonGroup class="manage-box-new-group">
+
         <Button
             class="manage-box-new"
             type="primary"
@@ -191,6 +315,7 @@
             @click="onAddShow"
         >{{ $L("新建项目") }}</Button
         >
+
         <Dropdown @on-click="onAddMenu" trigger="click">
           <Button type="primary">
             <Icon type="ios-arrow-down"></Icon>
@@ -206,126 +331,6 @@
           </DropdownMenu>
         </Dropdown>
       </ButtonGroup>
-
-
-      <Dropdown
-          class="page-manage-menu-dropdown main-menu"
-          trigger="click"
-          @on-click="settingRoute"
-
-          @on-visible-change="menuVisibleChange"
-      >
-        <div :class="['manage-box-title', visibleMenu ? 'menu-visible' : '']" style="margin-bottom: 20px">
-          <div class="manage-box-avatar">
-            <UserAvatar :userid="userId" :size="36" />
-          </div>
-          <span>{{ userInfo.nickname }}</span>
-          <Badge v-if="!!clientNewVersion" class="manage-box-top-report" dot />
-          <div class="manage-box-arrow">
-            <Icon type="ios-arrow-up" />
-            <Icon type="ios-arrow-down" />
-          </div>
-        </div>
-        <DropdownMenu slot="list">
-          <template v-for="item in menu">
-            <!--最近打开的任务-->
-            <Dropdown
-                v-if="item.path === 'taskBrowse'"
-                transfer
-                transfer-class-name="page-manage-menu-dropdown"
-                placement="right-start"
-            >
-              <DropdownItem :divided="!!item.divided">
-                <div class="manage-menu-flex">
-                  {{ $L(item.name) }}
-                  <Icon type="ios-arrow-forward"></Icon>
-                </div>
-              </DropdownItem>
-              <DropdownMenu slot="list" v-if="taskBrowseLists.length > 0">
-                <DropdownItem
-                    v-for="(item, key) in taskBrowseLists"
-                    v-if="item.id > 0 && key < 10"
-                    :key="key"
-                    class="task-title"
-                    @click.native="openTask(item)"
-                    :name="item.name"
-                >
-                  <span
-                      v-if="item.flow_item_name"
-                      :class="item.flow_item_status"
-                  >{{ item.flow_item_name }}</span
-                  >
-                  <div class="task-title-text">{{ item.name }}</div>
-                </DropdownItem>
-              </DropdownMenu>
-              <DropdownMenu v-else slot="list">
-                <DropdownItem style="color: darkgrey">{{
-                    $L("暂无打开记录")
-                  }}</DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
-            <!-- 团队管理 -->
-            <Dropdown
-                v-else-if="item.path === 'team'"
-                transfer
-                transfer-class-name="page-manage-menu-dropdown"
-                placement="right-start"
-            >
-              <DropdownItem :divided="!!item.divided">
-                <div class="manage-menu-flex">
-                  {{ $L(item.name) }}
-                  <Icon type="ios-arrow-forward"></Icon>
-                </div>
-              </DropdownItem>
-              <DropdownMenu slot="list">
-                <DropdownItem name="allUser">{{ $L("团队管理") }}</DropdownItem>
-<!--                <DropdownItem name="exportTask">{{-->
-<!--                    $L("导出任务统计")-->
-<!--                  }}</DropdownItem>-->
-<!--                <DropdownItem name="exportOverdueTask">{{-->
-<!--                    $L("导出超期任务")-->
-<!--                  }}</DropdownItem>-->
-<!--                <DropdownItem name="exportApprove">{{-->
-<!--                    $L("导出审批数据")-->
-<!--                  }}</DropdownItem>-->
-<!--                <DropdownItem name="exportCheckin">{{-->
-<!--                    $L("导出签到数据")-->
-<!--                  }}</DropdownItem>-->
-              </DropdownMenu>
-            </Dropdown>
-            <!-- 其他菜单 -->
-            <DropdownItem
-                v-else-if="item.visible !== false"
-                :divided="!!item.divided"
-                :name="item.path"
-                :style="item.style || {}"
-            >
-              <div class="manage-menu-flex">
-                {{ $L(item.name) }}
-                <Badge
-                    v-if="item.path === 'version'"
-                    class="manage-menu-report-badge"
-                    :text="clientNewVersion"
-                />
-                <Badge
-                    v-else-if="
-                    item.path === 'workReport' && reportUnreadNumber > 0
-                  "
-                    class="manage-menu-report-badge"
-                    :count="reportUnreadNumber"
-                />
-                <Badge
-                    v-else-if="item.path === 'approve' && approveUnreadNumber > 0"
-                    class="manage-menu-report-badge"
-                    :count="approveUnreadNumber"
-                />
-              </div>
-
-            </DropdownItem>
-          </template>
-        </DropdownMenu>
-
-      </Dropdown>
 
 
     </div>

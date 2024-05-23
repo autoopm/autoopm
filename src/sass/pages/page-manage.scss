@@ -27,6 +27,7 @@
         .scrollbar-container {
             flex: 1;
             width: 100%;
+            margin-top: 0px;
             display: flex;
             flex-direction: column;
         }
@@ -214,7 +215,7 @@
             pointer-events: none;
         }
         .manage-project-search {
-            width: 100%;
+            width: 80%;
             padding: 0 3px;
             margin: 8px 0 -2px;
             border-radius: 12px;
@@ -244,7 +245,7 @@
         }
         .manage-box-new-group {
             width: 80%;
-            margin-top: 6px;
+            margin-top: 16px;
             margin-bottom: 20px;
             display: flex;
             align-items: center;
@@ -299,7 +300,7 @@
         align-items: center;
         flex-shrink: 0;
         padding: 6px 10px;
-        margin-top: 14px;
+        margin-top: 27px;
         border-radius: 8px;
         background-color: #ffffff;
         cursor: pointer;
