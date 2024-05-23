@@ -21,6 +21,7 @@ import mixin from "./store/mixin";
 import "element-sea/lib/theme-chalk/index.css";
 import "./css/iview.css"
 import "./css/tailwindcss.css"
+import "./css/app.css"
 import "./sass/app.scss";
 import './my-theme/index.less';
 

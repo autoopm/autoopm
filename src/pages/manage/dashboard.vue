@@ -3,7 +3,70 @@
   <div class="page-dashboard " >
     <div class="p-8" style="width: 100%;">
       <div class="flex flex-col gap-8" >
-      <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-4">
+
+        <!--new add -->
+
+        <div
+            class="mt-5 grid grid-cols-1 gap-4 px-4 sm:grid-cols-3 sm:px-5"
+        >
+          <div
+              class="relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-info to-info-focus p-3.5"
+          >
+            <p class="text-xs uppercase text-sky-100">总任务</p>
+            <div class="flex items-end justify-between space-x-2">
+              <p class="mt-4 text-2xl font-medium text-white">{{dashData.myTaskSize}}</p>
+              <ETooltip placement="top" :content="$L('功能开发中...')">
+              <a
+                  href="#"
+                  class="border-b border-dotted border-current pb-0.5 text-xs font-medium text-sky-100 outline-none transition-colors duration-300 line-clamp-1 hover:text-white focus:text-white"
+              >获取报告
+              </a>
+              </ETooltip>
+            </div>
+            <div
+                class="mask is-reuleaux-triangle absolute top-0 right-0 -m-3 h-16 w-16 bg-white/20"
+            ></div>
+          </div>
+          <div
+              class="relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-amber-400 to-orange-600 p-3.5"
+          >
+            <p class="text-xs uppercase text-amber-50">待处理</p>
+            <div class="flex items-end justify-between space-x-2">
+              <p class="mt-4 text-2xl font-medium text-white">{{dashData.pendingTaskSize}}</p>
+              <ETooltip placement="top" :content="$L('功能开发中...')">
+              <a href="#"
+                  class="border-b border-dotted border-current pb-0.5 text-xs font-medium text-amber-50 outline-none transition-colors duration-300 line-clamp-1 hover:text-white focus:text-white"
+              >获取报告
+              </a>
+              </ETooltip>
+            </div>
+            <div
+                class="mask is-diamond absolute top-0 right-0 -m-3 h-16 w-16 bg-white/20"
+            ></div>
+          </div>
+          <div
+              class="relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-pink-500 to-rose-500 p-3.5"
+          >
+            <p class="text-xs uppercase text-pink-100">本周应完成</p>
+            <div class="flex items-end justify-between space-x-2">
+              <p class="mt-4 text-2xl font-medium text-white">{{dashData.weekShouleCompleteTaskSize}}</p>
+
+              <ETooltip placement="top" :content="$L('功能开发中...')">
+                <a href="#"
+                   class="border-b border-dotted border-current pb-0.5 text-xs font-medium text-pink-100 outline-none transition-colors duration-300 line-clamp-1 hover:text-white focus:text-white"
+                >获取报告
+                </a>
+              </ETooltip>
+
+            </div>
+            <div class="mask is-hexagon-2 absolute top-0 right-0 -m-3 h-16 w-16 bg-white/20"></div>
+          </div>
+        </div>
+
+        <!--new add end -->
+
+
+      <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-4"  style="display: none">
         <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6" style="background: #4477DC">
           <dt class="truncate text-sm font-medium text-white">总任务</dt>
           <dd class="mt-1 text-3xl font-semibold tracking-tight text-white">{{dashData.myTaskSize}}</dd>
@@ -30,7 +93,7 @@
           <!---->
           <div >
             <h3 class="mb-2 font-semibold capitalize">超期任务</h3>
-            <div class="h-[calc(100%-2.25rem)] rounded-[10px] border border-custom-border-200 bg-custom-background-100  text-sm rounded-lg max-h-96 overflow-auto ring-1 ring-black ring-opacity-5">
+            <div class="h-[calc(100%-2.25rem)] rounded-[10px] border border-custom-border-200 bg-custom-background-100  text-sm rounded-lg max-h-96 overflow-auto  ring-black ring-opacity-5">
               <div class=" grid grid-cols-4 gap-2  px-3 py-2 font-medium bg-red-500/20 bg-opacity-20 bg-red-300">
                 <h4 class="capitalize">超期</h4>
                 <h4 class="col-span-2">任务</h4>
@@ -66,7 +129,7 @@
           <!--进行中任务-->
           <div >
             <h3 class="mb-2 font-semibold capitalize">进行中任务</h3>
-            <div class="h-[calc(100%-2.25rem)] rounded-[10px] border border-custom-border-200 bg-custom-background-100 text-sm rounded-lg max-h-96 overflow-auto ring-1 ring-black ring-opacity-5">
+            <div class="h-[calc(100%-2.25rem)] rounded-[10px] border border-custom-border-200 bg-custom-background-100 text-sm rounded-lg max-h-96 overflow-auto ring-black ring-opacity-5">
               <div class=" grid grid-cols-4 gap-2  px-3 py-2 font-medium bg-opacity-20 bg-green-300">
                 <h4 class="capitalize">进行中</h4>
                 <h4 class="col-span-2">任务</h4>
