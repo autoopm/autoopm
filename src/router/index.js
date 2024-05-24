@@ -87,10 +87,18 @@ const routes = [
             component: () => import("../pages/manage/setting/license.vue"),
           },
           {
+            name: "manage-setting-knowledgebase",
+            path: "knowledgebase",
+            component: () => import("../pages/manage/setting/knowledgebase.vue"),
+          },
+
+          {
             name: "manage-setting-password",
             path: "password",
             component: () => import("../pages/manage/setting/password.vue"),
           },
+
+
           {
             name: "manage-setting-email",
             path: "email",
@@ -122,6 +130,11 @@ const routes = [
         name: "manage-file",
         path: "file/:folderId?/:fileId?",
         component: () => import("../pages/manage/file.vue"),
+      },
+      {
+        name: "manage-knowledgebase",
+        path: "knowledgebase",
+        component: () => import("../pages/manage/knowledgebase.vue"),
       },
       {
         name: "manage-application",

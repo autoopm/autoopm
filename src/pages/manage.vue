@@ -186,10 +186,20 @@
                 :text="msgUnreadMention"
               />
             </li>
+
             <li @click="toggleRoute('file')" :class="classNameRoute('file')">
               <i class="taskfont">&#xe6f3;</i>
               <div class="menu-title">{{ $L("文件") }}</div>
             </li>
+
+
+            <li @click="toggleRoute('knowledgebase')" :class="classNameRoute('knowledgebase')">
+              <i class="taskfont">&#xe6f3;</i>
+              <div class="menu-title">{{ $L("知识库") }}</div>
+            </li>
+
+
+
 <!--            <li-->
 <!--              @click="toggleRoute('application')"-->
 <!--              :class="classNameRoute('application')"-->

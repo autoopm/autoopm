@@ -113,8 +113,6 @@ Vue.prototype.goForward = function (location, isReplace) {
   if (typeof location === "string") {
     location = { name: location };
   }
-  console.log(location, ">>>>>>>>>goForward");
-  console.log(isReplace, ">>>>>>>>>goForward");
   if (app.$store.state.routeHistorys.length === 0) {
     app.$store.state.routeHistorys.push(app.$route);
   }
