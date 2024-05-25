@@ -16,7 +16,7 @@ export default {
   data() {
     return {
       loadIng: 0,
-      iframeUrl: ''
+      iframeSrc: ''
     }
   },
   computed: {
