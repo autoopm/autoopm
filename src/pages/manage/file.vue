@@ -1813,7 +1813,7 @@ export default {
         .dispatch("call", {
           url: "file/move",
           data: {
-            ids: this.shearIds,
+            ids: Array.isArray(this.shearIds) ? this.shearIds.join(',') : this.shearIds,
             pid: this.pid,
           },
         })
