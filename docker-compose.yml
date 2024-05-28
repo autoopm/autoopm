@@ -102,13 +102,13 @@ services:
       extnetwork:
         ipv4_address: 10.66.66.7
     restart: unless-stopped
-  maxkb:
-    image: 1panel/maxkb
-    container_name: "dootask-maxkb-${APP_ID}"
-    ports:
-      - "8108:8080"
-    volumes:
-      - ./docker/maxkb:/var/lib/postgresql/data
+#  maxkb:
+#    image: 1panel/maxkb
+#    container_name: "dootask-maxkb-${APP_ID}"
+#    ports:
+#      - "8108:8080"
+#    volumes:
+#      - ./docker/maxkb:/var/lib/postgresql/data
 networks:
   extnetwork:
     name: "autoo-networks-${APP_ID}"

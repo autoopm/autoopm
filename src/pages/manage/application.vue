@@ -320,14 +320,14 @@ export default {
     methods: {
         initList() {
             let applyList = [
-                { value: "approve", label: "审批中心", sort: 3 },
-                { value: "report", label: "工作报告", sort: 5 },
+                // { value: "approve", label: "审批中心", sort: 3 },
+                // { value: "report", label: "工作报告", sort: 5 },
                 // { value: "okr", label: "OKR管理", sort: 4 },
-                { value: "robot", label: "AI机器人", sort: 6 },
-                { value: "signin", label: "签到打卡", sort: 7 },
+                // { value: "robot", label: "AI机器人", sort: 6 },
+                // { value: "signin", label: "签到打卡", sort: 7 },
                 // { value: "meeting", label: "在线会议", sort: 8 },
-                { value: "word-chain", label: "群接龙", sort: 9 },
-                { value: "vote", label: "群投票", sort: 10 },
+                // { value: "word-chain", label: "群接龙", sort: 9 },
+                // { value: "vote", label: "群投票", sort: 10 },
             ];
             // wap模式
             if (this.windowOrientation == 'landscape') {
@@ -336,11 +336,11 @@ export default {
             } else {
                 // 竖屏模式
                 applyList.push(...[
-                    { value: "calendar", label: "日历", sort: 1 },
+                    // { value: "calendar", label: "日历", sort: 1 },
                     { value: "file", label: "文件", sort: 2 },
                     { value: "addProject", label: "创建项目", sort: 11 },
                     { value: "addTask", label: "添加任务", sort: 12 },
-                    { value: "scan", label: "扫一扫", show: $A.isEEUiApp, sort: 13 },
+                    // { value: "scan", label: "扫一扫", show: $A.isEEUiApp, sort: 13 },
                     { value: "setting", label: "设置", sort: 14 }
                 ])
             }
@@ -353,9 +353,9 @@ export default {
             } else {
                 adminApplyList.push(...[
                     // { value: "okrAnalyze", label: "OKR结果", sort: 15 },
-                    { value: "ldap", label: "LDAP", sort: 16 },
-                    { value: "mail", label: "邮件通知", sort: 17 },
-                    { value: "appPush", label: "APP推送", sort: 18 },
+                    // { value: "ldap", label: "LDAP", sort: 16 },
+                    // { value: "mail", label: "邮件通知", sort: 17 },
+                    // { value: "appPush", label: "APP推送", sort: 18 },
                     { value: "allUser", label: "团队管理", sort: 19 }
                 ])
             }
