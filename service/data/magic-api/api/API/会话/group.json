@@ -1,0 +1,14 @@
+{
+  "properties" : { },
+  "id" : "1fae9227d89a49fc943a45c59e803338",
+  "name" : "会话",
+  "type" : "api",
+  "parentId" : "4fd0586ad07146a4bc84aeb71b8ec638",
+  "path" : "/channel",
+  "createTime" : 1716867154392,
+  "updateTime" : 1716623938329,
+  "createBy" : null,
+  "updateBy" : null,
+  "paths" : [ ],
+  "options" : [ ]
+}

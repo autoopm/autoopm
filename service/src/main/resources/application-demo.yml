@@ -1,0 +1,4 @@
+magic-api:
+  web: /magic/web
+  resource:
+    readonly: false

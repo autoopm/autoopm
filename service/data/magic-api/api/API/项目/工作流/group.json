@@ -1,0 +1,14 @@
+{
+  "properties" : { },
+  "id" : "3c96b136ec424b4ba5425699a669f2e1",
+  "name" : "工作流",
+  "type" : "api",
+  "parentId" : "0c2d9f4051a44b37a9a0f361f4e13b75",
+  "path" : "/flow",
+  "createTime" : 1716867155006,
+  "updateTime" : 1713024590303,
+  "createBy" : null,
+  "updateBy" : null,
+  "paths" : [ ],
+  "options" : [ ]
+}

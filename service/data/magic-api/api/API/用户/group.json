@@ -1,0 +1,14 @@
+{
+  "properties" : { },
+  "id" : "731c0f0eb0fd4dd792004009271d66fa",
+  "name" : "用户",
+  "type" : "api",
+  "parentId" : "4fd0586ad07146a4bc84aeb71b8ec638",
+  "path" : "/users",
+  "createTime" : 1716867154507,
+  "updateTime" : 1713024589759,
+  "createBy" : null,
+  "updateBy" : null,
+  "paths" : [ ],
+  "options" : [ ]
+}

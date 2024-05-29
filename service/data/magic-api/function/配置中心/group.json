@@ -1,0 +1,14 @@
+{
+  "properties" : { },
+  "id" : "7e31035eb8d4471b9fc2923ea1d966c3",
+  "name" : "配置中心",
+  "type" : "function",
+  "parentId" : "0",
+  "path" : "configure",
+  "createTime" : 1716867155574,
+  "updateTime" : null,
+  "createBy" : null,
+  "updateBy" : null,
+  "paths" : [ ],
+  "options" : [ ]
+}

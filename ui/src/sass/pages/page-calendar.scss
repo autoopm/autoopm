@@ -1,0 +1,115 @@
+.page-calendar {
+    display: flex;
+    flex-direction: column;
+    .calendar-head {
+        flex-shrink: 0;
+        display: flex;
+        align-items: flex-start;
+        margin: 32px 20px 16px;
+        border-bottom: 1px solid #F4F4F5;
+        .calendar-titbox {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+            .calendar-title {
+                display: flex;
+                align-items: center;
+                margin-right: 36px;
+                > h1 {
+                    color: $primary-title-color;
+                    font-size: 28px;
+                    font-weight: 600;
+                }
+            }
+            .calendar-arrow {
+                margin-right: 12px;
+                > button {
+                    color: #888888;
+                    font-size: 12px;
+                    &:focus {
+                        box-shadow: none;
+                    }
+                }
+            }
+            .calendar-view {
+                flex: 1;
+                display: flex;
+                justify-content: flex-end;
+                > button {
+                    &:focus {
+                        box-shadow: none;
+                    }
+                }
+            }
+        }
+    }
+    .calendar-box {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 0 48px 6px;
+        overflow: hidden;
+    }
+    .calendar-menu {
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        z-index: -1;
+        opacity: 0;
+    }
+}
+
+body.window-portrait {
+    .page-calendar {
+        .calendar-head {
+            margin: 24px 16px 16px;
+            .calendar-titbox {
+                .calendar-title {
+                    flex: 1;
+                }
+                .calendar-arrow {
+                    margin-left: 12px;
+                    margin-right: 0;
+                }
+                .calendar-view {
+                    display: none;
+                }
+            }
+        }
+        .calendar-box {
+            padding: 0 24px 5px;
+            user-select: none;
+            .calendar-wrapper {
+                .tui-full-calendar-popup {
+                    font-weight: normal;
+                }
+                .tui-full-calendar-section-button {
+                    > button {
+                        .tui-full-calendar-icon {
+                            width: 14px;
+                            height: 14px;
+                            background-size: 14px;
+                        }
+                        .tui-full-calendar-content {
+                            font-size: 14px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    @media (max-width: 640px) {
+        .page-calendar {
+            .calendar-box {
+                .calendar-wrapper {
+                    .tui-full-calendar-popup-arrow {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+}
+
+

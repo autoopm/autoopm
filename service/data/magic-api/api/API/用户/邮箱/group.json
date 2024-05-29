@@ -1,0 +1,14 @@
+{
+  "properties" : { },
+  "id" : "5b45cadb3b994384a354e61195f34f2e",
+  "name" : "邮箱",
+  "type" : "api",
+  "parentId" : "731c0f0eb0fd4dd792004009271d66fa",
+  "path" : "/email",
+  "createTime" : 1716867154571,
+  "updateTime" : 1713024589826,
+  "createBy" : null,
+  "updateBy" : null,
+  "paths" : [ ],
+  "options" : [ ]
+}

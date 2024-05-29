@@ -1,0 +1,14 @@
+{
+  "properties" : { },
+  "id" : "55ff62aa20144b7bb5c6dfb5d76c8139",
+  "name" : "数据管理",
+  "type" : "component",
+  "parentId" : "0",
+  "path" : "/data",
+  "createTime" : 1716867155205,
+  "updateTime" : null,
+  "createBy" : null,
+  "updateBy" : null,
+  "paths" : [ ],
+  "options" : [ ]
+}

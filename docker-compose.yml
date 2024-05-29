@@ -5,14 +5,34 @@ services:
       container_name: "autoo-web-${APP_ID}"
       build:
         context: .
-        dockerfile: ./Dockerfile
+        dockerfile: ./ui/Dockerfile
+      volumes:
+        - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
       ports:
         - "8200:80"
       networks:
         extnetwork:
-          ipv4_address: 10.66.66.9
+          ipv4_address: 10.66.66.100
       restart: unless-stopped
-
+  autoo-server:
+    build:
+      context: .
+      dockerfile: ./service/Dockerfile
+    container_name: "autoo-server-${APP_ID}"
+    environment:
+      TZ: Asia/Shanghai
+    ports:
+      - "8081:8081"
+    volumes:
+      - ./service/data:/home/task/data
+    restart: always
+    depends_on:
+      - mysql
+      - minio
+      - wukongim
+    networks:
+      extnetwork:
+        ipv4_address: 10.66.66.101
 #  nginx:
 #    container_name: "autoo-nginx-${APP_ID}"
 #    image: "nginx:alpine"
@@ -26,14 +46,14 @@ services:
 #      extnetwork:
 #        ipv4_address: 10.66.66.11
 #    restart: unless-stopped
-  excalidraw:
-    container_name: "autoo-excalidraw-${APP_ID}"
-    image: excalidraw/excalidraw:latest
-    restart: unless-stopped
-    ports:
-      - 8104:80
-    volumes:
-      - ./docker/excalidraw:/app/web
+#  excalidraw:
+#    container_name: "autoo-excalidraw-${APP_ID}"
+#    image: excalidraw/excalidraw:latest
+#    restart: unless-stopped
+#    ports:
+#      - 8104:80
+#    volumes:
+#      - ./docker/excalidraw:/app/web
   fileview:
     container_name: "autoo-fileview-${APP_ID}"
     image: "kuaifan/fileview:4.2.0-SNAPSHOT-RC25"
@@ -82,7 +102,7 @@ services:
         ipv4_address: 10.66.66.6
     restart: unless-stopped
   office:
-    container_name: "dootask-office-${APP_ID}"
+    container_name: "autoo-office-${APP_ID}"
     image: "onlyoffice/documentserver:7.5.1.1"
     volumes:
       - ./docker/office/logs:/var/log/onlyoffice
@@ -102,13 +122,79 @@ services:
       extnetwork:
         ipv4_address: 10.66.66.7
     restart: unless-stopped
-#  maxkb:
-#    image: 1panel/maxkb
-#    container_name: "dootask-maxkb-${APP_ID}"
-#    ports:
-#      - "8108:8080"
-#    volumes:
-#      - ./docker/maxkb:/var/lib/postgresql/data
+  maxkb:
+    image: 1panel/maxkb
+    container_name: "autoo-maxkb-${APP_ID}"
+    ports:
+      - "8108:8080"
+    volumes:
+      - ./docker/maxkb:/var/lib/postgresql/data
+    networks:
+      extnetwork:
+        ipv4_address: 10.66.66.8
+    restart: always
+  wukongim:
+    container_name: "autoo-wukongim-${APP_ID}"
+    image: registry.cn-shanghai.aliyuncs.com/wukongim/wukongim:v1.2
+    ports:
+      - "5001:5001"
+      - "5100:5100"
+      - "5172:5172"
+      - "5200:5200"
+      - "5210:5210"
+      - "5300:5300"
+    volumes:
+      - ./docker/wukongim:/root/wukongim
+    networks:
+      extnetwork:
+        ipv4_address: 10.66.66.9
+    restart: always
+  minio:
+    container_name: "autoo-minio-${APP_ID}"
+    image: minio/minio
+    hostname: "minio"
+    ports:
+      - 9000:9000 # api 端口
+      - 9001:9001 # 控制台端口
+    environment:
+      MINIO_ACCESS_KEY: admin    #管理后台用户名
+      MINIO_SECRET_KEY: admin123 #管理后台密码，最小8个字符
+    volumes:
+      - /docker/minio/data:/data               #映射当前目录下的data目录至容器内/data目录
+      - /docker/minio/config:/root/.minio/     #映射配置目录
+    command: server --console-address ':9001' /data  #指定容器中的目录 /data
+    privileged: true
+    networks:
+      extnetwork:
+        ipv4_address: 10.66.66.10
+    restart: always
+  mysql:
+    container_name: "autoo-mysql-${APP_ID}"
+    image: "mysql:8.0.19"
+    platform: linux/x86_64
+    ports:
+      - "33306:3306"
+    environment:
+      TZ: "Asia/Shanghai"
+      MYSQL_ROOT_PASSWORD: task123456
+      MYSQL_DATABASE: task
+      MYSQL_USER: task
+      MYSQL_PASSWORD: 123456
+    volumes:
+      - ./docker/mysql/conf.d:/etc/mysql/conf.d
+      - ./docker/mysql/data:/var/lib/mysql
+      - ./docker/mysql/logs:/logs
+      - ./service/db:/docker-entrypoint-initdb.d/
+
+    command:
+      --lower-case-table-names=1
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_general_ci
+      --explicit_defaults_for_timestamp=true
+    networks:
+      extnetwork:
+        ipv4_address: 10.66.66.11
+    restart: always
 networks:
   extnetwork:
     name: "autoo-networks-${APP_ID}"

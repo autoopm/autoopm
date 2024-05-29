@@ -1,0 +1,14 @@
+{
+  "properties" : { },
+  "id" : "95e5c1dbf9144c9590e70cc8b304f1a2",
+  "name" : "部门",
+  "type" : "api",
+  "parentId" : "731c0f0eb0fd4dd792004009271d66fa",
+  "path" : "/department",
+  "createTime" : 1716867154645,
+  "updateTime" : 1713024589898,
+  "createBy" : null,
+  "updateBy" : null,
+  "paths" : [ ],
+  "options" : [ ]
+}

@@ -1,0 +1,10 @@
+server:
+  port: 8089
+
+spring:
+  datasource:
+    username: magic-boot
+    password: 8adxbBJP2EZyzrrm
+
+upload:
+  dir: /Users/lvjinze/mb/

@@ -1,0 +1,103 @@
+@import "highlight";
+@import "github";
+
+body {
+    &.dark-mode-reverse {
+        .markdown-body {
+            color: #ffffff;
+            .highlight pre,
+            pre {
+                background-color: #282c34;
+            }
+        }
+    }
+
+    .markdown-body {
+        color: #303133;
+        background-color: transparent;
+        font-size: 14px;
+        overflow: auto;
+
+        p {
+            white-space: pre-wrap;
+        }
+
+        ol {
+            list-style-type: decimal;
+        }
+
+        ul {
+            list-style-type: disc;
+        }
+
+        pre code,
+        pre tt {
+            line-height: 1.65;
+        }
+
+        .highlight pre,
+        pre {
+            background-color: #fff;
+        }
+
+        code.hljs {
+            padding: 0;
+        }
+
+        .code-block {
+            &-wrapper {
+                position: relative;
+                padding-top: 24px;
+            }
+
+            &-header {
+                position: absolute;
+                top: 5px;
+                right: 0;
+                width: 100%;
+                padding: 0 1rem;
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
+                color: #b3b3b3;
+
+                &__copy {
+                    cursor: pointer;
+                    margin-left: 0.5rem;
+                    user-select: none;
+
+                    &:hover {
+                        color: #65a665;
+                    }
+                }
+            }
+        }
+
+        .input-blink {
+            position: absolute;
+            content: '';
+            display: inline-block;
+            width: 2px;
+            height: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            animation: blink-animate 1.2s infinite steps(1, start);
+        }
+    }
+
+    .self {
+        .markdown-body {
+            color: #ffffff;
+        }
+    }
+
+    @keyframes blink-animate {
+        0%,to {
+            background-color: currentColor
+        }
+
+        50% {
+            background-color: transparent
+        }
+    }
+}

@@ -1,0 +1,14 @@
+{
+  "properties" : { },
+  "id" : "41922e26ef57421f8819fe6c59f14d63",
+  "name" : "权限",
+  "type" : "function",
+  "parentId" : "0",
+  "path" : "/permission",
+  "createTime" : 1716867155451,
+  "updateTime" : null,
+  "createBy" : null,
+  "updateBy" : null,
+  "paths" : [ ],
+  "options" : [ ]
+}

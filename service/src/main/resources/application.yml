@@ -1,0 +1,128 @@
+server:
+  port: 8082
+  compression:
+    enabled: true
+    min-response-size: 128
+spring:
+  profiles:
+    active: demo
+  servlet:
+    multipart:
+      max-file-size: 200MB
+      max-request-size: 200MB
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://${public.ip}:33306/task?useSSL=false&zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=UTF8&autoReconnect=true&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
+    username: task
+    password: 123456
+    druid:
+      # 下面为连接池的补充设置，应用到上面所有数据源中
+      # 初始化大小，最小，最大
+      initial-size: 5
+      min-idle: 5
+      max-active: 1000
+      # 配置获取连接等待超时的时间
+      max-wait: 60000
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      time-between-eviction-runs-millis: 60000
+      # 配置一个连接在池中最小生存的时间，单位是毫秒
+      min-evictable-idle-time-millis: 300000
+      validation-query: SELECT 1
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      # 打开PSCache，并且指定每个连接上PSCache的大小
+      pool-prepared-statements: true
+      #   配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+      max-pool-prepared-statement-per-connection-size: 20
+      filters: stat,wall
+      use-global-data-source-stat: true
+      # 配置监控服务器
+      stat-view-servlet:
+        enabled: true
+        login-username: admin
+        login-password: 123456
+        reset-enable: false
+        url-pattern: /druid/*
+        # 添加IP白名单
+        allow: ""
+        # 添加IP黑名单，当白名单和黑名单重复时，黑名单优先级更高
+        #deny:
+      web-stat-filter:
+        # 添加过滤规则
+        url-pattern: /*
+        # 忽略过滤格式
+        exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"
+# 上传路径
+upload:
+  dir: D:/mb/
+
+magic-api:
+  web: /magic/web
+  show-sql: true #配置打印SQL
+#  sql-column-case: camel
+  resource:
+    location: data/magic-api
+  backup: #备份相关配置
+    enable: true #是否启用
+    max-history: -1 #备份保留天数，-1为永久保留
+    table-name: magic_backup_record_v2 #使用数据库存储备份时的表名
+  page:
+    page: current
+    size: size
+  cache:
+    enable: true  #开启缓存，默认是不开启的
+    ttl: 3600000 #有效期1小时，默认-1 即永不过期
+  response-code:
+    success: 200 #执行成功的code值
+    invalid: 400 #参数验证未通过的code值
+    exception: 500 #执行出现异常的code值
+  crud: # CRUD相关配置
+    logic-delete-column: is_del #逻辑删除列
+    logic-delete-value: 1 #逻辑删除值
+#  security:
+#    username: admin
+#    password: 123456
+
+# Sa-Token配置
+sa-token:
+  # token名称 (同时也是cookie名称)
+  token-name: token
+  # token有效期，单位s 默认30天, -1代表永不过期
+  timeout: 2592000
+  # token临时有效期 (指定时间内无操作就视为token过期) 单位: 秒
+  active-timeout: -1
+  # 是否允许同一账号并发登录 (为true时允许一起登录, 为false时新登录挤掉旧登录)
+  is-concurrent: true
+  # 在多人登录同一账号时，是否共用一个token (为true时所有登录共用一个token, 为false时每次登录新建一个token)
+  is-share: false
+  # token风格
+  token-style: uuid
+  # 是否输出操作日志
+  is-log: false
+
+oss:
+  enable: false
+  endpoint: ""
+  accessKeyId: ""
+  accessKeySecret: ""
+  roleArn: ""
+  roleSessionName: ""
+  bucket: ""
+  bucketDomain: ""
+
+minio:
+  endpoint: http://${public.ip}:9000 #Minio服务所在地址
+  bucketName: task #存储桶名称
+  accessKey: admin #访问的key
+  secretKey: admin123 #访问的秘钥
+wukongim:
+  endpoint: http://${public.ip}:5001
+public:
+  ip: 192.168.31.130
+
+
