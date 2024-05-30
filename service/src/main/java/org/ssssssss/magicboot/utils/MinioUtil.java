@@ -73,6 +73,20 @@ public class MinioUtil {
     }
 
     /**
+     * 检查桶是否存在，不存在则创建
+     * @param bucketName
+     */
+    public void checkBucket(String bucketName){
+        if (bucketExists(bucketName)) {
+            log.info("Bucket already exists.");
+        } else {
+            // 创建一个名为task的存储桶
+            makeBucket(bucketName);
+            log.info("create a new bucket.");
+        }
+    }
+
+    /**
      * 删除存储bucket
      *
      * @return Boolean
@@ -109,6 +123,7 @@ public class MinioUtil {
      * @return
      */
     public String uploadBase64(String str) {
+        checkBucket(prop.getBucketName());
         byte[] imageBytes = Base64.decode(str);
         String fileName = IdUtil.simpleUUID();
         String objectName = DateUtil.today() + "/" + fileName + ".jpeg";
@@ -137,6 +152,7 @@ public class MinioUtil {
      * @return
      */
     public String uploadTxt(String str) {
+        checkBucket(prop.getBucketName());
         String fileName = IdUtil.simpleUUID();
         String objectName = DateUtil.today() + "/" + fileName + ".txt";
 
@@ -193,14 +209,7 @@ public class MinioUtil {
      * @return Boolean
      */
     public String upload(MultipartFile file) {
-        if (bucketExists(prop.getBucketName())) {
-            log.info("Bucket already exists.");
-        } else {
-            // 创建一个名为task的存储桶
-            makeBucket(prop.getBucketName());
-            log.info("create a new bucket.");
-        }
-
+        checkBucket(prop.getBucketName());
         String originalFilename = file.getOriginalFilename();
         if (StrUtil.isBlank(originalFilename)) {
             throw new RuntimeException();
@@ -327,6 +336,9 @@ public class MinioUtil {
         return true;
     }
 
+
+
+
     /**
      * 文件上传
      *
@@ -336,13 +348,7 @@ public class MinioUtil {
      * @throws Exception
      */
     public String uploadStream(InputStream stream, String fileName) {
-        if (bucketExists(prop.getBucketName())) {
-            log.info("Bucket already exists.");
-        } else {
-            // 创建一个名为task的存储桶
-            makeBucket(prop.getBucketName());
-            log.info("create a new bucket.");
-        }
+        checkBucket(prop.getBucketName());
         String newFileName = IdUtil.simpleUUID() + fileName.substring(fileName.lastIndexOf("."));
         String objectName = DateUtil.today() + "/" + newFileName;
         PutObjectArgs objectArgs = null;

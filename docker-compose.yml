@@ -185,7 +185,6 @@ services:
       - ./docker/mysql/data:/var/lib/mysql
       - ./docker/mysql/logs:/logs
       - ./service/db:/docker-entrypoint-initdb.d/
-
     command:
       --lower-case-table-names=1
       --character-set-server=utf8mb4

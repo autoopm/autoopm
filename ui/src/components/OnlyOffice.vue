@@ -230,7 +230,8 @@ export default {
                     "fileType": this.fileType,
                     "title": fileName,
                     "key": fileKey,
-                    "url": `http://autoo-server/api/${this.fileUrl}`,
+                    // "url": `http://autoo-server/api/${this.fileUrl}`,
+                    "url": window.location.origin+`/api/${this.fileUrl}`,
                 },
                 "editorConfig": {
                     "mode": "edit",
@@ -244,7 +245,8 @@ export default {
                         "forcesave": true,
                         "help": false,
                     },
-                    "callbackUrl": `http://autoo-server/api/file/content/office?id=${codeId}&Token=${this.userToken}`,
+                    // "callbackUrl": `http://autoo-server/api/file/content/office?id=${codeId}&Token=${this.userToken}`,
+                  "callbackUrl":  window.location.origin+`/api/file/content/office?id=${codeId}&Token=${this.userToken}`,
                 },
                 "events": {
                     "onDocumentReady": this.onDocumentReady,

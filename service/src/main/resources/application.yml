@@ -16,7 +16,7 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://${public.ip}:33306/task?useSSL=false&zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=UTF8&autoReconnect=true&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://mysql:3306/task?useSSL=false&zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=UTF8&autoReconnect=true&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
     username: task
     password: 123456
     druid:
@@ -116,13 +116,14 @@ oss:
   bucketDomain: ""
 
 minio:
-  endpoint: http://${public.ip}:9000 #Minio服务所在地址
+  endpoint: http://minio:9000 #Minio服务所在地址
   bucketName: task #存储桶名称
   accessKey: admin #访问的key
   secretKey: admin123 #访问的秘钥
 wukongim:
-  endpoint: http://${public.ip}:5001
+  endpoint: http://wukongim:5001
 public:
-  ip: 192.168.31.130
+  domain: http://192.168.100.172 # magic-api需要用到这个地址填充预览图片地址
+
 
 

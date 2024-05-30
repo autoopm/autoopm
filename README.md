@@ -35,26 +35,17 @@ git clone git@gitee.com:autoopm/autoopm.git
 
 4、修改本地的对外ip地址
 
-替换./service/src/main/resources/application.yml中的public:ip的地址（不要填127.0.0.1或localhost）
-
-
-public:
-ip: 192.168.100.134
+替换./service/src/main/resources/application.yml中的public:domain的地址（用于填充图片预览路径的，不要填127.0.0.1或localhost）
 
 4、进入目录并执行安装
 
 cd autoopm && ./setup.sh
 
-5、进入minio创建桶task
-
-打开服务器ip:9000,使用账号密码admin/admin123登录创建桶task
-
-
-6、导入magic-api接口
+5、导入magic-api接口
 
 打开服务器ip:8081/magic/web/index.html，将根目录下的data下面的magic-api.zip全量导入
 
-7、配置知识库
+6、配置知识库
 
 打开服务器ip：8108/ui/login，使用账号密码（admin/MaxKB@123..）登录，配置模型、应用和知识库，并将相关配置填写到系统设置-知识库设置中。
 
