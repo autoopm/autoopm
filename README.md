@@ -37,15 +37,15 @@ git clone git@gitee.com:autoopm/autoopm.git
 
 替换./service/src/main/resources/application.yml中的public:domain的地址（用于填充图片预览路径的，不要填127.0.0.1或localhost）
 
-4、进入目录并执行安装
+5、进入目录并执行安装
 
 cd autoopm && ./setup.sh
 
-5、导入magic-api接口
+6、导入magic-api接口
 
 打开服务器ip:8081/magic/web/index.html，将根目录下的data下面的magic-api.zip全量导入
 
-6、配置知识库
+7、配置知识库
 
 打开服务器ip：8108/ui/login，使用账号密码（admin/MaxKB@123..）登录，配置模型、应用和知识库，并将相关配置填写到系统设置-知识库设置中。
 
@@ -55,12 +55,13 @@ cd autoopm && ./setup.sh
 
 
 页面截图
-![输入图片说明](./images/WX20240402-013009@2x.png)
-![输入图片说明](./images/dashboard.png)
-![输入图片说明](./images/project@2x.png)
-![输入图片说明](./images/file1@2x.png)
-![输入图片说明](./images/file2@2x.png)
-![输入图片说明](./images/file3@2x.png)
-![输入图片说明](./images/file5@2x.png)
-![输入图片说明](./images/WX20240402-013122@2x.png)
-![输入图片说明](./images/magic-api.png)
+![知识库设置](./images/know1.png)
+![知识库查询](./images/know2.png)
+![仪表盘](./images/dashboard.png)
+![项目管理](./images/project@2x.png)
+![文件](./images/file1@2x.png)
+![文件-word](./images/file2@2x.png)
+![思维导图](./images/file3@2x.png)
+![流程图](./images/file5@2x.png)
+![项目详情](./images/WX20240402-013122@2x.png)
+![后台接口开发页面](./images/magic-api.png)
