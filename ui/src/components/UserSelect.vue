@@ -580,7 +580,6 @@ export default {
                         getstatistics: 'no'
                     },
                 }).then(({data}) => {
-                    console.log("进到这里---》")
                     data = data.data.map(item => Object.assign(item, {type: 'project'}))
                     this.projects = data
                     //
@@ -595,7 +594,6 @@ export default {
                     this.projects = []
                     $A.messageWarning(msg)
                 }).finally(_ => {
-                   console.log("进到这里finally---》")
                     this.loadIng--;
                     this.waitIng--;
                 });

@@ -25,7 +25,7 @@
     "children" : null
   }, {
     "name" : "email",
-    "value" : "admin@dootask.com",
+    "value" : "admin@autoo.com",
     "description" : null,
     "required" : true,
     "dataType" : "String",
@@ -100,7 +100,7 @@
   "requestBody" : "",
   "headers" : [ ],
   "paths" : [ ],
-  "responseBody" : "{\n    \"code\": 200,\n    \"message\": \"success\",\n    \"data\": {\n        \"userid\": 6,\n        \"identity\": \",admin,\",\n        \"department\": \"\",\n        \"az\": \"A\",\n        \"pinyin\": \"\",\n        \"email\": \"admin@dootask.com\",\n        \"tel\": \"\",\n        \"nickname\": \"Admin\",\n        \"profession\": \"管理员\",\n        \"userimg\": null,\n        \"encrypt\": \"67f88b\",\n        \"password\": \"\",\n        \"changepass\": 0,\n        \"login_num\": 1,\n        \"last_ip\": \"117.181.99.48\",\n        \"last_at\": 1711729907000,\n        \"line_ip\": \"117.181.99.48\",\n        \"line_at\": 1711729907000,\n        \"task_dialog_id\": 18,\n        \"created_ip\": \"\",\n        \"disable_at\": null,\n        \"email_verity\": true,\n        \"bot\": 0,\n        \"created_at\": \"2024-03-06 21:13:04\",\n        \"updated_at\": 1709798907000,\n        \"token\": \"b31bd89a-f54c-439b-a90c-3246489d4796\"\n    },\n    \"timestamp\": 1711912715901,\n    \"executeTime\": 336\n}",
+  "responseBody" : "{\n    \"code\": 200,\n    \"message\": \"success\",\n    \"data\": {\n        \"userid\": 6,\n        \"identity\": \",admin,\",\n        \"department\": \"\",\n        \"az\": \"A\",\n        \"pinyin\": \"\",\n        \"email\": \"admin@autoo.com\",\n        \"tel\": \"\",\n        \"nickname\": \"Admin\",\n        \"profession\": \"管理员\",\n        \"userimg\": null,\n        \"encrypt\": \"67f88b\",\n        \"password\": \"\",\n        \"changepass\": 0,\n        \"login_num\": 1,\n        \"last_ip\": \"117.181.99.48\",\n        \"last_at\": 1711729907000,\n        \"line_ip\": \"117.181.99.48\",\n        \"line_at\": 1711729907000,\n        \"task_dialog_id\": 18,\n        \"created_ip\": \"\",\n        \"disable_at\": null,\n        \"email_verity\": true,\n        \"bot\": 0,\n        \"created_at\": \"2024-03-06 21:13:04\",\n        \"updated_at\": 1709798907000,\n        \"token\": \"b31bd89a-f54c-439b-a90c-3246489d4796\"\n    },\n    \"timestamp\": 1711912715901,\n    \"executeTime\": 336\n}",
   "description" : null,
   "requestBodyDefinition" : {
     "name" : "root",
@@ -127,7 +127,7 @@
       "children" : [ ]
     }, {
       "name" : "email",
-      "value" : "admin@dootask.com",
+      "value" : "admin@autoo.com",
       "description" : "",
       "required" : false,
       "dataType" : "String",

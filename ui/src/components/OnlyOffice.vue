@@ -156,8 +156,8 @@ export default {
                 }
                 this.loading = true;
                 this.loadError = false;
-                // $A.loadScript($A.apiUrl("../office/web-apps/apps/api/documents/api.js")).then(_ => {
-                   $A.loadScript($A.apiUrl("http://localhost:8103/web-apps/apps/api/documents/api.js")).then(_ => {
+                $A.loadScript($A.apiUrl("../office/web-apps/apps/api/documents/api.js")).then(_ => {
+                   // $A.loadScript($A.apiUrl("http://office:8103/web-apps/apps/api/documents/api.js")).then(_ => {
                     if (!this.documentKey) {
                         this.handleClose();
                         return

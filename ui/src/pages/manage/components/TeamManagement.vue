@@ -822,10 +822,7 @@ export default {
                 })
             }
 
-            console.log("------------------->data"+keys)
-          console.log(keys)
 
-          console.log("------------------->data"+keys)
             this.$store.dispatch("call", {
                 url: 'users/lists',
                 data: {

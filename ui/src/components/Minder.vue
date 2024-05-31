@@ -307,9 +307,9 @@
         },
         computed: {
             url() {
-                // return $A.apiUrl(`../minder/index.html?type=manual&readonly=${this.readOnly ? 'yes' : 'no'}`)
+                return $A.apiUrl(`../minder/index.html?type=manual&readonly=${this.readOnly ? 'yes' : 'no'}`)
               //TODO 使用本地的,先写死
-              return $A.apiUrl(`http://localhost:8101/index.html?type=manual&readonly=${this.readOnly ? 'yes' : 'no'}`)
+              // return $A.apiUrl(`http://minder:8101/index.html?type=manual&readonly=${this.readOnly ? 'yes' : 'no'}`)
             }
         },
         watch: {

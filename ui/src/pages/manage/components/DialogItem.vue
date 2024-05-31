@@ -171,7 +171,6 @@ export default {
 
     methods: {
         msgRead() {
-           console.log("onOpenDialog------------------------>msgRead")
             if (this.isNoRead) {
                 return;
             }
@@ -213,7 +212,6 @@ export default {
         },
 
         onOpenDialog(userid) {
-          console.log("onOpenDialog------------------------>")
             if (this.dialogData.type != 'group') {
                 return
             }
@@ -269,7 +267,6 @@ export default {
                 this.$emit(event, ...arg)
                 return
             }
-          console.log("onOpenDialog------------------------>dispatch")
             let parent = this.$parent
             let name = parent.$options.name
             while (parent && (!name || name !== 'virtual-list')) {

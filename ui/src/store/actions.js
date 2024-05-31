@@ -216,7 +216,6 @@ export default {
       params.success = async (result, status, xhr) => {
         state.ajaxNetworkException = false;
         if (!$A.isJson(result)) {
-          console.log(result, status, xhr);
           reject({ code: 400, data: {}, msg: "Return error" });
           return;
         }
@@ -493,8 +492,6 @@ export default {
    * @param data|{key, project_id}
    */
   toggleProjectParameter({ state }, data) {
-    console.log("toggleProjectParameter-------")
-    console.log(data)
     $A.execMainDispatch("toggleProjectParameter", data);
     //
     let key = data;
@@ -1215,18 +1212,14 @@ export default {
    * @param project_id
    */
   forgetProject({ state, dispatch }, project_id) {
-    console.log("ids-->project_id"+project_id)
     $A.execMainDispatch("forgetProject", project_id);
     // console.log("$A.isArray(project_id)-->"+ $A.isArray(project_id))
     // const ids = $A.isArray(project_id) ? [project_id]  : project_id;
     const ids = Array.isArray(project_id) ? project_id : [project_id];
-    console.log("ids-->"+ids)
     ids.some((id) => {
-      console.log("ids for")
       const index = state.cacheProjects.findIndex(
         (project) => project.id === id
       );
-      console.log("ids for index-->"+ index)
       if (index > -1) {
         dispatch(
           "forgetTask",
@@ -1245,7 +1238,6 @@ export default {
       }
     });
 
-    console.log("进来这里了3...."+state.projectId)
     if (ids.includes(state.projectId)) {
       const project = $A
         .cloneJSON(state.cacheProjects)
@@ -2210,24 +2202,12 @@ export default {
    */
   taskAdd({ state, dispatch }, data) {
     return new Promise(function (resolve, reject) {
-      console.log("taskadd data")
-      console.log(data)
-      console.log("taskadd data")
+
       //这里处理下任务
       const post1 = $A.cloneJSON($A.date2string(data));
 
-      console.log("taskadd data post1")
-      console.log(post1)
-      console.log("taskadd data post1")
-
-
       var post = $A.processParams(post1)
-
-      console.log("taskadd data post--------")
-      console.log(post)
-      console.log("taskadd data post--------")
       // var post = $A.processParams(post1)
-
       // if ($A.isArray(post.column_id)) //TODO 没明白这里为什么要怎么写，判断数组
       if (post.column_id) //
         dispatch("call", {
@@ -2245,8 +2225,6 @@ export default {
           resolve(result);
         })
         .catch((e) => {
-          console.log("异常le。。。。")
-          console.warn(e);
           reject(e);
         });
     });
@@ -2669,8 +2647,6 @@ export default {
    * @param data
    */
   saveDialog({ state, dispatch }, data) {
-    console.log("saveDialog data")
-    console.log(data)
     $A.execMainDispatch("saveDialog", data);
     //
     if ($A.isArray(data)) {

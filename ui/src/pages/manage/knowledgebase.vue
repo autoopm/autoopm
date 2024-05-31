@@ -28,8 +28,6 @@ export default {
   watch: {
     know: {
       handler(data) {
-        console.log("进到这个页面")
-        console.log(data);
         this.formDatum = $A.cloneJSON(data);
         this.iframeUrl = $A.cloneJSON(data).iframeUrl
         if (this.formDatum.length === 0) {
@@ -45,7 +43,6 @@ export default {
         url: 'system/know?type=get',
         method: 'post',
       }).then(({data}) => {
-        console.log("获取知识库返回值",data)
         this.iframeSrc = $A.cloneJSON(data).iframeUrl;
         this.$store.state.know = $A.cloneJSON(data);
       }).catch(({msg}) => {

@@ -174,7 +174,7 @@
           "children" : [ ]
         }, {
           "name" : "email",
-          "value" : "admin@dootask.com",
+          "value" : "admin@autoo.com",
           "description" : "",
           "required" : false,
           "dataType" : "String",

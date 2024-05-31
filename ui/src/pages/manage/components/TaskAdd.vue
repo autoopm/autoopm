@@ -343,9 +343,7 @@ export default {
 
       //添加更多
       changeMore (status) {
-        console.log("this status value"+status)
         this.again = status
-        console.log("this status addMore value"+this.again)
         // this.$set(this.addMore, status);
       },
         /**
@@ -530,10 +528,8 @@ export default {
         },
 
         async onAdd(again,affirm=false) {
-            console.log("loadIng value"+this.loadIng)
             if (!this.addData.name) {
                 $A.messageError("任务描述不能为空");
-                 console.log("loadIng value 任务描述不能为空"+this.loadIng)
                 return;
             }
 
@@ -551,12 +547,10 @@ export default {
                         this.again = again
                     }
                 });
-              console.log("loadIng value 存在任务提示"+this.loadIng)
                 return;
             }
             this.$store.dispatch("taskAdd", this.addData).then(({msg}) => {
                 this.loadIng--;
-                console.log("loadIng value dispatch"+this.loadIng)
                 $A.messageSuccess(msg);
                 if (again === true) {
                     this.addData = Object.assign({}, this.addData, {
@@ -566,7 +560,6 @@ export default {
                     });
                     this.$refs.input.focus();
                     this.loadIng--;
-                    console.log("loadIng value dispatch"+this.loadIng)
                 } else {
                     this.addData = {
                         cascader: [], //TODO 修改成逗号分割

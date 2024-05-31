@@ -97,7 +97,6 @@ export class SSEClient {
 
     _onOpen() {
         if (window.systemInfo.debug === "yes") {
-            console.log("SSE open: " + this.url);
         }
     }
 
@@ -113,7 +112,6 @@ export class SSEClient {
     _onError(type, handler) {
         return () => {
             if (window.systemInfo.debug === "yes") {
-                console.log("SSE retry: " + this.url);
             }
             if (this.es) {
                 this._removeAllEvent(type, handler);
@@ -157,7 +155,6 @@ export class SSEClient {
             clearTimeout(this.timer);
         }
         if (window.systemInfo.debug === "yes") {
-            console.log("SSE cancel: " + this.url);
         }
     }
 }

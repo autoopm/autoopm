@@ -729,7 +729,6 @@ export default {
     //群频道 订阅者列表
     const subscribersCallback = async (channel, version) => {
       const subscribers = WKSDK.shared().channelManager.getSubscribes(channel);
-      console.log("subscribers------subscribersCallback------------------------end----",subscribers);
       return subscribers;
     };
     WKSDK.shared().config.provider.syncSubscribersCallback = subscribersCallback;
@@ -1585,10 +1584,8 @@ export default {
                 })));
             } else if (this.msgText) {
                 this.$refs.dialog.sendMsg(this.msgText);
-                console.log("sendMsg---------------this.msgText")
             } else if (typeof msgText === 'string' && msgText) {
                 this.$refs.dialog.sendMsg(msgText);
-              console.log("sendMsg---------------this.msgText  string msgText")
             }
             this.msgFile = [];
             this.msgText = "";

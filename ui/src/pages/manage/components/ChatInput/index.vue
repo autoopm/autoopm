@@ -1037,7 +1037,6 @@ export default {
         },
 
         onSend(type) {
-            console.log("触发这里..........................................")
             setTimeout(_ => {
                 if (this.filterInvalidLine(this.value) === '') {
                     return

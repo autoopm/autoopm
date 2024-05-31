@@ -149,10 +149,8 @@ export default {
                 .then((_) => {
                   window.vConsole = new window.VConsole({
                     onReady: () => {
-                      console.log("vConsole: onReady");
                     },
                     onClearLog: () => {
-                      console.log("vConsole: onClearLog");
                     },
                   });
                 })
@@ -220,11 +218,9 @@ export default {
   methods: {
     //悟空im连接
     wuKongIMConnection(){
-      console.log('wuKongIMConnection进来这个页面,userid->'+this.userId);
-      console.log('wuKongIMConnection进来这个页面,token->'+this.userToken);
-
-
-      WKSDK.shared().config.addr = 'ws://localhost:5200'; // 默认端口为5200 //TODO 这里还要改成当前的服务器ip
+      let url = $A.apiUrl('../ws');
+      console.log("ws connect addr -->"+url)
+      WKSDK.shared().config.addr = url; // 默认端口为5200 //TODO 这里还要改成当前的服务器ip
 // 认证信息
       WKSDK.shared().config.uid = this.userId+ ''; // 用户uid（需要在悟空通讯端注册过）
       WKSDK.shared().config.token = this.userToken; // 用户token （需要在悟空通讯端注册过）
@@ -234,9 +230,9 @@ export default {
       WKSDK.shared().connectManager.addConnectStatusListener(
           (status, reasonCode) => {
             if (status === ConnectStatus.Connected) {
-              console.log('wuKongIMConnection连接成功，status|reasonCode-->'+status+'|'+reasonCode);
+              console.log('im连接成功，status|reasonCode-->'+status+'|'+reasonCode);
             } else {
-              console.log('wuKongIMConnection连接失败', reasonCode); //  reasonCode: 2表示认证失败（uid或token错误）
+              console.log('im连接失败', reasonCode); //  reasonCode: 2表示认证失败（uid或token错误）
             }
           },
       );

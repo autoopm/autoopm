@@ -68,8 +68,8 @@ return '服务器存储异常'
 //         "size": 111.36,
 //         "file": "\/var\/www\/public\/uploads\/user\/picture\/1\/202402\/ac89c6e77ecfeb11bac7e2bd85c7cb5d.png",
 //         "path": "uploads\/user\/picture\/1\/202402\/ac89c6e77ecfeb11bac7e2bd85c7cb5d.png",
-//         "url": "http:\/\/dootask.com\/uploads\/user\/picture\/1\/202402\/ac89c6e77ecfeb11bac7e2bd85c7cb5d.png",
-//         "thumb": "http:\/\/dootask.com\/uploads\/user\/picture\/1\/202402\/ac89c6e77ecfeb11bac7e2bd85c7cb5d.png_thumb.png",
+//         "url": "http:\/\/autoo.com\/uploads\/user\/picture\/1\/202402\/ac89c6e77ecfeb11bac7e2bd85c7cb5d.png",
+//         "thumb": "http:\/\/autoo.com\/uploads\/user\/picture\/1\/202402\/ac89c6e77ecfeb11bac7e2bd85c7cb5d.png_thumb.png",
 //         "width": 1300,
 //         "height": 501,
 //         "ext": "png"

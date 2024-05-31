@@ -573,13 +573,11 @@ export default {
     },
 
     getContent() {
-      console.log(">>getContent>>>start>>>>");
       if (this.fileId === 0) {
         this.contentDetail = {};
         this.updateBak();
         return;
       }
-      console.log(this.file, ">>getContent>>>>this.file.type>>>");
 
       if (["word", "excel", "ppt"].includes(this.file.type)) {
         this.contentDetail = $A.cloneJSON(this.file);
@@ -599,8 +597,6 @@ export default {
           },
         })
         .then(({ data }) => {
-          console.log(data.content, ">getContent>content>>>>>>>");
-
           this.contentDetail = data.content;
           this.updateBak();
         })

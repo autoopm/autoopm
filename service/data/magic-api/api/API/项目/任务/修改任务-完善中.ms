@@ -545,7 +545,6 @@ if (body.owner !== null) {
     }
 
     //TODO 如果旧的任务中已经有了就不管了
-    // console.log(filteredTaskUser);
     for (item in newOwner) {
         log.info('newOwner list->' + item)
         result = db.table('project_task_users').insert({

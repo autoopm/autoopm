@@ -426,7 +426,6 @@ export default {
     },
 
     dialogList() {
-      console.log("mounted------------------------------dialogList");
       return this.cacheDialogs
           .filter((dialog) => {
             return !(dialog.name === undefined || dialog.dialog_delete === 1);
@@ -457,7 +456,6 @@ export default {
     },
 
     loadMsg() {
-      console.log("mounted------------------------------loadMsg ");
       return this.isLoad(`msg::${this.dialogId}-${this.msgId}-${this.msgType}`);
     },
 
@@ -791,7 +789,6 @@ export default {
           // );
           this.renderMsgSizes.clear();
           this.allMsgs = this.allMsgList;
-          console.log("请求到这里1.......")
 
           //TODO 这里更新信息列表
           this.messages = []
@@ -866,7 +863,6 @@ export default {
 
     isReady: {
       handler(ready) {
-        console.log("mounted------------------------------isReady ");
         if (!ready) {
           return;
         }
@@ -894,7 +890,6 @@ export default {
     },
 
     msgType() {
-      console.log("请求到这里2.......")
       this.getMsgs({
         dialog_id: this.dialogId,
         msg_id: this.msgId,
@@ -960,7 +955,6 @@ export default {
             } else if ($A.isJson(msgRecord) && msgRecord.duration > 0) {
               this.sendRecord(msgRecord);
             } else if (msgText) {
-              console.log("sendMsg--------------1");
               this.sendMsg(msgText);
             }
           });
@@ -1054,7 +1048,6 @@ export default {
               streamSeq: msg.streamSeq || 0,
               content: msg.content,
             };
-            console.log("this.messagesstreams.push ")
             this.messages[i].streams.push(newStream);
             break;
           }
@@ -1073,11 +1066,8 @@ export default {
      * @param packet
      */
     messageStatusListener(packet) {
-      console.log("消息packet->", packet); // 消息客户端序号用来匹配对应的发送的消息
       if (packet.reasonCode === 1) {
-        console.log("消息发送成功");   // 发送成功
       } else {
-        console.log("消息发送失败");  // 发送失败
       }
       this.messages.forEach((m) => {
         if (m.clientSeq === packet.clientSeq) {
@@ -1094,9 +1084,7 @@ export default {
     scrollBottom() {
       const chat = this.$refs.chatRef;
       if (chat) {
-        console.log("scrollBottom chat");
         this.$nextTick(function () {
-          console.log("scrollBottom--$nextTick scrollTop");
           chat.scrollTop = chat.scrollHeight;
         });
       }
@@ -1233,16 +1221,8 @@ export default {
       if (targetScrollTop <= 250) {
         // 下拉
         if (this.pulldowning || this.pulldownFinished) {
-          console.log(
-              "不允许下拉",
-              "pulldowning",
-              this.pulldowning,
-              "pulldownFinished",
-              this.pulldownFinished
-          );
           return;
         }
-        console.log("下拉");
         this.pulldowning = true;
         this.pullDown()
             .then(() => {
@@ -1429,12 +1409,7 @@ export default {
       //清除未读，这里也先不考虑
       //群频道 订阅者列表
       const subscribersCallback = async (channel, version) => {
-        const subscribers =
-            WKSDK.shared().channelManager.getSubscribes(channel);
-        console.log(
-            "subscribers------subscribersCallback------------------------end----",
-            subscribers
-        );
+        const subscribers = WKSDK.shared().channelManager.getSubscribes(channel);
         return subscribers;
       };
 
@@ -1478,14 +1453,10 @@ export default {
      * @param packet
      */
     handleMessage(packet) {
-      console.log("handleMessage->",packet); //消息客户端序号用来匹配对应的发送的消息
       if (packet.reasonCode === 1) {
         // 发送成功
-        console.log("消息发送成功");
       } else {
         // 发送失败
-        console.log("消息发送失败");
-        console.log(packet);
       }
     },
 
@@ -1494,7 +1465,6 @@ export default {
      * @param msg {base64, duration}
      */
     sendRecord(msg) {
-      console.log("应该不是这里吧3");
       const tempMsg = {
         id: this.getTempId(),
         dialog_id: this.dialogData.id,
@@ -1538,7 +1508,6 @@ export default {
      * @param item
      */
     sendQuick(item) {
-      console.log("sendMsg--------------sendQuick");
       this.sendMsg(
           `<p><span data-quick-key="${item.key}">${item.label}</span></p>`
       );
@@ -1556,7 +1525,6 @@ export default {
     },
 
     onPositionId(position_id, msg_id = 0, loop_num = 0) {
-      console.log("mounted------------------------------onPositionId");
       return new Promise((resolve, reject) => {
         if (position_id === 0) {
           $A.modalError("查看失败：参数错误");
@@ -1601,7 +1569,6 @@ export default {
             });
           }
           this.preventToBottom = true;
-          console.log("请求到这里3.......")
           // this.getMsgs({
           //   dialog_id: this.dialogId,
           //   msg_id: this.msgId,
@@ -1679,7 +1646,6 @@ export default {
     },
 
     onTouchStart(e) {
-      console.log("onTouchStart1------------");
       this.wrapperStart = null;
       if (this.selectedTextStatus) {
         this.wrapperStart = window.scrollY;
@@ -1830,7 +1796,6 @@ export default {
     },
 
     onMsgsResize({ height }) {
-      console.log("onMsgsResize---------");
       this.$refs.scroller.$el.style.height = `${height}px`;
       //
       if (typeof this.__msgs_height !== "undefined") {
@@ -1874,7 +1839,6 @@ export default {
     },
 
     onToIndex(index) {
-      console.log("onTouchStart1------------onToIndex");
       const scroller = this.$refs.scroller;
       if (scroller) {
         scroller.stopToBottom();
@@ -1885,7 +1849,6 @@ export default {
     },
 
     onToOffset(offset) {
-      console.log("onTouchStart1------------offset");
       const scroller = this.$refs.scroller;
       if (scroller) {
         scroller.stopToBottom();
@@ -1973,7 +1936,6 @@ export default {
 
     onReGetMsg() {
       this.scrollToBottomAndRefresh = false;
-      console.log("请求到这里4.......")
       // this.getMsgs({
       //   dialog_id: this.dialogId,
       //   msg_id: this.msgId,
@@ -1982,13 +1944,9 @@ export default {
     },
 
     onPrevPage() {
-      console.log("获取列表--------------------------------------");
-      console.log("获取列表数据来这里");
       if (this.prevId === 0) {
         return;
       }
-      console.log("获取列表数据来这里，开始请求");
-      console.log("请求到这里5.......")
       // this.getMsgs({
       //   dialog_id: this.dialogId,
       //   msg_id: this.msgId,
@@ -2342,7 +2300,6 @@ export default {
     },
 
     onScroll(event) {
-      console.log("onTouchStart1------------scrollAction onScroll");
       if (this.operatePreventScroll === 0) {
         this.operateVisible = false;
       }
@@ -2355,7 +2312,6 @@ export default {
         this.scrollToBottomAndRefresh && this.onReGetMsg();
       }
       //
-      console.log("onTouchStart1------------scrollAction scrollTop");
       this.scrollAction = event.target.scrollTop;
       this.scrollDirection =
           this.scrollTmp <= this.scrollAction ? "down" : "up";
@@ -2376,7 +2332,6 @@ export default {
           const nearMsg = this.allMsgs[i + (key === "next_id" ? 1 : -1)];
           if (nearMsg && nearMsg.id != rangeValue) {
             this.preventMoreLoad = true;
-            console.log("请求到这里6.......")
             // this.getMsgs({
             //   dialog_id: this.dialogId,
             //   msg_id: this.msgId,
@@ -2834,7 +2789,6 @@ export default {
         config.okText = "重新发送";
         config.onOk = () => {
           this.forgetTempMsg(data.id);
-          console.log("sendMsg--------------2");
           this.sendMsg(msg, mType);
         };
       } else if (type === "record") {
@@ -3275,9 +3229,6 @@ export default {
     },
 
     getUserApproveStatus() {
-      console.log(
-          "111112进到这里2..getUserApproveStatus..IN........................"
-      );
       this.approvaUserStatus = "";
       if (this.dialogData.type !== "user" || this.dialogData.bot) {
         return;

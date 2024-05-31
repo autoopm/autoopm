@@ -921,7 +921,6 @@ export default {
         projectId: {
             handler(val) {
                 if (val > 0) {
-                    console.log('11111-------getFlowData-----------11111111')
                     this.getFlowData();
                 }
             },
@@ -1184,8 +1183,6 @@ export default {
 
         onUser() {
             this.userLoad++;
-            console.log("this daaaaaaaa+")
-            console.log(this.userData.userids)
             this.$store.dispatch("call", {
                 url: 'project/user',
                 data: {

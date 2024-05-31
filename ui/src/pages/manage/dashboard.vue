@@ -496,9 +496,6 @@ export default {
         url: 'project/dash',
       }).then(({data}) => {
         this.dashData = {};
-        console.log("dashData size1 ",this.dashData)
-        console.log("data value"+data)
-        console.log(data)
         this.dashData = data
       }).catch(({msg}) => {
         $A.modalError(msg);
@@ -521,9 +518,6 @@ export default {
         // }
 
         this.taskDatas = {};
-        console.log("taskDatas size1 ",this.taskDatas)
-        console.log("data value"+data)
-        console.log(data)
         data.data.forEach(item => {
           if (!this.taskDatas[item.p_level]) {
             this.groupedLevels.push(item.p_level); //新建
@@ -535,7 +529,6 @@ export default {
           this.taskDatas[item.p_level].items.push(item);
         });
 
-        console.log("taskDatas size ",this.taskDatas)
         this.$forceUpdate()  //强刷
 
         // this.groupedLevels = groupedLevels.reduce((acc, curr, index) => {
@@ -612,7 +605,6 @@ export default {
     },
 
     openMenu(event, task) {
-      console.log("点击了这里...")
       this.$store.state.taskOperation = {event, task}
     },
 

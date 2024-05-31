@@ -659,8 +659,6 @@ export default {
           })
           .catch(({ data, msg }) => {
             this.loadIng--;
-            console.log("in this 223  data "+data);
-            console.log("in this  message"+msg);
             $A.modalError(msg);
             // if (data.code === "email") {
             //   $A.modalWarning(message);

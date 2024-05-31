@@ -74,8 +74,6 @@ export default {
     watch: {
         taskPriority: {
             handler(data) {
-              console.log('进入到这里。。。。。'+data);
-              console.log(data);
                 this.formDatum = $A.cloneJSON(data);
                 if (this.formDatum.length === 0) {
                     this.addDatum();
@@ -99,7 +97,6 @@ export default {
         },
 
         addDatum() {
-            console.log("这里。。。。。。。。。。。。。。。。。。。。")
             this.formDatum.push($A.cloneJSON(this.nullDatum));
 
         },

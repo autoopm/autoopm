@@ -920,12 +920,11 @@ export default {
         }
         e.preventDefault();
         if(this.addShow){
-           console.log("点击了添加项目")
             this.onAddProject()
         }
 
         if(this.addTaskShow){
-          console.log("点击了添加任务")
+
         }
       }
     },
@@ -951,7 +950,6 @@ export default {
     },
 
     settingRoute(path) {
-     console.log(path,'>>>>>>settingRoute>>')
       switch (path) {
         case "allUser":
           this.allUserShow = true;
@@ -1017,7 +1015,6 @@ export default {
           return;
       }
       if (this.menu.findIndex((m) => m.path == path) > -1) {
-        console.log('>>>toggleRoute>>>>')
         this.toggleRoute("setting-" + path);
       }
     },
@@ -1377,7 +1374,6 @@ export default {
       if (this.notificationManage.support) {
         this.notificationManage.notificationEvent({
           onclick: ({ target }) => {
-            console.log("[Notification] A Click", target);
             this.notificationManage.close();
             this.notificationClick(target);
             window.focus();
@@ -1388,12 +1384,10 @@ export default {
       //
       if (this.$Electron) {
         this.$Electron.registerMsgListener("clickNotification", (target) => {
-          console.log("[Notification] B Click", target);
           this.$Electron.sendMessage("mainWindowActive");
           this.notificationClick(target);
         });
         this.$Electron.registerMsgListener("replyNotification", (target) => {
-          console.log("[Notification] B Reply", target);
           this.notificationReply(target);
         });
       }
@@ -1418,9 +1412,7 @@ export default {
           case "denied":
           case "already denied":
             if (msg === "denied") {
-              console.log("您刚刚拒绝显示通知 请在设置中更改设置");
             } else {
-              console.log("您曾级拒绝显示通知 请在设置中更改设置");
             }
             break;
         }

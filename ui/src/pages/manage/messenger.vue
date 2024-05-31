@@ -693,33 +693,12 @@ export default {
       },
 
       async getDialogList(){
-        console.log("进到这个页面")
         var connStatus =  WKSDK.shared().connectManager.status
         if (connStatus === 1) {  //修改程sdk中的
-
           WKSDK.shared().conversationManager.sync().then((data) => {
-            // const remoteConversations = WKSDK.shared().conversationManager.sync() //同步最近会话列表
-            // console.log("11111111remoteConversations value--->")
-            // console.log(data)
-            // console.log("111111111111111111remoteConversations value end--->")
-            // this.dialogList = remoteConversations
             this.dialogList = data;
-           /* this.dialogList = []  //先清空
-            if (data && data.length > 0) {
-               console.log("remoteConversations  for befor")
-               for (let m of data) {
-                this.dialogList.push(m);
-               }
-            }
-            console.log("dialogList value end--->",this.dialogList)*/
-
-
           })
-
-
-
         }else {
-          console.log("dialogSearchList connStatus------->"+connStatus)
           this.dialogList = []
         }
       },
@@ -773,8 +752,6 @@ export default {
         }
         conversation.extra = {};
         conversation.info = conversationMap["info"]
-        console.log("conversation info--->"+conversationMap["info"])
-        console.log(conversationMap["info"])
         return conversation;
       },
       //数据转换
@@ -938,8 +915,6 @@ export default {
         return new Uint8Array(arr);
       },
       connectStatusListener(status, reasonCode){
-        console.log("status -》"+status)
-
       },
 
       listTouch() {
@@ -1120,7 +1095,6 @@ export default {
         },
 
         searchDialog() {
-          console.log("dialogSearchList--->searchDialog")
             const key = this.dialogSearchKey
             if (key == '') {
                 return
@@ -1163,7 +1137,6 @@ export default {
         },
 
         searchTagDialog() {
-            console.log("dialogSearchList->searchTagDialog")
             this.dialogMarkLoad++;
             this.$store.dispatch("call", {
                 url: 'dialog/search/tag',
