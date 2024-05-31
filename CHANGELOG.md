@@ -20,3 +20,12 @@ All notable changes to this project will be documented in this file.
 
 - 优化打包时候自动打包magic-api接口定义
 
+## [0.0.3]
+
+### Bug Fixes
+
+- 修复办公文档保存地址
+
+### Performance
+
+- 优化日志打印
