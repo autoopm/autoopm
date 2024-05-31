@@ -65,8 +65,9 @@ magic-api:
   web: /magic/web
   show-sql: true #配置打印SQL
 #  sql-column-case: camel
-  resource:
-    location: data/magic-api
+#  区分开发和测试环境
+#  resource:
+#    location: data/magic-api
   backup: #备份相关配置
     enable: true #是否启用
     max-history: -1 #备份保留天数，-1为永久保留
@@ -123,7 +124,7 @@ minio:
 wukongim:
   endpoint: http://wukongim:5001
 public:
-  domain: http://192.168.100.172 # magic-api需要用到这个地址填充预览图片地址
+  domain: http://192.168.31.130 # magic-api需要用到这个地址填充预览图片地址
 
 
 

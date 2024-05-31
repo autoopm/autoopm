@@ -4,7 +4,7 @@
   "script" : null,
   "groupId" : "1fae9227d89a49fc943a45c59e803338",
   "name" : "同步会话列表",
-  "createTime" : null,
+  "createTime" : 1717060652611,
   "updateTime" : 1716869054831,
   "lock" : null,
   "createBy" : null,

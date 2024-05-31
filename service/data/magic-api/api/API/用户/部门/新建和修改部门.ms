@@ -4,7 +4,7 @@
   "script" : null,
   "groupId" : "95e5c1dbf9144c9590e70cc8b304f1a2",
   "name" : "新建和修改部门",
-  "createTime" : 1716867158370,
+  "createTime" : 1717060653676,
   "updateTime" : 1713325130975,
   "lock" : "1",
   "createBy" : null,

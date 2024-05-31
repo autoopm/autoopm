@@ -4,7 +4,7 @@
   "script" : null,
   "groupId" : "a0d32feaa58a4d318032215149d5cf40",
   "name" : "知识库管理",
-  "createTime" : 1716867158705,
+  "createTime" : 1717060653699,
   "updateTime" : 1716567478821,
   "lock" : "1",
   "createBy" : null,

@@ -8,3 +8,7 @@ spring:
 
 upload:
   dir: /Users/lvjinze/mb/
+
+magic-api:
+  resource:
+    location: data/magic-api

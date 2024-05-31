@@ -4,8 +4,8 @@
   "script" : null,
   "groupId" : "07213facdab54280b6ba7b4637732337",
   "name" : "保存任务正文内容",
-  "createTime" : 1716867162918,
-  "updateTime" : 1716882660016,
+  "createTime" : 1717060653994,
+  "updateTime" : 1717056324840,
   "lock" : null,
   "createBy" : null,
   "updateBy" : null,
@@ -47,8 +47,8 @@ import 'org.ssssssss.magicboot.utils.MinioUtil';
 import 'org.ssssssss.magicboot.utils.FileUtils';
 import cn.hutool.core.util.StrUtil;
 import env
-var ip = env.get("public.ip")
-log.info("ip-->" + serviceUrl);
+
+
 
 log.info("获取的content value is " + content)
 log.info("获取的type value is " + type)
@@ -82,7 +82,11 @@ for (index, item in group2List) {
     log.info("保存图片到minio中" + url)
     prewUrl = MinioUtil.preview(url)
     log.info("图片真实地址:" + prewUrl)
-    preview = StrUtil.replaceChars(prewUrl, "task-minio", ip) //TODO 这里需要特殊处理
+
+    var domain = env.get("public.domain").replace("http://", "").replace("https://", "")
+    log.info("domain-->" + domain);
+
+    preview = StrUtil.replaceChars(prewUrl, "task-minio", domain) //TODO 这里需要特殊处理,这里是不靠谱的
     log.info("处理后的图片真实地址:" + prewUrl)
 
 

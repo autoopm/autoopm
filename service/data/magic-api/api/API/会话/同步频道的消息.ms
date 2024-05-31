@@ -4,7 +4,7 @@
   "script" : null,
   "groupId" : "1fae9227d89a49fc943a45c59e803338",
   "name" : "同步频道的消息",
-  "createTime" : null,
+  "createTime" : 1717060652941,
   "updateTime" : 1716877305867,
   "lock" : null,
   "createBy" : null,

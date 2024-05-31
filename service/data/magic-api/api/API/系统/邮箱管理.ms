@@ -4,7 +4,7 @@
   "script" : null,
   "groupId" : "a0d32feaa58a4d318032215149d5cf40",
   "name" : "邮箱管理",
-  "createTime" : 1716867158973,
+  "createTime" : 1717060653715,
   "updateTime" : 1713325160606,
   "lock" : "1",
   "createBy" : null,

@@ -4,8 +4,8 @@
   "script" : null,
   "groupId" : "89c986b52b04478a95630c451428ab00",
   "name" : "根据自身权限获取列表",
-  "createTime" : 1716867163394,
-  "updateTime" : 1716879587359,
+  "createTime" : 1717060654050,
+  "updateTime" : 1717056184162,
   "lock" : null,
   "createBy" : null,
   "updateBy" : null,
@@ -72,7 +72,7 @@ import log;
 
 import env
 
-var serviceUrl = "http://" + env.get("public.ip") + ":" + env.get("server.port")
+var serviceUrl = env.get("public.domain") + ":" + env.get("server.port")
 log.info("serviceUrl-->" + serviceUrl);
 
 

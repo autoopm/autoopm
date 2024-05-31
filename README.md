@@ -41,17 +41,12 @@ git clone git@gitee.com:autoopm/autoopm.git
 
 cd autoopm && ./setup.sh
 
-6、导入magic-api接口
-
-打开服务器ip:8081/magic/web/index.html，将根目录下的data下面的magic-api.zip全量导入
-
-7、配置知识库
+6、配置知识库
 
 打开服务器ip：8108/ui/login，使用账号密码（admin/MaxKB@123..）登录，配置模型、应用和知识库，并将相关配置填写到系统设置-知识库设置中。
 
 [知识库使用手册](https://github.com/1Panel-dev/MaxKB/wiki/1-%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2
 )
-
 
 
 页面截图

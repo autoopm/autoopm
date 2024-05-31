@@ -5,7 +5,7 @@
   "groupId" : "731c0f0eb0fd4dd792004009271d66fa",
   "name" : "登录注册",
   "createTime" : null,
-  "updateTime" : 1716868504163,
+  "updateTime" : 1717060780426,
   "lock" : null,
   "createBy" : null,
   "updateBy" : null,
@@ -272,13 +272,20 @@ import 'cn.hutool.core.lang.Validator';
 import 'cn.hutool.core.util.StrUtil';
 import 'cn.hutool.extra.pinyin.PinyinUtil';
 import env;
-
 import request;
 import http;
+import org.ssssssss.magicboot.utils.MinioUtil;
 
+//登录的时候检测
+var bucketName = env.get('minio.bucketName')
+log.info("env bucketName-->" + bucketName)
+MinioUtil.checkBucket(bucketName)
 
 var user
 log.info("type is" + type)
+
+
+
 if (type == 'reg') {
     log.info("注册逻辑")
     var system = db.table("settings").where().eq("name", "system").selectOne()
@@ -314,11 +321,11 @@ if (type == 'reg') {
     encrypt = RandomUtil.randomString(6)
     pwd = SaSecureUtil.md5(SaSecureUtil.md5(password) + encrypt)
 
-    before = StrUtil.subBefore(email,"@",false)
-    log.info("before-->"+before)
-    pinyin = before  //获取纯字母部分
-    log.info("pinyin-->"+pinyin)
-    az = StrUtil.upperFirst(pinyin.substring(0,1))
+    before = StrUtil.subBefore(email, "@", false)
+    log.info("before-->" + before)
+    pinyin = before //获取纯字母部分
+    log.info("pinyin-->" + pinyin)
+    az = StrUtil.upperFirst(pinyin.substring(0, 1))
     nickname = pinyin
 
     result = db.table("users").insert({
@@ -326,8 +333,9 @@ if (type == 'reg') {
         encrypt: encrypt,
         Password: pwd,
         // pinyin:pinyin, //暂时先不管
-        az:az,
-        nickname,nickname,
+        az: az,
+        nickname,
+        nickname,
     })
 
     //加入全员群组
@@ -347,6 +355,8 @@ if (type == 'reg') {
     //判断是否需要验证邮箱，如果需要则需要进入邮箱激活
 } else {
     log.info("登录逻辑")
+    //检查文件并创建桶
+
     //位数限制
 
     //判断是否需要显示验证码，如果需要，则需要去验证
@@ -402,8 +412,8 @@ if (type == 'reg') {
 
     //TODO 执行悟空IM用户注册登录，只有登录才会执行
     var wukongIMUrl = env.get("wukongim.endpoint")
-    log.info("wukongIMUrl"+wukongIMUrl);
-    var responseEntity = http.connect(wukongIMUrl+'/user/token').contentType('application/json').body({
+    log.info("wukongIMUrl" + wukongIMUrl);
+    var responseEntity = http.connect(wukongIMUrl + '/user/token').contentType('application/json').body({
         uid: useridStr, // 通信的用户唯一ID，可以随机uuid （建议自己服务端的用户唯一uid） （WuKongIMSDK需要）
         token: token, // 校验的token，随机uuid（建议使用自己服务端的用户的token）（WuKongIMSDK需要）
         device_flag: 1, // 设备标识  0.app 1.web （相同用户相同设备标记的主设备登录会互相踢，从设备将共存）
@@ -413,8 +423,14 @@ if (type == 'reg') {
 
 
     // userInfo = db.table("users").columns("").where().eq("column",userInfo.userid).selectOne()
-  //TODO 要去除密码等字段
-    userInfo.password  = ""
+    //TODO 要去除密码等字段
+    userInfo.password = ""
+
+
+    var bucketName = env.get('minio.bucketName')
+    log.info("env bucketName-->" + bucketName)
+    MinioUtil.checkBucket(bucketName)
+
     return userInfo
 }
 

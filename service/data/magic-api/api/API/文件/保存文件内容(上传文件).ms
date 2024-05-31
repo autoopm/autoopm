@@ -4,8 +4,8 @@
   "script" : null,
   "groupId" : "7cc0839b044d4ab3a208aaf2142fbd7f",
   "name" : "保存文件内容(上传文件)",
-  "createTime" : null,
-  "updateTime" : 1716879556854,
+  "createTime" : 1717060652958,
+  "updateTime" : 1717056473409,
   "lock" : "0",
   "createBy" : null,
   "updateBy" : null,
@@ -51,7 +51,7 @@ import log;
 import '@/file/uploadkb' as uploadkb;
 import env
 
-var serviceUrl = "http://" + env.get("public.ip") + ":" + env.get("server.port")
+var serviceUrl = env.get("public.domain") + ":" + env.get("server.port")
 log.info("serviceUrl-->" + serviceUrl);
 
 

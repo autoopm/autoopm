@@ -18,5 +18,6 @@ EXPOSE ${SERVER_PORT}
 ENTRYPOINT ["java", \
             "-Djava.security.egd=file:/dev/./urandom", \
             "-Dserver.port=${SERVER_PORT}", \
-            "-jar", "app.jar"]
+            "-jar", "app.jar", \
+            "--spring.profiles.active=prod"]
 

@@ -4,7 +4,7 @@
   "script" : null,
   "groupId" : "89c986b52b04478a95630c451428ab00",
   "name" : "获取用户对文件(夹)是否有访问权限",
-  "createTime" : 1716867163523,
+  "createTime" : 1717060654063,
   "updateTime" : 1711251238001,
   "lock" : null,
   "createBy" : null,
