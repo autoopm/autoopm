@@ -219,6 +219,9 @@ export default {
     //悟空im连接
     wuKongIMConnection(){
       let url = $A.apiUrl('../ws');
+      //url = url.replace("https://", "wss://");
+     // url = url.replace("http://", "ws://");
+
       console.log("ws connect addr -->"+url)
       WKSDK.shared().config.addr = url; // 默认端口为5200 //TODO 这里还要改成当前的服务器ip
 // 认证信息
