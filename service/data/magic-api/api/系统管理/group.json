@@ -1,0 +1,14 @@
+{
+  "properties" : { },
+  "id" : "acff5ad7aae64de2acb03e1d16a58ce2",
+  "name" : "系统管理",
+  "type" : "api",
+  "parentId" : "0",
+  "path" : "/system",
+  "createTime" : null,
+  "updateTime" : 1680235019988,
+  "createBy" : null,
+  "updateBy" : null,
+  "paths" : [ ],
+  "options" : [ ]
+}

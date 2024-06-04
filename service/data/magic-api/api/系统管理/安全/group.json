@@ -1,0 +1,10 @@
+{
+  "properties" : { },
+  "id" : "1952f25c81084e24b55b11385767dc38",
+  "name" : "安全",
+  "type" : "api",
+  "parentId" : "acff5ad7aae64de2acb03e1d16a58ce2",
+  "path" : "/security",
+  "paths" : [ ],
+  "options" : [ ]
+}

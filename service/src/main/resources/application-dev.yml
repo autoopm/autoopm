@@ -1,14 +1,11 @@
+
 server:
-  port: 8089
+  port: 8085
 
 spring:
   datasource:
-    username: magic-boot
-    password: 8adxbBJP2EZyzrrm
+    username: root
+    password: autoo123456
 
 upload:
-  dir: /Users/lvjinze/mb/
-
-magic-api:
-  resource:
-    location: data/magic-api
+  dir: /Users/xxwei/mb/

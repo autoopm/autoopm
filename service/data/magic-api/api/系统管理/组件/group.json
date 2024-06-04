@@ -1,0 +1,10 @@
+{
+  "properties" : { },
+  "id" : "6f106ebdee21489db34b956f7770ff03",
+  "name" : "组件",
+  "type" : "api",
+  "parentId" : "acff5ad7aae64de2acb03e1d16a58ce2",
+  "path" : "/component",
+  "paths" : [ ],
+  "options" : [ ]
+}

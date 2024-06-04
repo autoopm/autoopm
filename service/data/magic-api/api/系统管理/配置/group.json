@@ -1,0 +1,10 @@
+{
+  "properties" : { },
+  "id" : "5c36bdc1de454d6e9d1a464d87c96091",
+  "name" : "配置",
+  "type" : "api",
+  "parentId" : "acff5ad7aae64de2acb03e1d16a58ce2",
+  "path" : "/config",
+  "paths" : [ ],
+  "options" : [ ]
+}

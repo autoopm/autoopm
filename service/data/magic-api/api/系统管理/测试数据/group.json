@@ -1,0 +1,10 @@
+{
+  "properties" : { },
+  "id" : "42d241c0bb18476f8dabf92c2e4e2324",
+  "name" : "测试数据",
+  "type" : "api",
+  "parentId" : "acff5ad7aae64de2acb03e1d16a58ce2",
+  "path" : "/test",
+  "paths" : [ ],
+  "options" : [ ]
+}

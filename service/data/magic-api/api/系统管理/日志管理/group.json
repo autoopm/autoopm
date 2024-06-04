@@ -1,0 +1,10 @@
+{
+  "properties" : { },
+  "id" : "9ec6f9ec92d24a369952bb13eddc134f",
+  "name" : "日志管理",
+  "type" : "api",
+  "parentId" : "acff5ad7aae64de2acb03e1d16a58ce2",
+  "path" : "/log",
+  "paths" : [ ],
+  "options" : [ ]
+}

@@ -1,0 +1,10 @@
+{
+  "properties" : { },
+  "id" : "67b2ce258e24491194b74992958c74aa",
+  "name" : "菜单管理",
+  "type" : "api",
+  "parentId" : "acff5ad7aae64de2acb03e1d16a58ce2",
+  "path" : "/menu",
+  "paths" : [ ],
+  "options" : [ ]
+}

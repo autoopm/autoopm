@@ -1,3 +1,0 @@
-magic-api:
-  resource:
-    location: classpath:data/magic-api

@@ -1,0 +1,10 @@
+{
+  "properties" : { },
+  "id" : "376f26eb43a44a3daeafd27020a96f48",
+  "name" : "字典项",
+  "type" : "api",
+  "parentId" : "c7ce65f5b3cf4aaa913f6fec7d35d176",
+  "path" : "/items",
+  "paths" : [ ],
+  "options" : [ ]
+}

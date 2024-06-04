@@ -1,0 +1,14 @@
+{
+  "properties" : { },
+  "id" : "a73658de49cc4c1683e807418e6a88ab",
+  "name" : "OSS",
+  "type" : "api",
+  "parentId" : "0",
+  "path" : "/oss",
+  "createTime" : 1680236107242,
+  "updateTime" : null,
+  "createBy" : null,
+  "updateBy" : null,
+  "paths" : [ ],
+  "options" : [ ]
+}

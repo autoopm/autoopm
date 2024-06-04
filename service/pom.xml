@@ -24,7 +24,6 @@
 		<poi.version>4.1.2</poi.version>
 		<mysql.connector.version>8.0.32</mysql.connector.version>
 		<aliyun-core.version>4.6.0</aliyun-core.version>
-		<fastjson.version>1.2.83</fastjson.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -39,11 +38,6 @@
 			<groupId>org.ssssssss</groupId>
 			<artifactId>magic-api-spring-boot-starter</artifactId>
 			<version>${magic-api.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.ssssssss</groupId>
-			<artifactId>magic-api-plugin-redis</artifactId>
-			<version>2.1.1</version>
 		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
@@ -61,21 +55,6 @@
 			<version>${hutool-all.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.belerweb</groupId>
-			<artifactId>pinyin4j</artifactId>
-			<version>2.5.0</version>
-		</dependency>
-		<dependency>
-			<groupId>io.github.biezhi</groupId>
-			<artifactId>TinyPinyin</artifactId>
-			<version>2.0.3.RELEASE</version>
-		</dependency>
-		<dependency>
-			<groupId>com.github.stuxuhai</groupId>
-			<artifactId>jpinyin</artifactId>
-			<version>1.1.8</version>
-		</dependency>
-		<dependency>
 			<groupId>cn.dev33</groupId>
 			<artifactId>sa-token-spring-boot3-starter</artifactId>
 			<version>${sa-token.version}</version>
@@ -83,11 +62,6 @@
 		<dependency>
 			<groupId>org.ssssssss</groupId>
 			<artifactId>magic-api-plugin-task</artifactId>
-			<version>${magic-api.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.ssssssss</groupId>
-			<artifactId>magic-api-plugin-component</artifactId>
 			<version>${magic-api.version}</version>
 		</dependency>
 		<dependency>
@@ -100,31 +74,7 @@
 			<artifactId>aliyun-java-sdk-core</artifactId>
 			<version>${aliyun-core.version}</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/io.minio/minio -->
-		<dependency>
-			<groupId>io.minio</groupId>
-			<artifactId>minio</artifactId>
-			<version>8.4.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-		</dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-		<dependency>
-			<groupId>com.drewnoakes</groupId>
-			<artifactId>metadata-extractor</artifactId>
-			<version>2.19.0</version>
-		</dependency>
-		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>fastjson</artifactId>
-			<version>${fastjson.version}</version>
-		</dependency>
-    </dependencies>
+	</dependencies>
 
 	<build>
 		<finalName>magic-boot</finalName>
@@ -138,19 +88,6 @@
 				</configuration>
 			</plugin>
 		</plugins>
-		<resources>
-			<resource>
-				<directory>src/main/resources</directory>
-			</resource>
-			<resource>
-				<directory>${project.basedir}/data</directory>
-				<targetPath>data</targetPath>
-				<includes>
-					<include>**/*</include>
-				</includes>
-			</resource>
-		</resources>
 	</build>
-
 
 </project>

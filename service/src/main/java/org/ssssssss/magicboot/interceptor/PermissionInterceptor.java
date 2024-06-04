@@ -1,7 +1,7 @@
 package org.ssssssss.magicboot.interceptor;
 
 import cn.dev33.satoken.stp.StpUtil;
-import cn.hutool.core.util.StrUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,9 +15,13 @@ import org.ssssssss.magicapi.core.service.MagicAPIService;
 import org.ssssssss.magicapi.core.service.MagicResourceService;
 import org.ssssssss.magicapi.core.servlet.MagicHttpServletRequest;
 import org.ssssssss.magicapi.core.servlet.MagicHttpServletResponse;
+import org.ssssssss.magicapi.utils.PathUtils;
 import org.ssssssss.magicboot.model.StatusCode;
 import org.ssssssss.script.MagicScriptContext;
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 
 @Component
@@ -39,41 +43,39 @@ public class PermissionInterceptor implements RequestInterceptor, HandlerInterce
     @Override
     public Object preHandle(ApiInfo info, MagicScriptContext context, MagicHttpServletRequest request, MagicHttpServletResponse response) {
         String requireLogin = Objects.toString(info.getOptionValue(Options.REQUIRE_LOGIN), "");
-        if (requireLogin.equals("false")) {
+        if(requireLogin.equals("false")){
             return null;
         }
-
-//        if (!StpUtil.isLogin()) {
-//            return StatusCode.NO_LOGIN.json();
-//        }
-//        else {
-//            // TODO
-//            List<String> permissions = (List<String>) magicAPIService.execute("post", "/system/security/permissions", new HashMap<String, Object>());
-//            String permission = Objects.toString(info.getOptionValue(Options.PERMISSION), "");
-//            if (StringUtils.isNotBlank(permission) && !permissions.contains(permission)) {
-//                return StatusCode.FORBIDDEN.json();
-//            }
-//        }
+        if(!StpUtil.isLogin()){
+            return StatusCode.CERTIFICATE_EXPIRED.json();
+        } else {
+            // TODO
+            List<String> permissions = (List<String>) magicAPIService.execute("post", "/system/security/permissions", new HashMap<String, Object>());
+            String permission = Objects.toString(info.getOptionValue(Options.PERMISSION), "");
+            if (StringUtils.isNotBlank(permission) && !permissions.contains(permission)) {
+                return StatusCode.FORBIDDEN.json();
+            }
+        }
         return null;
     }
 
     @Override
     public Object postHandle(RequestEntity requestEntity, Object returnValue) throws Exception {
-        if (StpUtil.isLogin()) {
+        if(StpUtil.isLogin()){
             try {
                 MagicHttpServletRequest request = requestEntity.getRequest();
-//                ApiInfo info = requestEntity.getApiInfo();
-//                template.update("insert into sys_oper_log(api_name, api_path, api_method, cost_time, create_by, create_date, user_agent, user_ip) values(?,?,?,?,?,?,?,?)",
-////                    PathUtils.replaceSlash(groupServiceProvider.getFullName(info.getGroupId()) + "/" + info.getName()).replace("/","-"),
-//                        PathUtils.replaceSlash(String.format("/%s/%s", magicResourceService.getGroupName(info.getGroupId()), info.getName())),
-//                        request.getRequestURI(),
-//                        request.getMethod(),
-//                        System.currentTimeMillis() - requestEntity.getRequestTime(),
-//                        StpUtil.getLoginId(),
-//                        new Date(requestEntity.getRequestTime()),
-//                        request.getHeader("User-Agent"),
-//                        request.getRemoteAddr());
-            } catch (Exception ignored) {
+                ApiInfo info = requestEntity.getApiInfo();
+                template.update("insert into sys_oper_log(api_name, api_path, api_method, cost_time, create_by, create_date, user_agent, user_ip) values(?,?,?,?,?,?,?,?)",
+//                    PathUtils.replaceSlash(groupServiceProvider.getFullName(info.getGroupId()) + "/" + info.getName()).replace("/","-"),
+                        PathUtils.replaceSlash(String.format("/%s/%s", magicResourceService.getGroupName(info.getGroupId()), info.getName())),
+                        request.getRequestURI(),
+                        request.getMethod(),
+                        System.currentTimeMillis() - requestEntity.getRequestTime(),
+                        StpUtil.getLoginId(),
+                        new Date(requestEntity.getRequestTime()),
+                        request.getHeader("User-Agent"),
+                        request.getRemoteAddr());
+            } catch (Exception ignored){
                 ignored.printStackTrace();
             }
         }

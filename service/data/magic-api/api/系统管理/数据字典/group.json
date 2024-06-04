@@ -1,0 +1,10 @@
+{
+  "properties" : { },
+  "id" : "c7ce65f5b3cf4aaa913f6fec7d35d176",
+  "name" : "数据字典",
+  "type" : "api",
+  "parentId" : "acff5ad7aae64de2acb03e1d16a58ce2",
+  "path" : "/dict",
+  "paths" : [ ],
+  "options" : [ ]
+}

@@ -1,0 +1,236 @@
+{
+  "properties" : { },
+  "id" : "1fd1864c9c2d44c691302e7115a0168a",
+  "script" : null,
+  "groupId" : "376f26eb43a44a3daeafd27020a96f48",
+  "name" : "列表",
+  "createTime" : null,
+  "updateTime" : 1649169185265,
+  "lock" : "0",
+  "createBy" : null,
+  "updateBy" : null,
+  "path" : "/list",
+  "method" : "POST",
+  "parameters" : [ ],
+  "options" : [ {
+    "name" : "permission",
+    "value" : "dict:items:view",
+    "description" : "允许拥有该权限的访问",
+    "required" : false,
+    "dataType" : "String",
+    "type" : null,
+    "defaultValue" : null,
+    "validateType" : null,
+    "error" : null,
+    "expression" : null,
+    "children" : null
+  } ],
+  "requestBody" : "{\n\n}",
+  "headers" : [ ],
+  "paths" : [ ],
+  "responseBody" : "{\n    \"code\": 200,\n    \"message\": \"success\",\n    \"data\": {\n        \"total\": 17,\n        \"list\": [\n            {\n                \"id\": \"56aee220-cb12-4bb2-8453-84ee49672193\",\n                \"value\": \"3\",\n                \"label\": \"3\",\n                \"dictId\": \"4b9b4a7e-25a1-4efa-ab9a-a004f203f1f4\",\n                \"remarks\": \"\",\n                \"sort\": 30\n            },\n            {\n                \"id\": \"6a127863-8130-48be-88bf-e5179f5c33e6\",\n                \"value\": \"2\",\n                \"label\": \"2\",\n                \"dictId\": \"4b9b4a7e-25a1-4efa-ab9a-a004f203f1f4\",\n                \"remarks\": \"\",\n                \"sort\": 20\n            },\n            {\n                \"id\": \"f19152f4-dd72-4509-a350-af70d802dcdf\",\n                \"value\": \"1\",\n                \"label\": \"1\",\n                \"dictId\": \"4b9b4a7e-25a1-4efa-ab9a-a004f203f1f4\",\n                \"remarks\": \"\",\n                \"sort\": 10\n            },\n            {\n                \"id\": \"ac1ee828-62e1-42fd-9d18-cf37203855b2\",\n                \"value\": \"12\",\n                \"label\": \"12\",\n                \"dictId\": \"3c393981-9ddd-40b2-8c19-85f0a9d9a98f\",\n                \"remarks\": \"\",\n                \"sort\": 30\n            },\n            {\n                \"id\": \"457517be-5245-4d98-b9fa-8b6753a9cfc6\",\n                \"value\": \"2\",\n                \"label\": \"公司\",\n                \"dictId\": \"3c393981-9ddd-40b2-8c19-85f0a9d9a98f\",\n                \"remarks\": \"\",\n                \"sort\": 20\n            },\n            {\n                \"id\": \"b928f5b1-07bd-4f09-9142-897c767c5303\",\n                \"value\": \"1\",\n                \"label\": \"部门\",\n                \"dictId\": \"3c393981-9ddd-40b2-8c19-85f0a9d9a98f\",\n                \"remarks\": \"\",\n                \"sort\": 10\n            },\n            {\n                \"id\": \"0f91de6e8406d59762bebe5d2dfc9d36\",\n                \"value\": \"0\",\n                \"label\": \"不禁用\",\n                \"dictId\": \"ae9a2cd400264ff6bdc2f00b62d6e941\",\n                \"remarks\": null,\n                \"sort\": 0\n            },\n            {\n                \"id\": \"c5cf8715a74537156ea29c8bbc622b05\",\n                \"value\": \"1\",\n                \"label\": \"禁用\",\n                \"dictId\": \"ae9a2cd400264ff6bdc2f00b62d6e941\",\n                \"remarks\": null,\n                \"sort\": 0\n            },\n            {\n                \"id\": \"ze9a2cd400264ff6bdc2f00b62d6e911\",\n                \"value\": \"0\",\n                \"label\": \"系统类\",\n                \"dictId\": \"ae9a2cd400264ff6bdc2f00b62d6e911\",\n                \"remarks\": null,\n                \"sort\": 0\n            },\n            {\n                \"id\": \"ze9a2cd400264ff6bdc2f00b62d6e910\",\n                \"value\": \"1\",\n                \"label\": \"业务类\",\n                \"dictId\": \"ae9a2cd400264ff6bdc2f00b62d6e911\",\n                \"remarks\": null,\n                \"sort\": 0\n            }\n        ]\n    },\n    \"timestamp\": 1634735383948,\n    \"executeTime\": 13\n}",
+  "description" : null,
+  "requestBodyDefinition" : {
+    "name" : "",
+    "value" : "",
+    "description" : "",
+    "required" : false,
+    "dataType" : "Object",
+    "type" : null,
+    "defaultValue" : null,
+    "validateType" : "",
+    "error" : "",
+    "expression" : "",
+    "children" : [ ]
+  },
+  "responseBodyDefinition" : {
+    "name" : "",
+    "value" : "",
+    "description" : "",
+    "required" : false,
+    "dataType" : "Object",
+    "type" : null,
+    "defaultValue" : null,
+    "validateType" : "",
+    "error" : "",
+    "expression" : "",
+    "children" : [ {
+      "name" : "code",
+      "value" : "200",
+      "description" : "",
+      "required" : false,
+      "dataType" : "Integer",
+      "type" : null,
+      "defaultValue" : null,
+      "validateType" : "",
+      "error" : "",
+      "expression" : "",
+      "children" : [ ]
+    }, {
+      "name" : "message",
+      "value" : "success",
+      "description" : "",
+      "required" : false,
+      "dataType" : "String",
+      "type" : null,
+      "defaultValue" : null,
+      "validateType" : "",
+      "error" : "",
+      "expression" : "",
+      "children" : [ ]
+    }, {
+      "name" : "data",
+      "value" : "",
+      "description" : "",
+      "required" : false,
+      "dataType" : "Object",
+      "type" : null,
+      "defaultValue" : null,
+      "validateType" : "",
+      "error" : "",
+      "expression" : "",
+      "children" : [ {
+        "name" : "total",
+        "value" : "17",
+        "description" : "",
+        "required" : false,
+        "dataType" : "Integer",
+        "type" : null,
+        "defaultValue" : null,
+        "validateType" : "",
+        "error" : "",
+        "expression" : "",
+        "children" : [ ]
+      }, {
+        "name" : "list",
+        "value" : "",
+        "description" : "",
+        "required" : false,
+        "dataType" : "Array",
+        "type" : null,
+        "defaultValue" : null,
+        "validateType" : "",
+        "error" : "",
+        "expression" : "",
+        "children" : [ {
+          "name" : "",
+          "value" : "",
+          "description" : "",
+          "required" : false,
+          "dataType" : "Object",
+          "type" : null,
+          "defaultValue" : null,
+          "validateType" : "",
+          "error" : "",
+          "expression" : "",
+          "children" : [ {
+            "name" : "id",
+            "value" : "56aee220-cb12-4bb2-8453-84ee49672193",
+            "description" : "",
+            "required" : false,
+            "dataType" : "String",
+            "type" : null,
+            "defaultValue" : null,
+            "validateType" : "",
+            "error" : "",
+            "expression" : "",
+            "children" : [ ]
+          }, {
+            "name" : "value",
+            "value" : "3",
+            "description" : "",
+            "required" : false,
+            "dataType" : "String",
+            "type" : null,
+            "defaultValue" : null,
+            "validateType" : "",
+            "error" : "",
+            "expression" : "",
+            "children" : [ ]
+          }, {
+            "name" : "label",
+            "value" : "3",
+            "description" : "",
+            "required" : false,
+            "dataType" : "String",
+            "type" : null,
+            "defaultValue" : null,
+            "validateType" : "",
+            "error" : "",
+            "expression" : "",
+            "children" : [ ]
+          }, {
+            "name" : "dictId",
+            "value" : "4b9b4a7e-25a1-4efa-ab9a-a004f203f1f4",
+            "description" : "",
+            "required" : false,
+            "dataType" : "String",
+            "type" : null,
+            "defaultValue" : null,
+            "validateType" : "",
+            "error" : "",
+            "expression" : "",
+            "children" : [ ]
+          }, {
+            "name" : "remarks",
+            "value" : "",
+            "description" : "",
+            "required" : false,
+            "dataType" : "String",
+            "type" : null,
+            "defaultValue" : null,
+            "validateType" : "",
+            "error" : "",
+            "expression" : "",
+            "children" : [ ]
+          }, {
+            "name" : "sort",
+            "value" : "30",
+            "description" : "",
+            "required" : false,
+            "dataType" : "Integer",
+            "type" : null,
+            "defaultValue" : null,
+            "validateType" : "",
+            "error" : "",
+            "expression" : "",
+            "children" : [ ]
+          } ]
+        } ]
+      } ]
+    }, {
+      "name" : "timestamp",
+      "value" : "1634735383948",
+      "description" : "",
+      "required" : false,
+      "dataType" : "Long",
+      "type" : null,
+      "defaultValue" : null,
+      "validateType" : "",
+      "error" : "",
+      "expression" : "",
+      "children" : [ ]
+    }, {
+      "name" : "executeTime",
+      "value" : "13",
+      "description" : "",
+      "required" : false,
+      "dataType" : "Integer",
+      "type" : null,
+      "defaultValue" : null,
+      "validateType" : "",
+      "error" : "",
+      "expression" : "",
+      "children" : [ ]
+    } ]
+  }
+}
+================================
+return db.page("""
+    select id,value,label,dict_id,remarks,sort from sys_dict_items
+    where is_del = 0
+    ?{label, and label like concat('%',#{label},'%')}
+    ?{dictId, and dict_id = #{dictId}}
+    ?{value, and value like concat('%',#{value},'%')}
+    order by sort
+""")

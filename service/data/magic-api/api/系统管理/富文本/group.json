@@ -1,0 +1,22 @@
+{
+  "properties" : { },
+  "id" : "7eeba36706c24c1484ee4e84ad829f9b",
+  "name" : "富文本",
+  "type" : "api",
+  "parentId" : "acff5ad7aae64de2acb03e1d16a58ce2",
+  "path" : "/ueditor",
+  "paths" : [ ],
+  "options" : [ {
+    "name" : "require_login",
+    "value" : "false",
+    "description" : "该接口需要登录才允许访问",
+    "required" : false,
+    "dataType" : "String",
+    "type" : null,
+    "defaultValue" : null,
+    "validateType" : null,
+    "error" : null,
+    "expression" : null,
+    "children" : null
+  } ]
+}

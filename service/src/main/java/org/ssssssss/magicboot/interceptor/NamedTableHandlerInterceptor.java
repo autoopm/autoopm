@@ -18,7 +18,8 @@ public class NamedTableHandlerInterceptor implements NamedTableInterceptor {
     public void preHandle(SqlMode sqlMode, NamedTable namedTable) {
         if(Boolean.TRUE == namedTable.getAttribute(COMMON_FIELD)){
             if(sqlMode == SqlMode.INSERT) {
-                String id = IdUtil.simpleUUID();
+                Object primaryValue = namedTable.getColumns().get(namedTable.getPrimary());
+                String id = null != primaryValue && !"".equals(primaryValue.toString()) ? primaryValue.toString() : IdUtil.simpleUUID();
                 namedTable.setAttribute(namedTable.getPrimary(), id);
                 namedTable.column(namedTable.getPrimary(), id);
                 namedTable.column(CREATE_BY, StpUtil.getLoginId());

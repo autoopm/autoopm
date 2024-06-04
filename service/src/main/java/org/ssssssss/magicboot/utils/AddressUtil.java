@@ -1,6 +1,5 @@
 package org.ssssssss.magicboot.utils;
 
-import cn.dev33.satoken.secure.SaSecureUtil;
 import cn.hutool.core.net.Ipv4Util;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;

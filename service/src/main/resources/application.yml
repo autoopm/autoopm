@@ -1,11 +1,12 @@
 server:
-  port: 8082
+  port: 8085
   compression:
     enabled: true
     min-response-size: 128
+
 spring:
   profiles:
-    active: demo
+    active: dev
   servlet:
     multipart:
       max-file-size: 200MB
@@ -16,9 +17,9 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://mysql:3306/task?useSSL=false&zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=UTF8&autoReconnect=true&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
-    username: task
-    password: 123456
+    url: jdbc:mysql://localhost:13306/autoo?useSSL=false&zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=UTF8&autoReconnect=true&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
+    username: root
+    password: autoo123456
     druid:
       # 下面为连接池的补充设置，应用到上面所有数据源中
       # 初始化大小，最小，最大
@@ -59,15 +60,14 @@ spring:
         exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"
 # 上传路径
 upload:
-  dir: D:/mb/
+  dir: ./mb/
 
 magic-api:
   web: /magic/web
   show-sql: true #配置打印SQL
-#  sql-column-case: camel
-#  区分开发和测试环境
-#  resource:
-#    location: data/magic-api
+  sql-column-case: camel
+  resource:
+    location: data/magic-api
   backup: #备份相关配置
     enable: true #是否启用
     max-history: -1 #备份保留天数，-1为永久保留
@@ -115,16 +115,3 @@ oss:
   roleSessionName: ""
   bucket: ""
   bucketDomain: ""
-
-minio:
-  endpoint: http://minio:9000 #Minio服务所在地址
-  bucketName: task #存储桶名称
-  accessKey: admin #访问的key
-  secretKey: admin123 #访问的秘钥
-wukongim:
-  endpoint: http://wukongim:5001
-public:
-  domain: http://192.168.31.130 # magic-api需要用到这个地址填充预览图片地址
-
-
-

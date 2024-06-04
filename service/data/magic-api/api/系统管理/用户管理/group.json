@@ -1,0 +1,10 @@
+{
+  "properties" : { },
+  "id" : "4f0230049d7e4f39b1e0897cc0f46f9a",
+  "name" : "用户管理",
+  "type" : "api",
+  "parentId" : "acff5ad7aae64de2acb03e1d16a58ce2",
+  "path" : "/user",
+  "paths" : [ ],
+  "options" : [ ]
+}
