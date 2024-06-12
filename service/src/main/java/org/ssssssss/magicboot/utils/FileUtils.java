@@ -3,13 +3,16 @@ package org.ssssssss.magicboot.utils;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.http.HttpUtil;
 import org.springframework.web.multipart.MultipartFile;
 import org.ssssssss.magicboot.model.Global;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class FileUtils {
 
@@ -51,5 +54,58 @@ public class FileUtils {
       	params.put("url", fileAttr.get("filePath"));
       	return params;
 	}
+
+    /**
+     * 获取图片的高宽
+     *
+     * @param imageUrl
+     * @return
+     */
+    public static List<Integer> getImageSize(String imageUrl) {
+
+        File tempFile = FileUtil.file("temp.jpg");
+        HttpUtil.downloadFile(imageUrl, tempFile);
+        List<Integer> list = new ArrayList<>();
+        // 读取临时文件中的图片，获取图片尺寸
+        try {
+            BufferedImage image = ImageIO.read(tempFile);
+            int width = image.getWidth();
+            int height = image.getHeight();
+            list.add(width);
+            list.add(height);
+            System.out.println("图片宽度：" + width);
+            System.out.println("图片高度：" + height);
+            return list;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+
+    }
+
+    /**
+     * 获取文件大小，单位b
+     * @param fileUrl 文件网络路径
+     * @return 文件大小，单位b
+     */
+    public static long getFileSize(String fileUrl) {
+        // 创建临时文件
+        File tempFile = FileUtil.file("temp-size.word");
+        // 下载文件到临时文件
+        HttpUtil.downloadFile(fileUrl, tempFile);
+        // 获取文件大小
+        long size = FileUtil.size(tempFile);
+        return size;
+    }
+
+    public static void main(String[] args) {
+        Calendar cl = Calendar.getInstance();
+        cl.set(Calendar.DAY_OF_WEEK,Calendar.MONDAY);
+        cl.set(Calendar.HOUR_OF_DAY,0);
+        cl.set(Calendar.MINUTE,0);
+        SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        System.out.println("ft:::"+ft.format(cl.getTime()));
+
+    }
 
 }

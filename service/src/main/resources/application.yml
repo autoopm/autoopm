@@ -17,7 +17,7 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://localhost:13306/autoo?useSSL=false&zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=UTF8&autoReconnect=true&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://localhost:33306/autoo?useSSL=false&zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=UTF8&autoReconnect=true&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
     username: root
     password: autoo123456
     druid:
@@ -115,3 +115,8 @@ oss:
   roleSessionName: ""
   bucket: ""
   bucketDomain: ""
+minio:
+  endpoint: http://localhost:9000 #Minio服务所在地址
+  bucketName: autoo #存储桶名称
+  accessKey: autoo  #访问的key
+  secretKey: autoo123 #访问的秘钥

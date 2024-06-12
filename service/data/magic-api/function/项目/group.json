@@ -1,0 +1,14 @@
+{
+  "properties" : { },
+  "id" : "f1893ea1928d488999804afc6c84e785",
+  "name" : "项目",
+  "type" : "function",
+  "parentId" : "0",
+  "path" : "/project",
+  "createTime" : 1717813170655,
+  "updateTime" : 1713024590542,
+  "createBy" : null,
+  "updateBy" : null,
+  "paths" : [ ],
+  "options" : [ ]
+}

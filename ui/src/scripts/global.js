@@ -5,7 +5,7 @@ const modalIndex = ref(10)
 const modalMap = reactive({})
 
 export default {
-    title: 'Magic Boot',
+    title: 'AutooPM',
     baseApi: baseApi,
     filePrefix: '',
     dynamicComponentNames: [],

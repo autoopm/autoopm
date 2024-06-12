@@ -40,9 +40,17 @@ const formatJson = (list, filterVal) => {
 common.request = (method) => {
     return common[common.requestMethod.indexOf(method) !== -1 ? method : 'get']
 }
-common.requestMethod = ['get','post','postJson','delete']
+common.requestMethod = ['get','post','postJson','postFile','delete']
 common.get = (url, data) => request({url, params: data})
 common.delete = (url, data) => request({url, method: 'delete', params: data})
+common.post = (url, data) => request.post(url, data, {
+    headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    transformRequest: [data => data && Object.keys(data).map(it => encodeURIComponent(it) + '=' + encodeURIComponent(data[it] === null || data[it] === undefined ? '' : data[it])).join('&')]
+})
+common.postFile = (url, data) => request.post(url, data)
+
 common.post = (url, data) => request.post(url, data, {
     headers: {
         'Content-Type': 'application/x-www-form-urlencoded'

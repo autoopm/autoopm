@@ -4,8 +4,9 @@
             <n-grid-item :span="15">
                 <div class="left-bar">
                     <div class="logo-content">
+                        <mb-icon icon="login-img" size="35em"/>
                         <p class="text-6xl mt-0 mb-0 italic font-black text-white">「{{ $global.title }}」</p>
-                        <p class="text-base text-gray-50">"加速您的开发世界，轻松启动您的创意"</p>
+                        <p class="text-base text-gray-50">"最好用的协同办公工具"</p>
                     </div>
                 </div>
             </n-grid-item>
@@ -51,6 +52,7 @@
 import router from '@/scripts/router'
 import {useUserStore} from '@/store/modules/userStore'
 import {reactive, ref, getCurrentInstance} from 'vue'
+import MbIcon from "@/components/magic/basic/mb-icon.vue";
 const app = getCurrentInstance().appContext.app
 
 const userStore = useUserStore()
@@ -118,6 +120,6 @@ function handleLogin() {
     text-align: center;
     width: 500px;
     margin: 0 auto;
-    padding-top: 30vh;
+    padding-top: 5vh;
 }
 </style>

@@ -24,6 +24,7 @@
 		<poi.version>4.1.2</poi.version>
 		<mysql.connector.version>8.0.32</mysql.connector.version>
 		<aliyun-core.version>4.6.0</aliyun-core.version>
+		<fastjson.version>1.2.83</fastjson.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -55,6 +56,21 @@
 			<version>${hutool-all.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>com.belerweb</groupId>
+			<artifactId>pinyin4j</artifactId>
+			<version>2.5.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.github.biezhi</groupId>
+			<artifactId>TinyPinyin</artifactId>
+			<version>2.0.3.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.stuxuhai</groupId>
+			<artifactId>jpinyin</artifactId>
+			<version>1.1.8</version>
+		</dependency>
+		<dependency>
 			<groupId>cn.dev33</groupId>
 			<artifactId>sa-token-spring-boot3-starter</artifactId>
 			<version>${sa-token.version}</version>
@@ -74,6 +90,21 @@
 			<artifactId>aliyun-java-sdk-core</artifactId>
 			<version>${aliyun-core.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.minio</groupId>
+			<artifactId>minio</artifactId>
+			<version>8.4.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>${fastjson.version}</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

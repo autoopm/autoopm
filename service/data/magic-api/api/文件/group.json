@@ -1,0 +1,14 @@
+{
+  "properties" : { },
+  "id" : "fbe74c5bc9f04c308679a525a09005a6",
+  "name" : "文件",
+  "type" : "api",
+  "parentId" : "0",
+  "path" : "/file",
+  "createTime" : 1717811754704,
+  "updateTime" : null,
+  "createBy" : null,
+  "updateBy" : null,
+  "paths" : [ ],
+  "options" : [ ]
+}

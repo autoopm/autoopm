@@ -1,0 +1,14 @@
+{
+  "properties" : { },
+  "id" : "89c986b52b04478a95630c451428ab00",
+  "name" : "文件",
+  "type" : "function",
+  "parentId" : "0",
+  "path" : "/file",
+  "createTime" : 1717813170652,
+  "updateTime" : null,
+  "createBy" : null,
+  "updateBy" : null,
+  "paths" : [ ],
+  "options" : [ ]
+}
