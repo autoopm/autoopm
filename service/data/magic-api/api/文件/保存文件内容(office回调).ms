@@ -5,14 +5,26 @@
   "groupId" : "fbe74c5bc9f04c308679a525a09005a6",
   "name" : "保存文件内容(office回调)",
   "createTime" : null,
-  "updateTime" : 1718011321316,
+  "updateTime" : 1718290566148,
   "lock" : null,
   "createBy" : null,
   "updateBy" : null,
   "path" : "/content/office",
   "method" : "POST",
   "parameters" : [ ],
-  "options" : [ ],
+  "options" : [ {
+    "name" : "require_login",
+    "value" : "false",
+    "description" : "该接口需要登录才允许访问",
+    "required" : false,
+    "dataType" : "String",
+    "type" : null,
+    "defaultValue" : null,
+    "validateType" : null,
+    "error" : null,
+    "expression" : null,
+    "children" : null
+  } ],
   "requestBody" : "",
   "headers" : [ ],
   "paths" : [ ],
@@ -35,9 +47,17 @@ import java.util.Scanner;
 import response;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import cn.dev33.satoken.stp.StpUtil;
+
+
+log.info("进入这里了.......");
+var userId = StpUtil.getLoginIdByToken(token)
+log.info("userId......." + userId);
+
 
 // var userId = StpUtil.getLoginId()
-var userId = '6';
+// var userId = '6';
+
 log.info("--------------------------->office回调");
 log.info("param id get-------->" + id)
 log.info("param status  get-------->" + body.status)
@@ -47,7 +67,7 @@ log.info("param user get-------->" + body.users)
 // 查找文件
 var file = db.table('files')
     .where()
-    .isNull(deleted_at)
+    .isNull('deleted_at')
     .eq('id', id)
     .selectOne();
 

@@ -16,6 +16,8 @@ public class NamedTableHandlerInterceptor implements NamedTableInterceptor {
 
     @Override
     public void preHandle(SqlMode sqlMode, NamedTable namedTable) {
+
+
         if(Boolean.TRUE == namedTable.getAttribute(COMMON_FIELD)){
             if(sqlMode == SqlMode.INSERT) {
                 Object primaryValue = namedTable.getColumns().get(namedTable.getPrimary());

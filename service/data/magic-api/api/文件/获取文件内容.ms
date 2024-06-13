@@ -5,7 +5,7 @@
   "groupId" : "fbe74c5bc9f04c308679a525a09005a6",
   "name" : "获取文件内容",
   "createTime" : null,
-  "updateTime" : 1718100582699,
+  "updateTime" : 1718276050200,
   "lock" : null,
   "createBy" : null,
   "updateBy" : null,
@@ -13,7 +13,7 @@
   "method" : "GET",
   "parameters" : [ {
     "name" : "id",
-    "value" : null,
+    "value" : "143",
     "description" : "Number: 文件ID（需要登录） String: 链接码（不需要登录，用于预览）",
     "required" : true,
     "dataType" : "String",
@@ -59,8 +59,32 @@
     "error" : null,
     "expression" : null,
     "children" : null
+  }, {
+    "name" : "token",
+    "value" : "9404a2a8-1b45-4a39-b242-45d30a234d6c",
+    "description" : null,
+    "required" : false,
+    "dataType" : "String",
+    "type" : null,
+    "defaultValue" : null,
+    "validateType" : null,
+    "error" : null,
+    "expression" : null,
+    "children" : null
   } ],
-  "options" : [ ],
+  "options" : [ {
+    "name" : "require_login",
+    "value" : "false",
+    "description" : "该接口需要登录才允许访问",
+    "required" : false,
+    "dataType" : "String",
+    "type" : null,
+    "defaultValue" : null,
+    "validateType" : null,
+    "error" : null,
+    "expression" : null,
+    "children" : null
+  } ],
   "requestBody" : "",
   "headers" : [ ],
   "paths" : [ ],
@@ -79,30 +103,32 @@ import cn.hutool.core.util.StrUtil;
 import response;
 import java.net.URLEncoder;
 import '@/file/permissionFind' as permissionFind;
-import 'cn.dev33.satoken.stp.StpUtil';
+import cn.dev33.satoken.stp.StpUtil;
 import log;
 
 var file = null;
-
+log.info("到达这里了1.......");
 if (NumberUtil.isNumber(id)) {
-    var userId = StpUtil.getLoginId();
+    //根据token获取是哪个用户
+    log.info("到达这里了2.......");
+    // var userId = StpUtil.getLoginId();
     // var userId = 6; //测试时候打开
     // 根据文件ID查询（需要登录）
+    var userId = StpUtil.getLoginIdByToken(token)
+    log.info("userId......." + userId);
     file = permissionFind(userId, id, "yes".equals(down) ? 1 : 0);
 } else if (StrUtil.isNotEmpty(id)) {
     // 如果参数不为空，根据链接码查找文件id
     var fileId = db.selectValue("""
     select file_id from file_links where code = #{id}
     """);
-
     if (StrUtil.isEmpty(fileId)) {
         exit 400, '文件链接不存在';
     }
-
     // 根据文件id查出文件
     file = db.table('files')
         .where()
-        .isNull(deleted_at)
+        .isNull('deleted_at')
         .eq('id', fileId)
         .selectOne();
 
@@ -132,7 +158,7 @@ if ("yes".equals(only_update_at)) {
 // 否则，获取文件内容
 var fileContent = db.table('file_contents')
     .where()
-    .isNull(deleted_at)
+    .isNull('deleted_at')
     .eq('fid', file.id)
     .orderByDesc('id')
     .selectOne();

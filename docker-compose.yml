@@ -48,27 +48,27 @@ services:
 #      extnetwork:
 #        ipv4_address: 10.66.66.6
 #    restart: unless-stopped
-#  office:
-#    container_name: "autoo-office-${APP_ID}"
-#    image: "onlyoffice/documentserver:7.5.1.1"
-#    volumes:
-#      - ./docker/office/logs:/var/log/onlyoffice
-#      - ./docker/office/data:/var/www/onlyoffice/Data
-#      - ./docker/office/resources/require.js:/var/www/onlyoffice/documentserver/web-apps/vendor/requirejs/require.js
-#      - ./docker/office/resources/documenteditor/main/resources/css/app.css:/var/www/onlyoffice/documentserver/web-apps/apps/documenteditor/main/resources/css/app.css
-#      - ./docker/office/resources/documenteditor/mobile/css/964.css:/var/www/onlyoffice/documentserver/web-apps/apps/documenteditor/mobile/css/964.css
-#      - ./docker/office/resources/presentationeditor/main/resources/css/app.css:/var/www/onlyoffice/documentserver/web-apps/apps/presentationeditor/main/resources/css/app.css
-#      - ./docker/office/resources/presentationeditor/mobile/css/612.css:/var/www/onlyoffice/documentserver/web-apps/apps/presentationeditor/mobile/css/612.css
-#      - ./docker/office/resources/spreadsheeteditor/main/resources/css/app.css:/var/www/onlyoffice/documentserver/web-apps/apps/spreadsheeteditor/main/resources/css/app.css
-#      - ./docker/office/resources/spreadsheeteditor/mobile/css/887.css:/var/www/onlyoffice/documentserver/web-apps/apps/spreadsheeteditor/mobile/css/887.css
-#    environment:
-#      JWT_SECRET: ${APP_KEY}
-#    ports:
-#      - "8103:80"
-#    networks:
-#      extnetwork:
-#        ipv4_address: 10.66.66.7
-#    restart: unless-stopped
+  office:
+    container_name: "autoo-office-${APP_ID}"
+    image: "onlyoffice/documentserver:7.5.1.1"
+    volumes:
+      - ./docker/office/logs:/var/log/onlyoffice
+      - ./docker/office/data:/var/www/onlyoffice/Data
+      - ./docker/office/resources/require.js:/var/www/onlyoffice/documentserver/web-apps/vendor/requirejs/require.js
+      - ./docker/office/resources/documenteditor/main/resources/css/app.css:/var/www/onlyoffice/documentserver/web-apps/apps/documenteditor/main/resources/css/app.css
+      - ./docker/office/resources/documenteditor/mobile/css/964.css:/var/www/onlyoffice/documentserver/web-apps/apps/documenteditor/mobile/css/964.css
+      - ./docker/office/resources/presentationeditor/main/resources/css/app.css:/var/www/onlyoffice/documentserver/web-apps/apps/presentationeditor/main/resources/css/app.css
+      - ./docker/office/resources/presentationeditor/mobile/css/612.css:/var/www/onlyoffice/documentserver/web-apps/apps/presentationeditor/mobile/css/612.css
+      - ./docker/office/resources/spreadsheeteditor/main/resources/css/app.css:/var/www/onlyoffice/documentserver/web-apps/apps/spreadsheeteditor/main/resources/css/app.css
+      - ./docker/office/resources/spreadsheeteditor/mobile/css/887.css:/var/www/onlyoffice/documentserver/web-apps/apps/spreadsheeteditor/mobile/css/887.css
+    environment:
+      JWT_SECRET: ${APP_KEY}
+    ports:
+      - "8103:80"
+    networks:
+      extnetwork:
+        ipv4_address: 10.66.66.7
+    restart: unless-stopped
 #  maxkb:
 #    image: 1panel/maxkb
 #    container_name: "autoo-maxkb-${APP_ID}"

@@ -24,9 +24,12 @@ import org.ssssssss.magicapi.core.servlet.MagicHttpServletResponse;
 import org.ssssssss.magicboot.configuration.MinioConfig;
 
 import java.io.*;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.time.Duration;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -444,6 +447,43 @@ public class MinioUtil {
         }
     }
 
+    /**
+     * 获取文件预览下载地址
+     * @param objectName
+     * @return
+     */
+    public String getPresignedObjectUrl(String objectName){
+
+//        OffsetDateTime expiry = OffsetDateTime.now().plusDays(1); //设置URL的有效期为1天
+//        try {
+//
+//            // 生成预签名的GET请求URL
+//            URL url = minioClient.getPresignedObjectUrl(GetPresignedUrlArgs.builder()
+//                    .method(Method.GET)
+//                    .bucket(prop.getBucketName())
+//                    .object(objectName)
+//                    .expiry(expiry)
+//                    .build());
+//
+//            // 打印预签名的URL
+//            String result = url.toString();
+//            System.out.println("result is---> "+result);
+//            return  result;
+//        } catch (MinioException e) {
+//            e.printStackTrace();
+//            return "";
+//
+//        }
+        return "";
+
+
+    }
+
+    /**
+     * 检查对象是否存在
+     * @param objectName
+     * @return
+     */
     public boolean isObjectExists(String objectName) {
         try{
             GetObjectArgs args = GetObjectArgs.builder()
