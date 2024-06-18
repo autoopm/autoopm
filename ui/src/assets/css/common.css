@@ -19,6 +19,11 @@
 body{
   --mb-main-icon-color: #909399;
 }
+
+* {
+  margin: 0;
+  padding: 0;
+}
 .clear{
   clear: both;
 }

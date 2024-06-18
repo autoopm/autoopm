@@ -5,7 +5,7 @@
   "groupId" : "fbe74c5bc9f04c308679a525a09005a6",
   "name" : "保存文件内容(office回调)",
   "createTime" : null,
-  "updateTime" : 1718290566148,
+  "updateTime" : 1718326273872,
   "lock" : null,
   "createBy" : null,
   "updateBy" : null,
@@ -48,22 +48,7 @@ import response;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import cn.dev33.satoken.stp.StpUtil;
-
-
-log.info("进入这里了.......");
 var userId = StpUtil.getLoginIdByToken(token)
-log.info("userId......." + userId);
-
-
-// var userId = StpUtil.getLoginId()
-// var userId = '6';
-
-log.info("--------------------------->office回调");
-log.info("param id get-------->" + id)
-log.info("param status  get-------->" + body.status)
-log.info("param url get-------->" + body.url)
-log.info("param user get-------->" + body.users)
-
 // 查找文件
 var file = db.table('files')
     .where()
@@ -100,7 +85,6 @@ if (body.status == 2) {
             updated_at: new Date()
         })
     } else {
-
         db.table('file_contents').primary('fid').insert({
             fid: id,
             content: content::stringify,
@@ -110,7 +94,6 @@ if (body.status == 2) {
             created_at: new Date(),
             updated_at: new Date()
         });
-
     }
 
     // 更新files

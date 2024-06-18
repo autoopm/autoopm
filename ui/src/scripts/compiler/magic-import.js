@@ -8,6 +8,10 @@ import * as userStore from "@/store/modules/userStore";
 import MbIcon from '@/components/magic/basic/mb-icon.vue';
 import * as lodashEs from 'lodash-es'
 import * as vueRouter from 'vue-router'
+import * as  viewerApi from 'v-viewer'
+import * as vueusecore from '@vueuse/core'
+import * as player from 'xgplayer'
+import * as modal from '@arco-design/web-vue'
 
 const libs = {
     vue,
@@ -19,7 +23,12 @@ const libs = {
     '@/store/modules/userStore': userStore,
     '@/components/magic/basic/mb-icon.vue': MbIcon,
     'lodash-es': lodashEs,
-    'vue-router': vueRouter
+    'vue-router': vueRouter,
+    'v-viewer':viewerApi,
+    '@vueuse/core':vueusecore,
+    'xgplayer':player,
+
+
 }
 
 window.___magic__import__ = function(lib, name){
