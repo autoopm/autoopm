@@ -5,7 +5,7 @@
   "groupId" : "89c986b52b04478a95630c451428ab00",
   "name" : "根据自身权限获取列表",
   "createTime" : 1717813170697,
-  "updateTime" : 1714042212228,
+  "updateTime" : 1718958303500,
   "lock" : null,
   "createBy" : null,
   "updateBy" : null,
@@ -135,9 +135,11 @@ for (file in fileList) {
     file.created_at = date_format(file.created_at);
     file.updated_at = date_format(file.updated_at);
     file.deleted_at = date_format(file.deleted_at);
+    log.info("file.type---->"+file.type)
     // 是图片才需要拼接
     if (StrUtil.isNotEmpty(file.url) && StrUtil.isNotEmpty(file.type) && "picture".equals(file.type)) {
-        file.put("image_url", 'http://82.157.62.190:8081/api/file/preview/' + file.id);
+        file.put("image_url", 'http://192.168.31.130:8087/file/preview/' + file.id);
+        log.info("file.type image_url---->"+file)
     }
 
 }

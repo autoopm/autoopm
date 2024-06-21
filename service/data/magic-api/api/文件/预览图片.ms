@@ -5,7 +5,7 @@
   "groupId" : "fbe74c5bc9f04c308679a525a09005a6",
   "name" : "预览图片",
   "createTime" : null,
-  "updateTime" : 1718114265956,
+  "updateTime" : 1718958585410,
   "lock" : null,
   "createBy" : null,
   "updateBy" : null,
@@ -24,7 +24,19 @@
     "expression" : null,
     "children" : null
   } ],
-  "options" : [ ],
+  "options" : [ {
+    "name" : "require_login",
+    "value" : "false",
+    "description" : "该接口需要登录才允许访问",
+    "required" : false,
+    "dataType" : "String",
+    "type" : null,
+    "defaultValue" : null,
+    "validateType" : null,
+    "error" : null,
+    "expression" : null,
+    "children" : null
+  } ],
   "requestBody" : "",
   "headers" : [ ],
   "paths" : [ ],
@@ -45,7 +57,7 @@ log.info("fileName={}", fileName);
 
 var file = db.table('files')
     .where()
-    .isNull(deleted_at)
+    .isNull('deleted_at')
     .eq('id', path.id)
     .selectOne();
 
