@@ -5,7 +5,7 @@
   "groupId" : "fbe74c5bc9f04c308679a525a09005a6",
   "name" : "添加或修改文件(夹)",
   "createTime" : null,
-  "updateTime" : 1718039149578,
+  "updateTime" : 1718972483488,
   "lock" : null,
   "createBy" : null,
   "updateBy" : null,
@@ -40,7 +40,7 @@
     "value" : null,
     "description" : "文件ID（赋值修改文件名称）",
     "required" : false,
-    "dataType" : "String",
+    "dataType" : "Integer",
     "type" : null,
     "defaultValue" : null,
     "validateType" : null,
@@ -52,7 +52,7 @@
     "value" : null,
     "description" : "父级ID",
     "required" : false,
-    "dataType" : "String",
+    "dataType" : "Integer",
     "type" : null,
     "defaultValue" : null,
     "validateType" : null,
@@ -105,16 +105,11 @@ if (!tmpName.equals(trimmedName)) {
     exit 400, '"文件名称不能包含这些字符：\/:*?\"<>|"';
 }
 
-if (id > 0) {
-    // 修改
+if (id > 0) {  // 修改
     var file = permissionFind(userId, id, 1);
     //  处理重名
     var newName = handleDuplicateName(pid, userId, ext, trimmedName);
-    // 更新
-    var result = {
-        id: id,
-        name: newName
-    }
+    var result = {id: id,name: newName}    // 更新
     db.table('files').primary('id').update(result);
     // todo 推送更新消息
     return result;
