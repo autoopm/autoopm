@@ -40,7 +40,7 @@ const formatJson = (list, filterVal) => {
 common.request = (method) => {
     return common[common.requestMethod.indexOf(method) !== -1 ? method : 'get']
 }
-common.requestMethod = ['get','post','postJson','postFile','delete']
+common.requestMethod = ['get','post','postJson','postFile','delete','downloadFile']
 common.get = (url, data) => request({url, params: data})
 common.delete = (url, data) => request({url, method: 'delete', params: data})
 common.post = (url, data) => request.post(url, data, {
@@ -167,6 +167,37 @@ function getToken(){
     const token = userStore.getToken()
 }
 
+common.downloadFile = (url, data) => {
+    // 假设 baseApi 是全局变量，包含基础 API 地址
+    let fullUrl = global.baseApi + '/file/content';
+
+    // 如果 data 对象包含要发送的参数，将它们添加到 URL 的查询字符串中
+    if (data) {
+        // 使用 URLSearchParams 来构建查询字符串
+        let params = new URLSearchParams(data);
+        // 如果原始 URL 中没有查询字符串，则添加 '?'；否则添加 '&'
+        fullUrl += (url.includes('?') ? '&' : '?') + params.toString();
+    }
+    console.error("fullUrl--->"+fullUrl)
+
+    // 创建一个隐藏的 a 标签来触发下载
+    let link = document.createElement('a');
+    link.href = fullUrl;
+    // 如果需要设置下载的文件名，可以通过设置 download 属性来实现
+    // 但这通常依赖于后端如何设置响应的 Content-Disposition 头部
+    // link.download = 'filename.ext'; // 你可以根据需要设置文件名
+    link.style.display = 'none';
+
+    // 触发点击事件来下载文件
+    document.body.appendChild(link);
+    link.click();
+
+    // 清理
+    document.body.removeChild(link);
+}
+
+
+
 common.downloadMore = (urls, filename) => {
     let params = {
         // post只需编码一次，get需要编码两次（encodeURIComponent(encodeURIComponent(urls))）
@@ -197,6 +228,8 @@ common.download = (urls, filename) => {
 common.downloadHref = (urls, filename) => {
   return global.baseApi + `/system/file/download?urls=${encodeURIComponent(encodeURIComponent(urls))}&filename=${filename || ''}&token=${getToken()}`
 }
+
+
 
 common.loadConfig = async () => {
     await request({

@@ -12,6 +12,8 @@ import * as  viewerApi from 'v-viewer'
 import * as vueusecore from '@vueuse/core'
 import * as player from 'xgplayer'
 import * as modal from '@arco-design/web-vue'
+import global from "@/scripts/global";
+
 
 const libs = {
     vue,
@@ -27,8 +29,7 @@ const libs = {
     'v-viewer':viewerApi,
     '@vueuse/core':vueusecore,
     'xgplayer':player,
-
-
+    '@/scripts/global': global,
 }
 
 window.___magic__import__ = function(lib, name){

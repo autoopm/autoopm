@@ -5,7 +5,7 @@
   "groupId" : "fbe74c5bc9f04c308679a525a09005a6",
   "name" : "打包文件",
   "createTime" : null,
-  "updateTime" : 1718038344391,
+  "updateTime" : 1718975274095,
   "lock" : null,
   "createBy" : null,
   "updateBy" : null,
@@ -46,9 +46,8 @@
   "responseBodyDefinition" : null
 }
 ================================
-import 'cn.dev33.satoken.stp.StpUtil';
-import cn.hutool.core.util.StrUtil;
-
+import cn.dev33.satoken.stp.StpUtil
+import cn.hutool.core.util.StrUtil
 
 var userId = StpUtil.getLoginId()
 var fileName = null;
