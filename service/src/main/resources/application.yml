@@ -1,5 +1,5 @@
 server:
-  port: 8085
+  port: 8081
   compression:
     enabled: true
     min-response-size: 128
@@ -17,7 +17,7 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://localhost:33306/autoo?useSSL=false&zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=UTF8&autoReconnect=true&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://mysql:3306/autoo?useSSL=false&zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=UTF8&autoReconnect=true&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
     username: root
     password: autoo123456
     druid:
@@ -67,7 +67,11 @@ magic-api:
   show-sql: true #配置打印SQL
   sql-column-case: camel
   resource:
+    type: database # 配置存储在数据库中
     location: data/magic-api
+    tableName: magic_api_file_v2 # 数据库中的表名
+    prefix: /magic-api # key前缀
+    readonly: false # 是否是只读模式
   backup: #备份相关配置
     enable: true #是否启用
     max-history: -1 #备份保留天数，-1为永久保留
@@ -116,7 +120,7 @@ oss:
   bucket: ""
   bucketDomain: ""
 minio:
-  endpoint: http://localhost:9000 #Minio服务所在地址
+  endpoint: http://minio:9000 #Minio服务所在地址
   bucketName: autoo #存储桶名称
   accessKey: autoo  #访问的key
   secretKey: autoo123 #访问的秘钥

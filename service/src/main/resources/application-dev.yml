@@ -4,8 +4,10 @@ server:
 
 spring:
   datasource:
+    url: jdbc:mysql://localhost:33306/autoo?useSSL=false&zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=UTF8&autoReconnect=true&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
     username: root
     password: autoo123456
-
 upload:
   dir: /Users/xxwei/mb/
+minio:
+  endpoint: http://localhost:9000 #Minio服务所在地址
