@@ -128,11 +128,11 @@ export default {
             let codeId = this.code || this.value.id;
             let fileUrl
             if ($A.leftExists(codeId, "msgFile_")) {
-                fileUrl = `dialog/msg/download?msg_id=${$A.leftDelete(codeId, "msgFile_")}&Token=${this.userToken}`;
+                fileUrl = `dialog/msg/download?msg_id=${$A.leftDelete(codeId, "msgFile_")}&token=${this.userToken}`;
             } else if ($A.leftExists(codeId, "taskFile_")) {
-                fileUrl = `project/task/filedown?file_id=${$A.leftDelete(codeId, "taskFile_")}&Token=${this.userToken}`;
+                fileUrl = `project/task/filedown?file_id=${$A.leftDelete(codeId, "taskFile_")}&token=${this.userToken}`;
             } else {
-                fileUrl = `file/content?id=${codeId}&Token=${this.userToken}`;
+                fileUrl = `file/content?id=${codeId}&token=${this.userToken}`;
                 if (this.historyId > 0) {
                     fileUrl += `&history_id=${this.historyId}`
                 }
@@ -157,7 +157,6 @@ export default {
                 this.loading = true;
                 this.loadError = false;
                 $A.loadScript($A.apiUrl("../office/web-apps/apps/api/documents/api.js")).then(_ => {
-                   // $A.loadScript($A.apiUrl("http://office:8103/web-apps/apps/api/documents/api.js")).then(_ => {
                     if (!this.documentKey) {
                         this.handleClose();
                         return
@@ -188,6 +187,9 @@ export default {
             immediate: true
         }
     },
+  mounted() {
+
+  },
 
     methods: {
         onFrameLoad() {
@@ -230,8 +232,8 @@ export default {
                     "fileType": this.fileType,
                     "title": fileName,
                     "key": fileKey,
-                    // "url": `http://autoo-server/api/${this.fileUrl}`,
                     "url": window.location.origin+`/api/${this.fileUrl}`,
+
                 },
                 "editorConfig": {
                     "mode": "edit",
@@ -245,8 +247,7 @@ export default {
                         "forcesave": true,
                         "help": false,
                     },
-                    // "callbackUrl": `http://autoo-server/api/file/content/office?id=${codeId}&Token=${this.userToken}`,
-                  "callbackUrl":  window.location.origin+`/api/file/content/office?id=${codeId}&Token=${this.userToken}`,
+                  "callbackUrl":  window.location.origin+`/api/file/content/office?id=${codeId}&token=${this.userToken}`,
                 },
                 "events": {
                     "onDocumentReady": this.onDocumentReady,
@@ -311,7 +312,6 @@ export default {
                 })
             })()
         },
-
         onDocumentReady() {
             this.$emit("on-document-ready", this.docEditor)
         }

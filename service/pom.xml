@@ -138,18 +138,18 @@
 				</configuration>
 			</plugin>
 		</plugins>
-		<resources>
-			<resource>
-				<directory>src/main/resources</directory>
-			</resource>
-			<resource>
-				<directory>${project.basedir}/data</directory>
-				<targetPath>data</targetPath>
-				<includes>
-					<include>**/*</include>
-				</includes>
-			</resource>
-		</resources>
+<!--		<resources>-->
+<!--			<resource>-->
+<!--				<directory>src/main/resources</directory>-->
+<!--			</resource>-->
+<!--			<resource>-->
+<!--				<directory>${project.basedir}/data</directory>-->
+<!--				<targetPath>data</targetPath>-->
+<!--				<includes>-->
+<!--					<include>**/*</include>-->
+<!--				</includes>-->
+<!--			</resource>-->
+<!--		</resources>-->
 	</build>
 
 

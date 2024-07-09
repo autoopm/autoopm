@@ -113,7 +113,7 @@
                 </div>
 
               </div>
-              <div class="grid h-full place-items-center" v-if="dashData.overdueTask.length === 0">
+              <div class="grid h-full place-items-center" v-if="dashData.overdueTask && dashData.overdueTask.length === 0">
                 <div class="my-5 flex flex-col items-center gap-4">
 <!--                  <LayerDiagonalIcon height={60} width={60} />-->
                   <span class="text-custom-text-200">
@@ -150,7 +150,7 @@
                 </div>
               </div>
 
-              <div class="grid h-full place-items-center" v-if="dashData.runingTask.length === 0">
+              <div class="grid h-full place-items-center" v-if="dashData.runingTask && dashData.runingTask.length === 0">
                 <div class="my-5 flex flex-col items-center gap-4">
                   <!--                  <LayerDiagonalIcon height={60} width={60} />-->
                   <span class="text-custom-text-200">

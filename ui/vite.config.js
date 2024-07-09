@@ -65,13 +65,13 @@ export default defineConfig({
     chunkSizeWarningLimit: 1500,
   },
   server: {
-    port: 3000, //启动端口
+    port: 3200, //启动端口
     open: true,
     proxy: {
-      "/request": {
-        target: "http://localhost:8082",
+      "/api/": {
+        target: "http://localhost:8083",
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/request/, ""),
+        //rewrite: (path) => path.replace(/^\/request/, ""),
       },
     },
     cors: true,

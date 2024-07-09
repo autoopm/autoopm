@@ -5,7 +5,7 @@ server:
     min-response-size: 128
 spring:
   profiles:
-    active: demo
+    active: prod
   servlet:
     multipart:
       max-file-size: 200MB
@@ -64,10 +64,13 @@ upload:
 magic-api:
   web: /magic/web
   show-sql: true #配置打印SQL
-#  sql-column-case: camel
-#  区分开发和测试环境
-#  resource:
-#    location: data/magic-api
+  sql-column-case: camel
+  resource:
+    type: database # 配置存储在数据库中
+    location: data/magic-api
+    tableName: magic_api_file_v2 # 数据库中的表名
+    prefix: /magic-api # key前缀
+    readonly: false # 是否是只读模式
   backup: #备份相关配置
     enable: true #是否启用
     max-history: -1 #备份保留天数，-1为永久保留
@@ -124,7 +127,7 @@ minio:
 wukongim:
   endpoint: http://wukongim:5001
 public:
-  domain: http://192.168.31.130 # magic-api需要用到这个地址填充预览图片地址
+  domain: http://192.168.1.2 # TODO magic-api需要用到这个地址填充预览图片地址
 
 
 
