@@ -64,7 +64,7 @@ upload:
 magic-api:
   web: /magic/web
   show-sql: true #配置打印SQL
-  sql-column-case: camel
+  #ql-column-case: camel
   resource:
     type: database # 配置存储在数据库中
     location: data/magic-api

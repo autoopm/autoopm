@@ -15,6 +15,8 @@ services:
           ipv4_address: 10.66.66.100
       restart: unless-stopped
   autoo-server:
+#    image: autoopm-autoo-server:latest
+#    首次编译打开
     build:
       context: .
       dockerfile: ./service/Dockerfile
