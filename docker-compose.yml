@@ -19,7 +19,7 @@ services:
 #    首次编译打开
     build:
       context: .
-      dockerfile: ./service/Dockerfile
+      dockerfile: ./service/Dockerfile2
     container_name: "autoo-server-${APP_ID}"
     environment:
       TZ: Asia/Shanghai

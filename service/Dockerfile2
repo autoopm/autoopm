@@ -1,0 +1,14 @@
+FROM openjdk:17-jdk-slim
+WORKDIR /app
+# 从上一个阶段复制生成的 JAR 文件到镜像中
+COPY ./service/target/*.jar /app/app.jar
+# 暴露应用程序的端口（如果需要）
+ENV SERVER_PORT=8081
+EXPOSE ${SERVER_PORT}
+# 启动 Spring Boot 应用程序
+ENTRYPOINT ["java", \
+            "-Djava.security.egd=file:/dev/./urandom", \
+            "-Dserver.port=${SERVER_PORT}", \
+            "-jar", "app.jar", \
+            "--spring.profiles.active=prod"]
+
