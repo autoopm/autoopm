@@ -137,6 +137,7 @@ export default {
                     fileUrl += `&history_id=${this.historyId}`
                 }
             }
+            console.log("fileUrl--------------------------------------------------->"+fileUrl);
             return fileUrl;
         },
 
@@ -253,6 +254,7 @@ export default {
                     "onDocumentReady": this.onDocumentReady,
                 },
             };
+            console.log("callbackUrl-------------------------------->"+config.editorConfig.callbackUrl);
             if (/\/hideenOfficeTitle\//.test(window.navigator.userAgent)) {
                 config.document.title = " ";
             }
