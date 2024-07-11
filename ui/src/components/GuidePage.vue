@@ -1,6 +1,6 @@
 <template>
   <div v-if="show" class="common-guide">
-    <img src="/public/images/guide.png" width="100%" />
+    <img src="/images/guide.png" width="100%" />
     <div>
       <Button type="default" @click="show = false" size="large">{{
         $L("忍心拒绝")
