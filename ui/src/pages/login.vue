@@ -7,181 +7,182 @@
         :class="{ 'can-click': needStartHome }"
         @click="goHome"
       ></div>
+
+
+      <div class="text-center">
+        <!--          <img-->
+        <!--              class="mx-auto h-16 w-16"-->
+        <!--              src="images/app-logo.svg"-->
+        <!--              alt="logo"-->
+        <!--          />-->
+        <div class="mt-4">
+          <h2 class="text-2xl font-semibold text-slate-600 dark:text-navy-100">
+            {{ welcomeTitle }}
+          </h2>
+          <p class="text-slate-400 dark:text-navy-300">
+            {{ $L(subTitle) }}
+          </p>
+        </div>
+      </div>
+
+
       <div class="login-box">
-        
-        <div class="login-title">{{ welcomeTitle }}</div>
+<!--        <transition name="login-mode">-->
+<!--          <div-->
+<!--            v-if="loginMode == 'qrcode'"-->
+<!--            class="login-qrcode"-->
+<!--            @click="qrcodeRefresh"-->
+<!--          >-->
+<!--            <VueQrcode-->
+<!--              :value="qrcodeUrl"-->
+<!--              :options="{ width: 200, margin: 2 }"-->
+<!--            ></VueQrcode>-->
+<!--          </div>-->
+<!--        </transition>-->
 
-        <div class="login-subtitle">{{ $L(subTitle) }}</div>
 
         <transition name="login-mode">
-          <div
-            v-if="loginMode == 'qrcode'"
-            class="login-qrcode"
-            @click="qrcodeRefresh"
-          >
-            <VueQrcode
-              :value="qrcodeUrl"
-              :options="{ width: 200, margin: 2 }"
-            ></VueQrcode>
-          </div>
-        </transition>
-        <transition name="login-mode">
-          <div v-if="loginMode == 'access'" class="login-access">
-            <Input
-              v-if="isSoftware && cacheServerUrl"
-              :value="$A.getDomain(cacheServerUrl)"
-              prefix="ios-globe-outline"
-              size="large"
-              readonly
-              clearable
-              @on-clear="setServerUrl('')"
-            />
+          <div v-if="loginMode == 'access'" class="card mt-5 rounded-lg p-5 lg:p-7" >
+            <label class="block"  v-if="isSoftware && cacheServerUrl">
+              <span>域名:</span>
+              <span class="relative mt-1.5 flex">
+              <Input
+                  :value="$A.getDomain(cacheServerUrl)"
+                  size="large"
+                  readonly
+                  clearable
+                  @on-clear="setServerUrl('')"
+              />
+              </span>
+            </label>
 
-            <Input
-              v-model="email"
-              ref="email"
-              prefix="ios-mail-outline"
-              :placeholder="$L('输入您的电子邮件')"
-              type="email"
-              size="large"
-              @on-enter="onLogin"
-              clearable
-            />
+            <label class="mt-4 block">
+              <span>邮箱:</span>
+              <span class="relative mt-1.5 flex">
+              <Input
+                  v-model="email"
+                  ref="email"
+                  :placeholder="$L('输入您的电子邮件')"
+                  type="email"
+                  size="large"
+                  @on-enter="onLogin"
+                  clearable
+              />
+              </span>
+            </label>
 
-            <Input
-              v-model="password"
-              ref="password"
-              prefix="ios-lock-outline"
-              :placeholder="$L('输入您的密码')"
-              type="password"
-              size="large"
-              @on-enter="onLogin"
-              clearable
-            />
+            <label class="mt-4 block">
+              <span>密码:</span>
+              <span class="relative mt-1.5 flex">
+                  <Input
+                      v-model="password"
+                      ref="password"
+                      :placeholder="$L('输入您的密码')"
+                      type="password"
+                      size="large"
+                      @on-enter="onLogin"
+                      clearable
+                  />
+              </span>
+            </label>
 
-            <Input
-              v-if="loginType == 'reg'"
-              v-model="password2"
-              ref="password2"
-              prefix="ios-lock-outline"
-              :placeholder="$L('输入确认密码')"
-              type="password"
-              size="large"
-              @on-enter="onLogin"
-              clearable
-            />
-            <Input
-              v-if="loginType == 'reg' && needInvite"
-              v-model="invite"
-              ref="invite"
-              class="login-code"
-              :placeholder="$L('请输入注册邀请码')"
-              type="text"
-              size="large"
-              @on-enter="onLogin"
-              clearable
-              ><span slot="prepend">&nbsp;{{ $L("邀请码") }}&nbsp;</span></Input
-            >
+            <label class="mt-4 block"  v-if="loginType == 'reg'">
+              <span>确认密码:</span>
+              <span class="relative mt-1.5 flex">
+                  <Input
+                      v-model="password2"
+                      ref="password2"
+                      :placeholder="$L('输入确认密码')"
+                      type="password"
+                      size="large"
+                      @on-enter="onLogin"
+                      clearable
+                  />
+              </span>
+            </label>
+<!--            <Input-->
+<!--              v-if="loginType == 'reg' && needInvite"-->
+<!--              v-model="invite"-->
+<!--              ref="invite"-->
+<!--              class="login-code"-->
+<!--              :placeholder="$L('请输入注册邀请码')"-->
+<!--              type="text"-->
+<!--              size="large"-->
+<!--              @on-enter="onLogin"-->
+<!--              clearable-->
+<!--              ><span slot="prepend">&nbsp;{{ $L("邀请码") }}&nbsp;</span></Input-->
+<!--            >-->
+<!--            <Input-->
+<!--              v-if="loginType == 'login' && codeNeed"-->
+<!--              v-model="code"-->
+<!--              ref="code"-->
+<!--              class="login-code"-->
+<!--              :placeholder="$L('输入图形验证码')"-->
+<!--              type="text"-->
+<!--              size="large"-->
+<!--              @on-enter="onLogin"-->
+<!--              clearable-->
+<!--            >-->
+<!--              <Icon-->
+<!--                type="ios-checkmark-circle-outline"-->
+<!--                class="login-icon"-->
+<!--                slot="prepend"-->
+<!--              ></Icon>-->
+<!--              <div slot="append" class="login-code-end" @click="refreshCode">-->
+<!--                <div v-if="codeLoad > 0" class="code-load"><Loading /></div>-->
+<!--                <span v-else-if="codeUrl === 'error'" class="code-error">{{-->
+<!--                  $L("加载失败")-->
+<!--                }}</span>-->
+<!--                <img v-else :src="codeUrl" />-->
+<!--              </div>-->
+<!--            </Input>-->
 
-            <Input
-              v-if="loginType == 'login' && codeNeed"
-              v-model="code"
-              ref="code"
-              class="login-code"
-              :placeholder="$L('输入图形验证码')"
-              type="text"
-              size="large"
-              @on-enter="onLogin"
-              clearable
-            >
-              <Icon
-                type="ios-checkmark-circle-outline"
-                class="login-icon"
-                slot="prepend"
-              ></Icon>
-              <div slot="append" class="login-code-end" @click="refreshCode">
-                <div v-if="codeLoad > 0" class="code-load"><Loading /></div>
-                <span v-else-if="codeUrl === 'error'" class="code-error">{{
-                  $L("加载失败")
-                }}</span>
-                <img v-else :src="codeUrl" />
-              </div>
-            </Input>
+
+            <div class="mt-4 flex items-center justify-between space-x-2">
+              <label class="inline-flex items-center space-x-2">
+                <span class="line-clamp-1"></span>
+              </label>
+
+              <a href="javascript:void(0)" @click="forgotPassword"
+                  class="text-slate-400 transition-colors line-clamp-1 hover:text-slate-800 focus:text-slate-800 dark:text-navy-300 dark:hover:text-navy-100 dark:focus:text-navy-100"
+              >忘记密码?</a
+              >
+            </div>
 
             <Button
+                class = "mt-5"
               type="primary"
               :loading="loadIng > 0 || loginJump"
               size="large"
               long
               @click="onLogin"
-              >{{ $L(loginText) }}</Button
-            >
+              >{{ $L(loginText) }}</Button>
 
-            <div v-if="loginType == 'reg'" class="login-switch">
-              {{ $L("已经有帐号？")
-              }}<a href="javascript:void(0)" @click="loginType = 'login'">{{
-                $L("登录帐号")
-              }}</a>
+            <div class="mt-4 text-center text-xs+" v-if="loginType == 'reg'">
+              <p class="line-clamp-1">
+                <span>已经有帐号?</span>
+                <a
+                    class="text-primary transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent"
+                    href="javascript:void(0)" @click="loginType = 'login'"
+                >登录帐号</a
+                >
+              </p>
             </div>
-            <div v-else class="login-switch">
-              {{ $L("还没有帐号？")
-              }}<a href="javascript:void(0)" @click="loginType = 'reg'">{{
-                $L("注册帐号")
-              }}</a>
+
+            <div class="mt-4 text-center text-xs+" v-else>
+              <p class="line-clamp-1">
+                <span>还没有帐号?</span>
+                <a
+                    class="text-primary transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent"
+                    href="javascript:void(0)" @click="loginType = 'reg'"
+                >注册帐号</a
+                >
+              </p>
             </div>
           </div>
         </transition>
       </div>
-      <div class="login-bottom">
-        <Dropdown trigger="click" placement="bottom-start">
-          <div class="login-setting">
-            {{ $L("设置") }}
-            <i class="taskfont">&#xe689;</i>
-          </div>
-          <DropdownMenu slot="list" class="login-setting-menu">
-            <Dropdown placement="right-start" transfer @on-click="setTheme">
-              <DropdownItem>
-                <div class="login-setting-item">
-                  {{ $L("主题皮肤") }}
-                  <Icon type="ios-arrow-forward"></Icon>
-                </div>
-              </DropdownItem>
-              <DropdownMenu slot="list">
-                <DropdownItem
-                  v-for="(item, key) in themeList"
-                  :key="key"
-                  :name="item.value"
-                  :selected="themeMode === item.value"
-                  >{{ $L(item.name) }}</DropdownItem
-                >
-              </DropdownMenu>
-            </Dropdown>
-            <Dropdown placement="right-start" transfer @on-click="onLanguage">
-              <DropdownItem divided>
-                <div class="login-setting-item">
-                  {{ currentLanguage }}
-                  <Icon type="ios-arrow-forward"></Icon>
-                </div>
-              </DropdownItem>
-              <DropdownMenu slot="list">
-                <DropdownItem
-                  v-for="(item, key) in languageList"
-                  :key="key"
-                  :name="key"
-                  :selected="languageType === key"
-                  >{{ item }}</DropdownItem
-                >
-              </DropdownMenu>
-            </Dropdown>
-          </DropdownMenu>
-        </Dropdown>
-        <div class="login-forgot">
-          {{ $L("忘记密码了？")
-          }}<a href="javascript:void(0)" @click="forgotPassword">{{
-            $L("重置密码")
-          }}</a>
-        </div>
-      </div>
+
     </div>
 
     <!--隐私政策提醒-->
@@ -309,22 +310,24 @@ export default {
     },
 
     welcomeTitle() {
-      if (this.loginMode == "qrcode") {
-        return this.$L("扫码登录");
-      }
-      const title = window.systemInfo.title || "Autoo";
-      return "Welcome " + title;
+      // if (this.loginMode == "qrcode") {
+      //   return this.$L("扫码登录");
+      // }
+      // const title = window.systemInfo.title || "Autoo";
+      // return "Welcome " + title;
+      return "欢迎回来";
     },
 
     subTitle() {
-      const title = window.systemInfo.title || "Autoo";
-      if (this.loginMode == "qrcode") {
-        return this.$L(`请使用${title}移动端扫描二维码。`);
-      }
-      if (this.loginType == "reg") {
-        return this.$L(`输入您的信息以创建帐户。`);
-      }
-      return this.$L(`输入您的凭证以访问您的帐户。`);
+      // const title = window.systemInfo.title || "Autoo";
+      // if (this.loginMode == "qrcode") {
+      //   return this.$L(`请使用${title}移动端扫描二维码。`);
+      // }
+      // if (this.loginType == "reg") {
+      //   return this.$L(`输入您的信息以创建帐户。`);
+      // }
+      // return this.$L(`输入您的凭证以访问您的帐户。`);
+      return "请登录以继续。"
     },
 
     loginText() {

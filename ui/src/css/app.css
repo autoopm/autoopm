@@ -1,3 +1,29 @@
+.text-slate-400 {
+     color:#94a3b8;
+}
+.block {
+    display: block
+}
+.mt-4 {
+    margin-top: 1rem;
+}
+.text-lg {
+    font-size: 1.125rem;
+    line-height: 1.75rem
+}
+
+.text-base {
+    font-size: 1rem;
+    line-height: 1.5rem
+}
+
+.mt-5 {
+    margin-top: 1.25rem;
+}
+
+
+
+
 .from-pink-500 {
     --tw-gradient-from: #ec4899;
     /*--tw-gradient-to: rgba(236,72,153,0);*/
