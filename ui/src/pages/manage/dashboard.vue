@@ -655,6 +655,7 @@ export default {
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  /* autoprefixer: ignore next */
   -webkit-box-orient: vertical;
 }
 .todo {
