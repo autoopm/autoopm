@@ -29,3 +29,9 @@ All notable changes to this project will be documented in this file.
 ### Performance
 
 - 优化日志打印
+
+## [0.0.4]
+
+### Bug Fixes
+
+- 修复任务负责人修改失败

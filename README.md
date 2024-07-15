@@ -59,14 +59,23 @@ cd autoopm && ./setup.sh
 )
 
 
+7、更新说明：
+```
+service/db-update目录为sql更新文件，更新的时候，需要手动执行一下
+```
+
+
 页面截图
-![知识库设置](./images/know1.png)
-![知识库查询](./images/know2.png)
-![仪表盘](./images/dashboard.png)
-![项目管理](./images/project@2x.png)
+![仪表盘](./images/登录.png)
+![仪表盘](./images/首页.png)
+![项目管理](./images/项目管理.png)
+![项目详情](./images/WX20240402-013122@2x.png)
 ![文件](./images/file1@2x.png)
 ![文件-word](./images/file2@2x.png)
 ![思维导图](./images/file3@2x.png)
 ![流程图](./images/file5@2x.png)
-![项目详情](./images/WX20240402-013122@2x.png)
+![知识库设置](./images/know1.png)
 ![后台接口开发页面](./images/magic-api.png)
+
+
+
