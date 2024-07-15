@@ -650,6 +650,13 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.col-span-2{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
 .todo {
   margin-top: 0px;
   padding: 0 12px;
