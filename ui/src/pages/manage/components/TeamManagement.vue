@@ -68,7 +68,9 @@
                                 {{$L("关键词")}}
                             </div>
                             <div class="search-content">
-                                <Input v-model="keys.key" :placeholder="$L('邮箱、昵称、职位')" clearable/>
+                              <!-- 暂时先考虑邮箱匹配-->
+<!--                                <Input v-model="keys.key" :placeholder="$L('邮箱、昵称、职位')" clearable/>-->
+                                <Input v-model="keys.key" :placeholder="$L('邮箱')" clearable/>
                             </div>
                         </li>
                         <li>
@@ -832,9 +834,11 @@ export default {
                     pagesize: Math.max($A.runNum(this.pageSize), 10),
                 },
             }).then(({data}) => {
-                this.page = data.current_page;
+                console.log('请求用户列表返回--------------->'+data);
+                // this.page = data.current_page;  //暂时不考虑分页
                 this.total = data.total;
                 this.list = data.data;
+
                 this.noText = '没有相关的成员';
             }).catch(() => {
                 this.noText = '数据加载失败';
