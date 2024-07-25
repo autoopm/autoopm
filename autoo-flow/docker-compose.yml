@@ -1,0 +1,43 @@
+version: "3"
+
+services:
+  # golang:
+  #   container_name: "task-flow-golang-${APP_ID}"
+  #   image: golang:alpine
+  #   working_dir: /go/src/
+  #   ports:
+  #     - "${SERVER_PORT}:${SERVER_PORT}"
+  #   stdin_open: true
+  #   tty: true
+  #   volumes:
+  #     - ./:/go/src/
+  #   networks:
+  #     network:
+  #       ipv4_address: 10.16.18.3
+  #   restart: always
+
+  approve:
+    container_name: "task-flow-approve-${APP_ID}"
+    image: "hitosea2020/go-approve:${DOCKER_VER}"
+    ports:
+      - "${SERVER_PORT}:80"
+    environment:
+      TZ: "Asia/Shanghai"
+      MYSQL_HOST: "${MYSQL_HOST}"
+      MYSQL_PORT: "${MYSQL_PORT}"
+      MYSQL_DBNAME: "${MYSQL_DBNAME}"
+      MYSQL_USERNAME: "${MYSQL_USERNAME}"
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
+      MYSQL_Prefix: "${MYSQL_Prefix}"
+    networks:
+      network:
+        ipv4_address: 10.13.16.6
+    restart: always
+
+networks:
+  network:
+    name: "task-approve-network"
+    ipam:
+      config:
+        - subnet: 10.13.16.0/24
+          gateway: 10.13.16.1

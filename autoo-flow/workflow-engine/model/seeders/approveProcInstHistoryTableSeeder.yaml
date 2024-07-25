@@ -1,0 +1,28 @@
+insert into
+  pre_approve_proc_inst_history (
+    id,
+    proc_def_id,
+    proc_def_name,
+    title,
+    department_id,
+    department,
+    company,
+    node_id,
+    candidate,
+    task_id,
+    start_time,
+    end_time,
+    duration,
+    start_user_id,
+    start_user_name,
+    is_finished,
+    var,
+    state,
+    latest_comment,
+    global_comment
+  )
+values
+('1','1','请假','','0','默认部门','系统默认','1','审批结束','6','2023-11-20 09:50:28','2023-11-20 10:00:59','-631','2','test@dootask.com','1','{\"type\":\"事假\",\"description\":\"事假\",\"startTime\":\"2023-11-20 09:00\",\"endTime\":\"2023-11-20 18:00\",\"other\":\"\"}','2','同意','[{\"procInstId\":1,\"userId\":\"2\",\"content\":\"{\\\"content\\\":\\\"谢谢老板\\\",\\\"pictures\\\":[]}\",\"createdAt\":\"2023-11-20 10:02:58\"}]'),
+('11','1','请假','','0','默认部门','系统默认','1','审批结束','28','2023-11-20 10:17:58','2023-11-20 11:11:05','-3187','2','test@dootask.com','1','{\"type\":\"哺乳假\",\"description\":\"哺乳假\",\"startTime\":\"2023-11-20 09:00\",\"endTime\":\"2023-11-20 18:00\",\"other\":\"\"}','2','同意',null),
+('12','1','请假','','0','默认部门','系统默认','1700444311228','1','26','2023-11-20 10:21:51','2023-11-20 10:22:31','-40','2','test@dootask.com','1','{\"type\":\"事假\",\"description\":\"事假\",\"startTime\":\"2023-11-20 09:00\",\"endTime\":\"2023-11-20 18:00\",\"other\":\"\"}','3','不能请那么多假',null),
+('13','1','请假','','0','默认部门','系统默认','1','审批结束','32','2023-11-20 11:12:37','2023-11-20 11:49:37','-2220','2','test@dootask.com','1','{\"type\":\"事假\",\"description\":\"事假\",\"startTime\":\"2023-11-20 09:00\",\"endTime\":\"2023-11-20 18:00\",\"other\":\"\"}','2','同意批假',null);

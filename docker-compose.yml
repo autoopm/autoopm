@@ -3,8 +3,8 @@ version: '3'
 services:
   autoo-api:
     build:
-      context: .
-      dockerfile: ./service/Dockerfile
+      context: ./service
+      dockerfile: Dockerfile
     container_name: "autoo-server-${APP_ID}"
     environment:
       TZ: Asia/Shanghai
@@ -15,7 +15,7 @@ services:
     restart: always
     networks:
       extnetwork:
-        ipv4_address: 10.66.66.2
+        ipv4_address: "${APP_IP_SEGMENT}.2"
   nginx:
     container_name: "autoo-nginx-${APP_ID}"
     image: "nginx:alpine"
@@ -30,7 +30,7 @@ services:
       TZ: "Asia/Shanghai"
     networks:
       extnetwork:
-        ipv4_address: 10.66.66.3
+        ipv4_address: "${APP_IP_SEGMENT}.3"
     restart: unless-stopped
   #  fileview:
 #    container_name: "autoo-fileview-${APP_ID}"
@@ -57,7 +57,7 @@ services:
       - ./docker/drawio/webapp/js/diagramly/ElectronApp.js:/usr/local/tomcat/webapps/draw/js/diagramly/ElectronApp.js
     networks:
       extnetwork:
-        ipv4_address: 10.66.66.4
+        ipv4_address: "${APP_IP_SEGMENT}.4"
     depends_on:
       - drawio-export
     restart: unless-stopped
@@ -66,7 +66,7 @@ services:
     image: "kuaifan/export-server:0.0.1"
     networks:
       extnetwork:
-        ipv4_address: 10.66.66.5
+        ipv4_address: "${APP_IP_SEGMENT}.5"
     volumes:
       - ./docker/drawio/export/fonts:/usr/share/fonts/drawio
     restart: unless-stopped
@@ -77,7 +77,7 @@ services:
       - "8101:80"
     networks:
       extnetwork:
-        ipv4_address: 10.66.66.6
+        ipv4_address: "${APP_IP_SEGMENT}.6"
     restart: unless-stopped
   office:
     container_name: "autoo-office-${APP_ID}"
@@ -98,7 +98,7 @@ services:
       - "8103:80"
     networks:
       extnetwork:
-        ipv4_address: 10.66.66.7
+        ipv4_address: "${APP_IP_SEGMENT}.7"
     restart: unless-stopped
 #  maxkb:
 #    image: 1panel/maxkb
@@ -144,7 +144,7 @@ services:
     privileged: true
     networks:
       extnetwork:
-        ipv4_address: 10.66.66.10
+        ipv4_address: "${APP_IP_SEGMENT}.10"
     restart: always
   mysql:
     container_name: "autoo-mysql-${APP_ID}"
@@ -155,9 +155,9 @@ services:
     environment:
       TZ: "Asia/Shanghai"
       MYSQL_ROOT_PASSWORD: autoo123456
-      MYSQL_DATABASE: autoo
-      MYSQL_USER: autoo
-      MYSQL_PASSWORD: 123456
+      MYSQL_DATABASE: "${DB_DATABASE}"
+      MYSQL_USER: "${DB_USERNAME}"
+      MYSQL_PASSWORD: "${DB_PASSWORD}"
     volumes:
       - ./docker/mysql/conf.d:/etc/mysql/conf.d
       - ./docker/mysql/data:/var/lib/mysql
@@ -170,12 +170,35 @@ services:
       --explicit_defaults_for_timestamp=true
     networks:
       extnetwork:
-        ipv4_address: 10.66.66.11
+        ipv4_address: "${APP_IP_SEGMENT}.11"
     restart: always
+  approve:
+    container_name: "autoo-approve-${APP_ID}"
+    build:
+      context: ./autoo-flow
+      dockerfile: Dockerfile
+    ports:
+      - "8099:80"
+    environment:
+      TZ: "${TIMEZONE:-PRC}"
+      MYSQL_HOST: "${DB_HOST}"
+      MYSQL_PORT: "${DB_PORT}"
+      MYSQL_DBNAME: "${DB_DATABASE}"
+      MYSQL_USERNAME: "${DB_USERNAME}"
+      MYSQL_PASSWORD: "${DB_PASSWORD}"
+      MYSQL_Prefix: "approve_"
+      DEMO_DATA: true
+      KEY: ${APP_KEY}
+    networks:
+      extnetwork:
+        ipv4_address: "${APP_IP_SEGMENT}.12"
+    depends_on:
+      - mysql
+    restart: unless-stopped
 networks:
   extnetwork:
     name: "autoo-networks-${APP_ID}"
     ipam:
       config:
-        - subnet: "10.66.66.0/24"
-          gateway: "10.66.66.1"
+        - subnet: "${APP_IP_SEGMENT}.0/24"
+          gateway: "${APP_IP_SEGMENT}.1"

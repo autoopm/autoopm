@@ -167,7 +167,9 @@ onMounted(() => {
         renderFile()
     }
     if (props.action) {
-        actionUrl.value = global.baseApi + props.action
+
+        //actionUrl.value = global.baseApi + props.action
+        actionUrl.value =  props.action
     }
 })
 

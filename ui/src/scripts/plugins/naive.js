@@ -71,6 +71,8 @@ const naive = NaiveUI.create({
         NaiveUI.NTreeSelect,
         NaiveUI.NSpin,
         NaiveUI.NTimePicker,
+        NaiveUI.NTimeline,
+        NaiveUI.NTimelineItem,
         NaiveUI.NBackTop,
         NaiveUI.NSkeleton,
         NaiveUI.NImage,

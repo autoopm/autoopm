@@ -1,0 +1,15 @@
+go-workflow.exe
+go-workflow
+STAR.fznews.com.cn.crt
+STAR.fznews.com.cn.key
+server.crt
+server.key
+/tmp/
+/.vscode
+/.env
+/demo-lock
+
+/docker/mysql/backup
+/docker/mysql/logs
+/docker/mysql/repassword.sh
+/docker/mysql/data

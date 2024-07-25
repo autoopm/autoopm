@@ -1,0 +1,40 @@
+{
+    "translateModel": 3,
+    "strict": true,
+    "filePath": "./",
+    "targetPath": "",
+    "languageList": [
+        "CN",
+        "EN",
+        "TC",
+        "KO",
+        "JA",
+        "DE",
+        "FR",
+        "ID"
+    ],
+    "channel": "google",
+    "appKey": "",
+    "secretKey": "",
+    "excludes": [
+        "node_modules",
+        "vendor",
+        "build",
+        "dist",
+        ".git",
+        ".vscode",
+        "storage",
+        "public",
+        "language",
+        "database",
+        "lang",
+        "i18n"
+    ],
+    "fileSuffix": [
+        ".vue",
+        ".html",
+        ".js",
+        ".ts",
+        ".php"
+    ]
+}
