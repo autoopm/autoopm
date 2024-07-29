@@ -20,3 +20,22 @@
 ![](./images/WX20240626-195457@2x.png)  
 ![](./images/WX20240626-195718@2x.png)  
 ![](./images/WX20240626-195910@2x.png)  
+![](./images/approve.png)
+
+
+## 部署教程
+1、cd进入ui目录，执行
+
+    npm install && npm run build
+
+2、回到根目录，执行
+    
+    docker compose up -d
+
+3、登录系统，打开localhost：8200，账号 admin  密码 123456 
+
+
+4、注意要将minio的桶设为可公开访问
+
+
+

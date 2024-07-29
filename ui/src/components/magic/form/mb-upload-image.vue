@@ -11,7 +11,8 @@
             >
                 <template #item="{ element }">
                     <div class="draggable-item" :style="{ width: width + 'px', height: height + 'px' }">
-                        <n-image :src="$global.baseApi + element"/>
+                       <!-- <n-image :src="$global.baseApi + element"/> -->
+                        <n-image :src="element"/>
                         <div class="tools">
                             <div class="shadow" @click="handleDelete(element)">
                                 <n-icon size="20">
@@ -245,6 +246,7 @@ function onError() {
 }
 
 function onFinish({file, event}) {
+    console.log("onFinish  ------->")
     let res = JSON.parse((event?.target).response)
     file.fullPath = res.data.url
     urls.value.push(res.data.url)
