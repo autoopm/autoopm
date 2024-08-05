@@ -52,7 +52,7 @@ let emits = defineEmits(['del'])
 
 <style lang="less">
 .select-result {
-  width: 276px;
+  width: 236px;
   height: 100%;
   font-size: 12px;
 

@@ -44,10 +44,12 @@ export let getDepartmentList = async (parentId = 0) => {
         return h;
     });
     data.employees = data.employees.map(h => {
-        h.id = h.userid;
+        h.id = h.id; //由userid改成id
         h.isLeave = 0;
         h.open = false;
-        h.employeeName = h.nickname || h.email;
+        //h.employeeName = h.nickname || h.email;
+        h.employeeName = h.name || h.email;
+
         return h;
     });
     departments.value = data;
@@ -65,8 +67,9 @@ export let getDebounceData = (event, type = 1) => {
                 departments.value.childDepartments = [];
                 let res = await getEmployees(data)
                 departments.value.employees = res.data.list.map(h =>{
-                    h.id = h.userid;
-                    h.employeeName = h.nickname || h.email;
+                    h.id = h.id; //由userid改成id
+                   // h.employeeName = h.nickname || h.email;
+                    h.employeeName = h.name || h.email;
                     // "departmentName": "招商事业部",
                     // "employeeDepartmentId": "121",
                     // "departmentNames": "招商事业部"

@@ -54,6 +54,9 @@ All.prototype = {
         return arr.some(item => { return item[key] == elem[key] });
     },
     toChecked(arr, elem, key = 'id') {
+        console.error("do this 。。。。。toChecked")
+        console.error("do this 。。。。。toChecked",arr)
+        console.error("do this 。。。。。toChecked",elem)
         var isIncludes = this.toggleClass(arr, elem, key);
         !isIncludes ? arr.push(elem) : this.removeEle(arr, elem, key);
     },

@@ -1,21 +1,20 @@
 version: "3"
 
 services:
-  # golang:
-  #   container_name: "task-flow-golang-${APP_ID}"
-  #   image: golang:alpine
-  #   working_dir: /go/src/
-  #   ports:
-  #     - "${SERVER_PORT}:${SERVER_PORT}"
-  #   stdin_open: true
-  #   tty: true
-  #   volumes:
-  #     - ./:/go/src/
-  #   networks:
-  #     network:
-  #       ipv4_address: 10.16.18.3
-  #   restart: always
-
+#   golang:
+#     container_name: "task-flow-golang-${APP_ID}"
+#     image: golang:alpine
+#     working_dir: /go/src/
+#     ports:
+#       - "${SERVER_PORT}:${SERVER_PORT}"
+#     stdin_open: true
+#     tty: true
+#     volumes:
+#       - ./:/go/src/
+#     networks:
+#       network:
+#         ipv4_address: 10.16.18.3
+#     restart: always
   approve:
     container_name: "task-flow-approve-${APP_ID}"
     image: "hitosea2020/go-approve:${DOCKER_VER}"
